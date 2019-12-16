@@ -1,4 +1,6 @@
 import dbInstance from './db';
+import staff from './models/staff';
+import { SUCCESS } from '../../constant';
 
 export default {
     state: {
@@ -14,10 +16,11 @@ export default {
             state.errorMessage = '';
         },
         SUCCESS(state, payload) {
-            state.data = payload.staff;
+            state.data = payload.data
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
+
         },
         ERROR(state, payload) {
             state.error = true;
@@ -27,13 +30,28 @@ export default {
     },
     actions: {
         fetch({ commit, rootState, dispatch }) {
-            const staffs = dbInstance.db().collection('staffs');
-            commit('SUCCESS', staffs);
+
+            commit('INIT');
+
+            const staffs = dbInstance.db().collection('staffs').get();
+            const data = []
+
+            staffs.then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    data.push(staff(doc.data()))
+                })
+            })
+                .then(() => commit('SUCCESS', { data }))
+                .catch(error => {
+                    commit('ERROR', { error });
+                })
         },
 
         store({ commit, rootState, dispatch }, payload) {
             commit('INIT');
-            dbInstance.db().collection('staffs').doc().set(payload)
+
+            console.log(payload)
+            dbInstance.db().collection('staffs').add(payload)
                 .then(result => {
                     commit('SUCCESS', { staff })
                 })
@@ -46,7 +64,9 @@ export default {
             commit('INIT');
             dbInstance.db().collection('staffs').doc(payload.id).set(payload)
                 .then(result => {
-                    commit('SUCCESS', { staff })
+                    const data = result.doc()
+
+                    commit('SUCCESS', { data })
                 })
                 .catch(error => {
                     commit('ERROR', { error });

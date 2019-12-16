@@ -3,6 +3,7 @@ export default (data) => {
     return {
         id: data.id || 0,
         companyId: data.companyId || null,
+        staffId: data.staffId || null,
         name: data.name || null,
         mobile: data.mobile || null,
         email: data.email || null,

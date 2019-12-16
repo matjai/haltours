@@ -170,13 +170,9 @@ export default {
     this.$store.dispatch("fetch").staffs;
     this.initialize();
   },
-
   methods: {
     initialize() {
       this.staffs = this.$store.state.staffs;
-
-      console.log(this.staffs);
-
       (this.departments = [
         {
           name: "Executive"
