@@ -20,7 +20,13 @@ export default {
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
-
+        },
+        ADD_SUCCESS(state, payload) {
+            console.log(payload)
+            state.data.push(payload.data);
+            state.loading = false;
+            state.error = false;
+            state.errorMessage = '';
         },
         ERROR(state, payload) {
             state.error = true;
@@ -51,10 +57,9 @@ export default {
         store({ commit, rootState, dispatch }, payload) {
             commit('INIT');
             dbInstance.db().collection('companies').add(payload)
-                .then(result => {
-                    const data = result.data()
-
-                    commit('SUCCESS', { data })
+                .then(docRef => {
+                    const data = { id: docRef.id, ...payload };
+                    commit('ADD_SUCCESS', { data })
                 })
                 .catch(error => {
                     commit('ERROR', { error });

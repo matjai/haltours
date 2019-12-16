@@ -219,15 +219,16 @@ export default {
       this.selectedIndex.push(item.id);
     },
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.companies.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.desserts.indexOf(item);
-      //confirm("Are you sure you want to delete this item?") &&
-      //this.companies.splice(index, 1);
+      const index = this.companies.data.indexOf(item);
+      confirm("Are you sure you want to delete this item?") &&
+        this.companies.data.splice(index, 1);
+      this.snackbar = true;
     },
 
     close() {
