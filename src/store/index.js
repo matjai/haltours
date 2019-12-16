@@ -1,5 +1,6 @@
 import login from "@/store/login";
 import user from "@/store/user";
+import staffs from "@/store/staffs";
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -26,7 +27,8 @@ const state = {
   fs: fbucket,
   fieldValue: fieldValue,
   fsTimestamp: fsTimestamp,
-  user: null
+  user: null,
+  staffs: null
 };
 
 export default new Vuex.Store({
@@ -34,6 +36,7 @@ export default new Vuex.Store({
   mutations: vuexfireMutations,
   modules: {
     login,
-    user
+    user,
+    staffs
   }
 });

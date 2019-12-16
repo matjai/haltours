@@ -16,10 +16,10 @@ new Vue({
       if (user) {
         console.log('user logged in')
         store.dispatch('bindUser', { userId: user.uid })
-        .then(() => {
-          store.commit('login')
-          if(router.currentRoute.name.toLowerCase() === 'login') router.push("/main").catch(err => {})
-        })
+          .then(() => {
+            store.commit('login')
+            if (router.currentRoute.name.toLowerCase() === 'login') router.push("/main").catch(err => { })
+          })
         //console.log(user) //REFACTOR function getUser
       } else console.log('No active login.')
     });
