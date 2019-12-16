@@ -67,6 +67,21 @@
                           </v-col>
                         </v-row>
                         <v-row>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-file-input 
+                              accept="image/*"
+                              label="Logo"
+                              ></v-file-input>
+                          </v-col>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-file-input 
+                              accept="image/*"
+                              label="Image"
+                              @change="startUpload"
+                              ></v-file-input>
+                          </v-col>
+                        </v-row>
+                        <v-row>
                           <v-col >
                             <v-textarea
                               outlined
@@ -218,6 +233,7 @@ export default {
     indexSelected(item) {
       this.selectedIndex.push(item.id);
     },
+    
     editItem(item) {
       this.editedIndex = this.companies.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -249,6 +265,10 @@ export default {
       }
 
       this.close();
+    },
+
+    startUpload(){
+      console.log("try lu");
     }
   }
 };
