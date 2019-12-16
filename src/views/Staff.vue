@@ -1,6 +1,7 @@
 <template>
   <div class="about d-block pa-2 container">
     <h2>Staffs Management</h2>
+
     <v-data-table
       :headers="headers"
       :items="staffs.data"
@@ -13,7 +14,6 @@
           <v-toolbar-title>Staff</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-
           <v-dialog v-model="dialog" max-width="800px">
             <template v-slot:activator="{ on }">
               <v-btn color="primary" dark class="mb-2" v-on="on">New Staff</v-btn>
@@ -219,9 +219,13 @@ export default {
 
     deleteItem(item) {
       const index = this.staffs.data.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
+      const x = confirm("Are you sure you want to delete this item?");
+
+      if (x) {
         this.staffs.data.splice(index, 1);
-      this.snackbar = true;
+        this.$store.dispatch("remove", item).staffs;
+        this.snackbar = true;
+      }
     },
 
     close() {
@@ -236,7 +240,8 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.staffs[this.editedIndex], this.editedItem);
+        Object.assign(this.staffs.data[this.editedIndex], this.editedItem);
+        this.$store.dispatch("update", this.editedItem).staffs;
       } else {
         this.$store.dispatch("store", this.editedItem).staffs;
       }

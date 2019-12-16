@@ -22,9 +22,25 @@ export default {
             state.errorMessage = '';
         },
         ADD_SUCCESS(state, payload) {
-            console.log(payload)
-
             state.data.push(payload.data);
+            state.loading = false;
+            state.error = false;
+            state.errorMessage = '';
+
+        },
+        UPDATED(state, payload) {
+            const { data } = payload;
+            state.data = [...state.data, ...data]
+            state.loading = false;
+            state.error = false;
+            state.errorMessage = '';
+
+        },
+        REMOVED(state, payload) {
+
+            const itemIndex = state.data.indexof(payload)
+            state.data = state.data.splice(itemIndex, 1)
+
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
@@ -43,7 +59,9 @@ export default {
             const data = []
             staffs.then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    data.push(staff(doc.data()))
+                    const id = doc.id;
+                    const _m = Object.assign({}, { ...doc.data(), id })
+                    data.push(staff(_m))
                 })
                 commit('SUCCESS', { data })
             })
@@ -66,10 +84,11 @@ export default {
         },
         update({ commit, rootState, dispatch }, payload) {
             commit('INIT');
+            console.log(payload)
             dbInstance.db().collection('staffs').doc(payload.id).set(payload)
                 .then(result => {
                     const data = payload
-                    commit('SUCCESS', { data })
+                    commit('UPDATED', { data })
                 })
                 .catch(error => {
                     commit('ERROR', { error });
@@ -77,9 +96,9 @@ export default {
         },
         remove({ commit, rootState, dispatch }, payload) {
             commit('INIT');
-            dbInstance.db().collection('staffs').doc(payload.id).delete(payload)
+            dbInstance.db().collection('staffs').doc(payload.id).delete()
                 .then(result => {
-                    commit('SUCCESS', { staff })
+                    commit('REMOVED', { data: payload })
                 })
                 .catch(error => {
                     commit('ERROR', { error });
