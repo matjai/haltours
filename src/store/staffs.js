@@ -16,7 +16,15 @@ export default {
             state.errorMessage = '';
         },
         SUCCESS(state, payload) {
-            state.data = payload.data
+            state.data = payload.data;
+            state.loading = false;
+            state.error = false;
+            state.errorMessage = '';
+        },
+        ADD_SUCCESS(state, payload) {
+            console.log(payload)
+
+            state.data.push(payload.data);
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
@@ -30,19 +38,15 @@ export default {
     },
     actions: {
         fetch({ commit, rootState, dispatch }) {
-
             commit('INIT');
-
             const staffs = dbInstance.db().collection('staffs').get();
             const data = []
-
-
             staffs.then((querySnapshot) => {
-                querySnapshot.data().forEach((doc) => {
+                querySnapshot.forEach((doc) => {
                     data.push(staff(doc.data()))
                 })
+                commit('SUCCESS', { data })
             })
-                .then(() => commit('SUCCESS', { data }))
                 .catch(error => {
                     commit('ERROR', { error });
                 })
@@ -51,10 +55,9 @@ export default {
         store({ commit, rootState, dispatch }, payload) {
             commit('INIT');
             dbInstance.db().collection('staffs').add(payload)
-                .then(result => {
-                    const data = result.data()
-
-                    commit('SUCCESS', { data })
+                .then(docRef => {
+                    const data = { id: docRef.id, ...payload };
+                    commit('ADD_SUCCESS', { data })
                 })
                 .catch(error => {
                     commit('ERROR', { error });
@@ -65,7 +68,7 @@ export default {
             commit('INIT');
             dbInstance.db().collection('staffs').doc(payload.id).set(payload)
                 .then(result => {
-                    const data = result.doc()
+                    const data = payload
                     commit('SUCCESS', { data })
                 })
                 .catch(error => {
