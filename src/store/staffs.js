@@ -36,8 +36,9 @@ export default {
             const staffs = dbInstance.db().collection('staffs').get();
             const data = []
 
+
             staffs.then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
+                querySnapshot.data().forEach((doc) => {
                     data.push(staff(doc.data()))
                 })
             })
@@ -49,11 +50,11 @@ export default {
 
         store({ commit, rootState, dispatch }, payload) {
             commit('INIT');
-
-            console.log(payload)
             dbInstance.db().collection('staffs').add(payload)
                 .then(result => {
-                    commit('SUCCESS', { staff })
+                    const data = result.data()
+
+                    commit('SUCCESS', { data })
                 })
                 .catch(error => {
                     commit('ERROR', { error });
@@ -65,7 +66,6 @@ export default {
             dbInstance.db().collection('staffs').doc(payload.id).set(payload)
                 .then(result => {
                     const data = result.doc()
-
                     commit('SUCCESS', { data })
                 })
                 .catch(error => {

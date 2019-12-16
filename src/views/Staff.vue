@@ -1,5 +1,6 @@
 <template>
   <div class="about d-block pa-2">
+    <h2>Staffs Management</h2>
     <v-data-table
       :headers="headers"
       :items="staffs.data"
