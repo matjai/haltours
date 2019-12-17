@@ -71,17 +71,20 @@
                             <v-file-input 
                               accept="image/*"
                               label="Logo"
+                              @change="onUploadLogo($event)"
                               ></v-file-input>
+                              <div v-if="logoIsUploading">
+                                <p> <progress id="progress" :value="uploadValueOfLogo" max="100" ></progress> {{uploadValueOfLogo.toFixed()+"%"}} </p>
+                              </div>
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
                             <v-file-input 
                               accept="image/*"
                               label="Image"
-                              @change="onUpload($event)"
+                              @change="onUploadImage($event)"
                               ></v-file-input>
-                              <div>
-                                <p>Progress: {{uploadValue.toFixed()+"%"}}
-                                <progress id="progress" :value="uploadValue" max="100" ></progress>  </p>
+                              <div v-if="imageIsUploading">
+                                <p> <progress id="progress" :value="uploadValueOfImage" max="100" ></progress> {{uploadValueOfImage.toFixed()+"%"}} </p>
                               </div>
                           </v-col>
                         </v-row>
@@ -173,9 +176,11 @@ export default {
     dialog: false,
     search: '',
     imageData: null,  
-    picture: null,
-    uploadValue: 0,
-    
+    uploadValueOfLogo: 0,
+    uploadValueOfImage: 0,
+    logoIsUploading: false,
+    imageIsUploading: false,
+
     headers: [
       {
         align: "left",
@@ -259,6 +264,11 @@ export default {
 
     close() {
       this.dialog = false;
+      this.imageData = null;  
+      this.uploadValueOfLogo = 0;
+      this.uploadValueOfImage = 0;
+      this.logoIsUploading = false;
+      this.imageIsUploading = false;
 
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
@@ -277,25 +287,32 @@ export default {
       this.close();
     },
 
-    // startUpload($event) {
-    //   console.log($event);
-    //   this.uploadValue=0;
-    //   this.picture=null;
-    //   this.imageData = event.target.files[0];
-      
-    // },
-    onUpload($event){
-      console.log($event);
-      this.uploadValue=0;
-      this.picture=null;
+    onUploadLogo($event){
+      this.logoIsUploading = true;
+      this.uploadValueOfLogo=0;
       this.imageData = event.target.files[0];
       const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData);
       storageRef.on(`state_changed`,snapshot=>{
-        this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+        this.uploadValueOfLogo = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
       }, error=>{console.log(error.message)},
-      ()=>{this.uploadValue=100;
+      ()=>{this.uploadValueOfLogo=100;
         storageRef.snapshot.ref.getDownloadURL().then((url)=>{
-          this.picture =url;
+          this.editedItem.logoURL = url;
+        });
+      }      
+      );
+    },
+
+    onUploadImage($event){
+      this.imageIsUploading = true;
+      this.uploadValueOfImage=0;
+      this.imageData = event.target.files[0];
+      const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData);
+      storageRef.on(`state_changed`,snapshot=>{
+        this.uploadValueOfImage = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+      }, error=>{console.log(error.message)},
+      ()=>{this.uploadValueOfImage=100;
+        storageRef.snapshot.ref.getDownloadURL().then((url)=>{
           this.editedItem.imageURL = url;
         });
       }      
