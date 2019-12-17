@@ -9,6 +9,14 @@
       class="elevation-1"
       :loading="staffs.loading"
     >
+      <template v-slot:item.avatar="{ item }">
+        <div style="padding:1em;">
+          <v-avatar size="62">
+            <img alt="Avatar" src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460" />
+          </v-avatar>
+        </div>
+      </template>
+
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>Staff</v-toolbar-title>
@@ -158,6 +166,7 @@ export default {
     ],
     headers: [
       {
+        value: "avatar",
         align: "left",
         sortable: false
       },
