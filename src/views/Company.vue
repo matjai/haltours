@@ -37,7 +37,8 @@
                   </template>
                   <v-card>
                     <v-card-title>
-                      <span class="headline"></span>
+                      <span class="headline" v-if="editedItem.name==null">New Company</span>
+                      <span class="headline" v-if="editedItem.name!=null">{{editedItem.name}}</span>
                     </v-card-title>
 
                     <v-card-text>
@@ -138,6 +139,7 @@
                               accept="image/*"
                               label="Logo"
                               @change="onUploadLogo($event)"
+                              prepend-icon="mdi-camera"
                               ></v-file-input>
                               <div v-if="logoIsUploading">
                                 <p> <progress id="progress" :value="uploadValueOfLogo" max="100" ></progress> {{uploadValueOfLogo.toFixed()+"%"}} </p>
@@ -160,6 +162,7 @@
                               accept="image/*"
                               label="Image"
                               @change="onUploadImage($event)"
+                              prepend-icon="mdi-camera"
                               ></v-file-input>
                               <div v-if="imageIsUploading">
                                 <p> <progress id="progress" :value="uploadValueOfImage" max="100" ></progress> {{uploadValueOfImage.toFixed()+"%"}} </p>
@@ -287,7 +290,7 @@ export default {
     editedIndex: -1,
     selectedIndex: [],
     editedItem: {
-      name: "",
+      name: null,
       description: "",
       registration_number: null,
       address: null,
@@ -304,6 +307,7 @@ export default {
     defaultItem: {
       name: "",
       description: "",
+      registration_number: null,
       address: null,
       phone_number: null,
       fax_number: null,
@@ -382,7 +386,8 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.companies[this.editedIndex], this.editedItem);
+        Object.assign(this.companies.data[this.editedIndex], this.editedItem);
+        this.$store.dispatch("update", this.editedItem).companies;
       } else {
         this.$store.dispatch("store", this.editedItem).companies;
       }
