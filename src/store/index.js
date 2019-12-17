@@ -1,6 +1,7 @@
 import login from "@/store/login";
 import user from "@/store/user";
 import staffs from "@/store/staffs";
+import companies from "@/store/companies";
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -28,7 +29,8 @@ const state = {
   fieldValue: fieldValue,
   fsTimestamp: fsTimestamp,
   user: null,
-  staffs: null
+  staffs: null,
+  companies: null
 };
 
 export default new Vuex.Store({
@@ -37,6 +39,7 @@ export default new Vuex.Store({
   modules: {
     login,
     user,
-    staffs
+    staffs,
+    companies
   }
 });
