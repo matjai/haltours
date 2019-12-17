@@ -1,7 +1,6 @@
 <template>
-  <div class="about d-block pa-2 container-fluid" style="margin-top:2em;">
+  <v-container fluid class="pa-2 mt-10">
     <!-- <h2 class="font-weight-bold">Staffs Management</h2> -->
-
     <v-data-table
       :headers="headers"
       :items="staffs.data"
@@ -21,6 +20,14 @@
         <v-toolbar flat color="white">
           <v-toolbar-title>Staffs Management</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
+          <v-text-field
+            v-model="search"
+            append-icon="search"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
+
           <v-spacer></v-spacer>
 
           <v-dialog v-model="dialog" max-width="800px">
@@ -155,7 +162,7 @@
         </v-card-text>
       </v-card>
     </v-footer>-->
-  </div>
+  </v-container>
 </template>
 
 <script>

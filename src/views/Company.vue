@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid class="pa-0">
-    <v-toolbar flat>
+  <v-container fluid class="pa-2 mt-10">
+    <!-- <v-toolbar flat>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
       <v-toolbar-title>Haltours Destination Management</v-toolbar-title>
@@ -15,7 +15,7 @@
       <v-btn icon to="/login">
         <v-icon>mdi-export</v-icon>
       </v-btn>
-    </v-toolbar>
+    </v-toolbar>-->
     <v-layout>
       <v-flex>
         <div class="about d-block pa-2">
@@ -221,7 +221,7 @@
               </v-toolbar>
             </template>
 
-            <template v-slot:item.action="{ item }" style="padding:2em;">
+            <template v-slot:item.action="{ item }">
               <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
               <v-icon small @click="deleteItem(item)">delete</v-icon>
             </template>
