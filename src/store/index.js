@@ -12,6 +12,24 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
 import config from "./firebase";
+import createLogger from 'vuex/dist/logger'
+
+
+//debug logger for browser console 
+//in case you are not using vue dev tools
+const logger = createLogger({
+  collapsed: false,
+  filter(mutation, stateBefore, stateAfter) {
+    return mutation.type !== "aBlacklistedMutation"
+  },
+  transformer(state) {
+    return state.subTree
+  },
+  mutationTransformer(mutation) {
+    return mutation.type
+  },
+  logger: console,
+})
 
 firebase.initializeApp(config);
 Vue.use(Vuex);
@@ -34,6 +52,7 @@ const state = {
 };
 
 export default new Vuex.Store({
+  plugins: [logger],
   state,
   mutations: vuexfireMutations,
   modules: {

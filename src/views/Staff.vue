@@ -104,9 +104,6 @@
         <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
         <v-icon small @click="deleteItem(item)">delete</v-icon>
       </template>
-      <!-- <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
-      </template>-->
     </v-data-table>
     <!-- 
     <div class="text-center ma-2">
@@ -220,9 +217,7 @@ export default {
     deleteItem(item) {
       const index = this.staffs.data.indexOf(item);
       const x = confirm("Are you sure you want to delete this item?");
-
       if (x) {
-        this.staffs.data.splice(index, 1);
         this.$store.dispatch("remove", item).staffs;
         this.snackbar = true;
       }

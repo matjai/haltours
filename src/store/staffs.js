@@ -46,10 +46,9 @@ export default {
 
         },
         STAFF_REMOVED(state, payload) {
-
-            const itemIndex = state.data.indexof(payload)
-            state.data = state.data.splice(itemIndex, 1)
-
+            const { data } = payload;
+            const itemIndex = state.data.indexOf(data)
+            state.data.splice(itemIndex, 1)
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
@@ -109,7 +108,7 @@ export default {
                     commit(STAFF_REMOVED, { data: payload })
                 })
                 .catch(error => {
-                    commit(STAFF_REMOVED, { error });
+                    commit(STAFF_ERROR, { error });
                 });
         },
     },
