@@ -150,9 +150,9 @@
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
                             <v-card>
-                              <div v-if="editedItem.imageURL!=null">
+                              <div v-if="editedItem.heroURL!=null">
                                 <v-img 
-                                :src= "editedItem.imageURL"
+                                :src= "editedItem.heroURL"
                                 height="125"
                                 class="grey darken-4"
                                 contain
@@ -161,11 +161,11 @@
                               <v-file-input 
                               accept="image/*"
                               label="Image"
-                              @change="onUploadImage($event)"
+                              @change="onUploadHero($event)"
                               prepend-icon="mdi-camera"
                               ></v-file-input>
-                              <div v-if="imageIsUploading">
-                                <p> <progress id="progress" :value="uploadValueOfImage" max="100" ></progress> {{uploadValueOfImage.toFixed()+"%"}} </p>
+                              <div v-if="heroIsUploading">
+                                <p> <progress id="progress" :value="uploadValueOfHero" max="100" ></progress> {{uploadValueOfHero.toFixed()+"%"}} </p>
                               </div>
                             </v-card>
                       
@@ -269,9 +269,9 @@ export default {
     search: '',
     imageData: null,  
     uploadValueOfLogo: 0,
-    uploadValueOfImage: 0,
+    uploadValueOfHero: 0,
     logoIsUploading: false,
-    imageIsUploading: false,
+    heroIsUploading: false,
 
     headers: [
       {
@@ -300,7 +300,7 @@ export default {
       facebook: null,
       instagram: null,
       logoURL: null,
-      imageURL: null,
+      heroURL: null,
       country: null
     },
     text: "This is notification!.",
@@ -315,7 +315,7 @@ export default {
       facebook: null,
       instagram: null,
       logoURL: null,
-      imageURL: null,
+      heroURL: null,
       country: null
     }
   }),
@@ -364,18 +364,20 @@ export default {
 
     deleteItem(item) {
       const index = this.companies.data.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.companies.data.splice(index, 1);
-      this.snackbar = true;
+      const x = confirm("Are you sure you want to delete this company?");
+      if (x) {
+        this.$store.dispatch("remove", item).companies;
+        this.snackbar = true;
+      }
     },
 
     close() {
       this.dialog = false;
       this.imageData = null;  
       this.uploadValueOfLogo = 0;
-      this.uploadValueOfImage = 0;
+      this.uploadValueOfHero = 0;
       this.logoIsUploading = false;
-      this.imageIsUploading = false;
+      this.heroIsUploading = false;
 
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
@@ -412,18 +414,18 @@ export default {
       );
     },
 
-    onUploadImage($event){
-      this.imageIsUploading = true;
-      this.uploadValueOfImage=0;
+    onUploadHero($event){
+      this.heroIsUploading = true;
+      this.uploadValueOfHero=0;
       this.imageData = event.target.files[0];
       const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData);
       storageRef.on(`state_changed`,snapshot=>{
-        this.uploadValueOfImage = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+        this.uploadValueOfHero = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
       }, error=>{console.log(error.message)},
-      ()=>{this.uploadValueOfImage=100;
+      ()=>{this.uploadValueOfHero=100;
         storageRef.snapshot.ref.getDownloadURL().then((url)=>{
-          this.editedItem.imageURL = url;
-          this.imageIsUploading = false;
+          this.editedItem.heroURL = url;
+          this.heroIsUploading = false;
         });
       }      
       );

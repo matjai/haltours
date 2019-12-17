@@ -12,7 +12,7 @@ export default (data) => {
         facebook: data.facebook || null,
         instagram: data.instagram || null,
         logoURL: data.logoURL || null,
-        imageURL: data.imageURL || null,
+        heroURL: data.heroURL || null,
         country: data.country || {}
     }
 

@@ -99,9 +99,9 @@ export default {
         },
         remove({ commit, rootState, dispatch }, payload) {
             commit(COMPANY_INIT);
-            dbInstance.db().collection(COLLECTION).doc(payload.id).delete(payload)
+            dbInstance.db().collection(COLLECTION).doc(payload.id).delete()
                 .then(result => {
-                    commit(COMPANY_REMOVED, { company })
+                    commit(COMPANY_REMOVED, { data: payload })
                 })
                 .catch(error => {
                     commit(COMPANY_ERROR, { error });
