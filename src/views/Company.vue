@@ -77,8 +77,12 @@
                             <v-file-input 
                               accept="image/*"
                               label="Image"
-                              @change="startUpload"
+                              @change="onUpload($event)"
                               ></v-file-input>
+                              <div>
+                                <p>Progress: {{uploadValue.toFixed()+"%"}}
+                                <progress id="progress" :value="uploadValue" max="100" ></progress>  </p>
+                              </div>
                           </v-col>
                         </v-row>
                         <v-row>
@@ -161,11 +165,17 @@
 
 
 <script>
+import firebase from 'firebase';
+
 export default {
   data: () => ({
     icons: ["mdi-facebook-box", "mdi-instagram", "mdi-youtube"],
     dialog: false,
     search: '',
+    imageData: null,  
+    picture: null,
+    uploadValue: 0,
+    
     headers: [
       {
         align: "left",
@@ -267,8 +277,29 @@ export default {
       this.close();
     },
 
-    startUpload(){
-      console.log("try lu");
+    // startUpload($event) {
+    //   console.log($event);
+    //   this.uploadValue=0;
+    //   this.picture=null;
+    //   this.imageData = event.target.files[0];
+      
+    // },
+    onUpload($event){
+      console.log($event);
+      this.uploadValue=0;
+      this.picture=null;
+      this.imageData = event.target.files[0];
+      const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData);
+      storageRef.on(`state_changed`,snapshot=>{
+        this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+      }, error=>{console.log(error.message)},
+      ()=>{this.uploadValue=100;
+        storageRef.snapshot.ref.getDownloadURL().then((url)=>{
+          this.picture =url;
+          this.editedItem.imageURL = url;
+        });
+      }      
+      );
     }
   }
 };
