@@ -1,6 +1,6 @@
 <template>
-  <div class="about d-block pa-2 container">
-    <h2>Staffs Management</h2>
+  <div class="about d-block pa-2 container-fluid" style="margin-top:2em;">
+    <!-- <h2 class="font-weight-bold">Staffs Management</h2> -->
 
     <v-data-table
       :headers="headers"
@@ -19,12 +19,18 @@
 
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>Staff</v-toolbar-title>
+          <v-toolbar-title>Staffs Management</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
+
           <v-dialog v-model="dialog" max-width="800px">
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark class="mb-2" v-on="on">New Staff</v-btn>
+              <v-fab-transition>
+                <v-btn color="pink" v-on="on" dark absolute top right fab>
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </v-fab-transition>
+              <!-- <v-btn color="primary" dark class="mb-2" New Staff</v-btn> -->
             </template>
             <v-card>
               <v-card-title>
@@ -126,6 +132,7 @@
         <v-icon small @click="deleteItem(item)">delete</v-icon>
       </template>
     </v-data-table>
+
     <!-- 
     <div class="text-center ma-2">
       <v-snackbar v-model="snackbar" top="top" right="right">

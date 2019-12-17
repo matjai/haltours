@@ -1,6 +1,6 @@
 <template>
-<v-container fluid="" class="pa-0">
-    <v-toolbar flat="">
+  <v-container fluid class="pa-0">
+    <v-toolbar flat>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
       <v-toolbar-title>Haltours Destination Management</v-toolbar-title>
@@ -31,174 +31,7 @@
               <v-toolbar flat color="white">
                 <v-toolbar-title>Company</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
-                <v-spacer><v-dialog v-model="dialog" max-width="800px">
-                  <template v-slot:activator="{ on }">
-                    <v-btn color="primary" dark class="mb-2" v-on="on">Add Company</v-btn>
-                  </template>
-                  <v-card>
-                    <v-card-title>
-                      <span class="headline" v-if="editedItem.name==null">New Company</span>
-                      <span class="headline" v-if="editedItem.name!=null">{{editedItem.name}}</span>
-                    </v-card-title>
 
-                    <v-card-text>
-                      <v-container>
-                        <v-row>
-                          <v-col cols="12">
-                            <v-text-field color="primary" v-if="companies.loading" loading disabled></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              label="Name"
-                              v-model="editedItem.name"
-                              placeholder="Name"
-                              outlined
-                            ></v-text-field>
-                          </v-col>
-                          
-                          <v-col cols="12" sm="6" md="6">
-                            <v-select
-                              :items="countries"
-                              item-text="name"
-                              label="Countries"
-                              v-model="editedItem.country"
-                              outlined
-                              return-object
-                            ></v-select>
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              label="Registration Number"
-                              v-model="editedItem.registration_number"
-                              placeholder="Registration Number"
-                              outlined
-                            ></v-text-field>
-                          </v-col>
-                          
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              label="Phone Number"
-                              v-model="editedItem.phone_number"
-                              placeholder="Phone Number"
-                              outlined
-                            ></v-text-field>
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              label="Fax Number"
-                              v-model="editedItem.fax_number"
-                              placeholder="Fax Number"
-                              outlined
-                            ></v-text-field>
-                          </v-col>
-                          
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              label="Website"
-                              v-model="editedItem.website"
-                              placeholder="Website"
-                              outlined
-                            ></v-text-field>
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              label="Facebook"
-                              v-model="editedItem.facebook"
-                              placeholder="Facebook URL"
-                              outlined
-                            ></v-text-field>
-                          </v-col>
-                          
-                          <v-col cols="12" sm="6" md="6">
-                            <v-text-field
-                              label="Instagram"
-                              v-model="editedItem.instagram"
-                              placeholder="Instagram URL"
-                              outlined
-                            ></v-text-field>
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-card>
-                              <div v-if="editedItem.logoURL!=null">
-                                <v-img 
-                                  :src= "editedItem.logoURL"
-                                  height="125"
-                                  class="grey darken-4"
-                                  contain
-                                ></v-img>
-                              </div>
-                              <v-file-input 
-                              accept="image/*"
-                              label="Logo"
-                              @change="onUploadLogo($event)"
-                              prepend-icon="mdi-camera"
-                              ></v-file-input>
-                              <div v-if="logoIsUploading">
-                                <p> <progress id="progress" :value="uploadValueOfLogo" max="100" ></progress> {{uploadValueOfLogo.toFixed()+"%"}} </p>
-                              </div>
-                            </v-card>
-                            
-                        
-                          </v-col>
-                          <v-col cols="12" sm="6" md="6">
-                            <v-card>
-                              <div v-if="editedItem.heroURL!=null">
-                                <v-img 
-                                :src= "editedItem.heroURL"
-                                height="125"
-                                class="grey darken-4"
-                                contain
-                                ></v-img>
-                              </div>
-                              <v-file-input 
-                              accept="image/*"
-                              label="Image"
-                              @change="onUploadHero($event)"
-                              prepend-icon="mdi-camera"
-                              ></v-file-input>
-                              <div v-if="heroIsUploading">
-                                <p> <progress id="progress" :value="uploadValueOfHero" max="100" ></progress> {{uploadValueOfHero.toFixed()+"%"}} </p>
-                              </div>
-                            </v-card>
-                      
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col >
-                            <v-textarea
-                              outlined
-                              label="Address"
-                              v-model="editedItem.address"
-                            ></v-textarea>
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col >
-                            <v-textarea
-                              outlined
-                              label="Description"
-                              v-model="editedItem.description"
-                            ></v-textarea>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card-text>
-
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                      <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog></v-spacer>
                 <v-text-field
                   v-model="search"
                   append-icon="search"
@@ -207,11 +40,188 @@
                   hide-details
                 ></v-text-field>
 
-                
+                <v-spacer>
+                  <v-dialog v-model="dialog" max-width="800px">
+                    <template v-slot:activator="{ on }">
+                      <v-fab-transition>
+                        <v-btn color="pink" v-on="on" dark absolute top right fab>
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </v-fab-transition>
+                    </template>
+                    <v-card>
+                      <v-card-title>
+                        <span class="headline" v-if="editedItem.name==null">New Company</span>
+                        <span class="headline" v-if="editedItem.name!=null">{{editedItem.name}}</span>
+                      </v-card-title>
+
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col cols="12">
+                              <v-text-field
+                                color="primary"
+                                v-if="companies.loading"
+                                loading
+                                disabled
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                label="Name"
+                                v-model="editedItem.name"
+                                placeholder="Name"
+                                outlined
+                              ></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="6" md="6">
+                              <v-select
+                                :items="countries"
+                                item-text="name"
+                                label="Countries"
+                                v-model="editedItem.country"
+                                outlined
+                                return-object
+                              ></v-select>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                label="Registration Number"
+                                v-model="editedItem.registration_number"
+                                placeholder="Registration Number"
+                                outlined
+                              ></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                label="Phone Number"
+                                v-model="editedItem.phone_number"
+                                placeholder="Phone Number"
+                                outlined
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                label="Fax Number"
+                                v-model="editedItem.fax_number"
+                                placeholder="Fax Number"
+                                outlined
+                              ></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                label="Website"
+                                v-model="editedItem.website"
+                                placeholder="Website"
+                                outlined
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                label="Facebook"
+                                v-model="editedItem.facebook"
+                                placeholder="Facebook URL"
+                                outlined
+                              ></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                label="Instagram"
+                                v-model="editedItem.instagram"
+                                placeholder="Instagram URL"
+                                outlined
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-card>
+                                <div v-if="editedItem.logoURL!=null">
+                                  <v-img
+                                    :src="editedItem.logoURL"
+                                    height="125"
+                                    class="grey darken-4"
+                                    contain
+                                  ></v-img>
+                                </div>
+                                <v-file-input
+                                  accept="image/*"
+                                  label="Logo"
+                                  @change="onUploadLogo($event)"
+                                  prepend-icon="mdi-camera"
+                                ></v-file-input>
+                                <div v-if="logoIsUploading">
+                                  <p>
+                                    <progress id="progress" :value="uploadValueOfLogo" max="100"></progress>
+                                    {{uploadValueOfLogo.toFixed()+"%"}}
+                                  </p>
+                                </div>
+                              </v-card>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-card>
+                                <div v-if="editedItem.heroURL!=null">
+                                  <v-img
+                                    :src="editedItem.heroURL"
+                                    height="125"
+                                    class="grey darken-4"
+                                    contain
+                                  ></v-img>
+                                </div>
+                                <v-file-input
+                                  accept="image/*"
+                                  label="Image"
+                                  @change="onUploadHero($event)"
+                                  prepend-icon="mdi-camera"
+                                ></v-file-input>
+                                <div v-if="heroIsUploading">
+                                  <p>
+                                    <progress id="progress" :value="uploadValueOfHero" max="100"></progress>
+                                    {{uploadValueOfHero.toFixed()+"%"}}
+                                  </p>
+                                </div>
+                              </v-card>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col>
+                              <v-textarea outlined label="Address" v-model="editedItem.address"></v-textarea>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col>
+                              <v-textarea
+                                outlined
+                                label="Description"
+                                v-model="editedItem.description"
+                              ></v-textarea>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card-text>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                        <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-spacer>
               </v-toolbar>
             </template>
 
-            <template v-slot:item.action="{ item }">
+            <template v-slot:item.action="{ item }" style="padding:2em;">
               <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
               <v-icon small @click="deleteItem(item)">delete</v-icon>
             </template>
@@ -229,29 +239,18 @@
         </div>
       </v-flex>
     </v-layout>
-    <v-footer dark padless absolute="">
-      <v-card
-        flat
-        class="indigo lighten-1 white--text text-center"
-        style="width: 100%;"
-      >
+    <v-footer dark padless absolute>
+      <v-card flat class="indigo lighten-1 white--text text-center" style="width: 100%;">
         <v-card-text>
-          <v-btn
-            v-for="icon in icons"
-            :key="icon"
-            class="mx-4 white--text"
-            icon
-            large
-          >
+          <v-btn v-for="icon in icons" :key="icon" class="mx-4 white--text" icon large>
             <v-icon large>{{ icon }}</v-icon>
           </v-btn>
         </v-card-text>
 
-        <v-card-text class="white--text pt-0">
-          3 Tower Jalan Ampang 68000 Selangor Malaysia
-        </v-card-text>
+        <v-card-text class="white--text pt-0">3 Tower Jalan Ampang 68000 Selangor Malaysia</v-card-text>
         <v-card-text class="white--text">
-          {{ new Date().getFullYear() }} — <strong>Haltours</strong>
+          {{ new Date().getFullYear() }} —
+          <strong>Haltours</strong>
         </v-card-text>
       </v-card>
     </v-footer>
@@ -260,14 +259,14 @@
 
 
 <script>
-import firebase from 'firebase';
+import firebase from "firebase";
 
 export default {
   data: () => ({
     icons: ["mdi-facebook-box", "mdi-instagram", "mdi-youtube"],
     dialog: false,
-    search: '',
-    imageData: null,  
+    search: "",
+    imageData: null,
     uploadValueOfLogo: 0,
     uploadValueOfHero: 0,
     logoIsUploading: false,
@@ -339,7 +338,7 @@ export default {
 
       console.log(this.companies);
 
-      (this.countries = [
+      this.countries = [
         {
           id: 1,
           name: "Malaysia"
@@ -348,13 +347,13 @@ export default {
           id: 2,
           name: "Indonesia"
         }
-      ])
+      ];
     },
 
     indexSelected(item) {
       this.selectedIndex.push(item.id);
     },
-    
+
     editItem(item) {
       this.editedIndex = this.companies.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -373,7 +372,7 @@ export default {
 
     close() {
       this.dialog = false;
-      this.imageData = null;  
+      this.imageData = null;
       this.uploadValueOfLogo = 0;
       this.uploadValueOfHero = 0;
       this.logoIsUploading = false;
@@ -397,37 +396,57 @@ export default {
       this.close();
     },
 
-    onUploadLogo($event){
+    onUploadLogo($event) {
       this.logoIsUploading = true;
-      this.uploadValueOfLogo=0;
+      this.uploadValueOfLogo = 0;
       this.imageData = event.target.files[0];
-      const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData);
-      storageRef.on(`state_changed`,snapshot=>{
-        this.uploadValueOfLogo = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
-      }, error=>{console.log(error.message)},
-      ()=>{this.uploadValueOfLogo=100;
-        storageRef.snapshot.ref.getDownloadURL().then((url)=>{
-          this.editedItem.logoURL = url;
-          this.logoIsUploading = false;
-        });
-      }      
+      const storageRef = firebase
+        .storage()
+        .ref(`${this.imageData.name}`)
+        .put(this.imageData);
+      storageRef.on(
+        `state_changed`,
+        snapshot => {
+          this.uploadValueOfLogo =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+        error => {
+          console.log(error.message);
+        },
+        () => {
+          this.uploadValueOfLogo = 100;
+          storageRef.snapshot.ref.getDownloadURL().then(url => {
+            this.editedItem.logoURL = url;
+            this.logoIsUploading = false;
+          });
+        }
       );
     },
 
-    onUploadHero($event){
+    onUploadHero($event) {
       this.heroIsUploading = true;
-      this.uploadValueOfHero=0;
+      this.uploadValueOfHero = 0;
       this.imageData = event.target.files[0];
-      const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData);
-      storageRef.on(`state_changed`,snapshot=>{
-        this.uploadValueOfHero = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
-      }, error=>{console.log(error.message)},
-      ()=>{this.uploadValueOfHero=100;
-        storageRef.snapshot.ref.getDownloadURL().then((url)=>{
-          this.editedItem.heroURL = url;
-          this.heroIsUploading = false;
-        });
-      }      
+      const storageRef = firebase
+        .storage()
+        .ref(`${this.imageData.name}`)
+        .put(this.imageData);
+      storageRef.on(
+        `state_changed`,
+        snapshot => {
+          this.uploadValueOfHero =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+        error => {
+          console.log(error.message);
+        },
+        () => {
+          this.uploadValueOfHero = 100;
+          storageRef.snapshot.ref.getDownloadURL().then(url => {
+            this.editedItem.heroURL = url;
+            this.heroIsUploading = false;
+          });
+        }
       );
     }
   }
