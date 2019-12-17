@@ -11,7 +11,7 @@ export default (data) => {
         position: data.position || {},
         department: data.department || {},
         permissions: data.permissions || [],
-        checked: false
+        roles: data.roles || null,
     }
 
 }

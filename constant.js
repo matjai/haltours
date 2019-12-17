@@ -13,3 +13,10 @@ export const COMPANY_ADDED = 'COMPANY_ADDED';
 export const COMPANY_UPDATED = 'COMPANY_UPDATED';
 export const COMPANY_REMOVED = 'COMPANY_REMOVED';
 export const COMPANY_ERROR = 'COMPANY_ERROR';
+
+export const ROLES_INIT = 'ROLES_INIT';
+export const ROLES_FETCHED = 'ROLES_FETCHED';
+export const ROLES_ADDED = 'ROLES_ADDED';
+export const ROLES_UPDATED = 'ROLES_UPDATED';
+export const ROLES_REMOVED = 'ROLES_REMOVED';
+export const ROLES_ERROR = 'ROLES_ERROR';

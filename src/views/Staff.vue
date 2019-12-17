@@ -120,6 +120,17 @@
                         return-object
                       ></v-select>
                     </v-col>
+
+                    <v-col cols="12" sm="12" md="12">
+                      <v-select
+                        :items="getRoles"
+                        item-text="name"
+                        label="Access Roles"
+                        v-model="editedItem.roles"
+                        outlined
+                        return-object
+                      ></v-select>
+                    </v-col>
                   </v-row>
                 </v-container>
               </v-card-text>
@@ -132,6 +143,10 @@
             </v-card>
           </v-dialog>
         </v-toolbar>
+      </template>
+
+      <template v-slot:item.roles="{ item }">
+        <v-chip class="ma-2 text-center justify-center" color="primary" pill>{{ item.roles.name }}</v-chip>
       </template>
 
       <template v-slot:item.action="{ item }">
@@ -189,8 +204,10 @@ export default {
       { text: "Mobile", value: "mobile" },
       { text: "Position", value: "position.name" },
       { text: "Department", value: "department.name" },
+      { text: "Roles", value: "roles" },
       { text: "Actions", value: "action", sortable: false }
     ],
+    search: "",
     snackbar: false,
     top: true,
     right: true,
@@ -206,7 +223,8 @@ export default {
       mobile: "",
       email: "",
       position: null,
-      department: null
+      department: null,
+      roles: null
     },
     text: "This is notification!.",
     defaultItem: {
@@ -214,11 +232,16 @@ export default {
       mobile: "",
       email: "",
       position: null,
-      department: null
+      department: null,
+      roles: null
     }
   }),
 
-  computed: {},
+  computed: {
+    getRoles() {
+      return this.$store.getters.getAllRoles;
+    }
+  },
 
   watch: {
     dialog(val) {
@@ -256,29 +279,29 @@ export default {
     },
 
     onImageUpload($event) {
-      this.imageIsUploading = true;
-      this.imageData = event.target.files[0];
+      if (event.target.files[0] != undefined) {
+        this.imageIsUploading = true;
+        this.imageData = event.target.files[0];
+        const storageRef = firebase
+          .storage()
+          .ref(`${this.imageData.name}`)
+          .put(this.imageData);
 
-      //refactor this line into vuex
-      const storageRef = firebase
-        .storage()
-        .ref(`${this.imageData.name}`)
-        .put(this.imageData);
-
-      storageRef.on(
-        `state_changed`,
-        snapshot => {},
-        error => {
-          console.log(error.message);
-          this.imageIsUploading = false;
-        },
-        () => {
-          storageRef.snapshot.ref.getDownloadURL().then(url => {
-            this.editedItem.avatar = url;
+        storageRef.on(
+          `state_changed`,
+          snapshot => {},
+          error => {
+            console.log(error.message);
             this.imageIsUploading = false;
-          });
-        }
-      );
+          },
+          () => {
+            storageRef.snapshot.ref.getDownloadURL().then(url => {
+              this.editedItem.avatar = url;
+              this.imageIsUploading = false;
+            });
+          }
+        );
+      }
     },
 
     editItem(item) {

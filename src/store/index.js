@@ -2,6 +2,7 @@ import login from "@/store/login";
 import user from "@/store/user";
 import staffs from "@/store/staffs";
 import companies from "@/store/companies";
+import roles from "@/store/roles";
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -48,7 +49,8 @@ const state = {
   fsTimestamp: fsTimestamp,
   user: null,
   staffs: null,
-  companies: null
+  companies: null,
+  roles: null
 };
 
 export default new Vuex.Store({
@@ -59,6 +61,7 @@ export default new Vuex.Store({
     login,
     user,
     staffs,
-    companies
+    companies,
+    roles
   }
 });
