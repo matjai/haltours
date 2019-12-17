@@ -68,7 +68,73 @@
                         </v-row>
                         <v-row>
                           <v-col cols="12" sm="6" md="6">
-                            <v-file-input 
+                            <v-text-field
+                              label="Registration Number"
+                              v-model="editedItem.registration_number"
+                              placeholder="Registration Number"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                          
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              label="Phone Number"
+                              v-model="editedItem.phone_number"
+                              placeholder="Phone Number"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              label="Fax Number"
+                              v-model="editedItem.fax_number"
+                              placeholder="Fax Number"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                          
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              label="Website"
+                              v-model="editedItem.website"
+                              placeholder="Website"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              label="Facebook"
+                              v-model="editedItem.facebook"
+                              placeholder="Facebook URL"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                          
+                          <v-col cols="12" sm="6" md="6">
+                            <v-text-field
+                              label="Instagram"
+                              v-model="editedItem.instagram"
+                              placeholder="Instagram URL"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col cols="12" sm="6" md="6">
+                            <v-card>
+                              <div v-if="editedItem.logoURL!=null">
+                                <v-img 
+                                  :src= "editedItem.logoURL"
+                                  height="125"
+                                  class="grey darken-4"
+                                  contain
+                                ></v-img>
+                              </div>
+                              <v-file-input 
                               accept="image/*"
                               label="Logo"
                               @change="onUploadLogo($event)"
@@ -76,9 +142,21 @@
                               <div v-if="logoIsUploading">
                                 <p> <progress id="progress" :value="uploadValueOfLogo" max="100" ></progress> {{uploadValueOfLogo.toFixed()+"%"}} </p>
                               </div>
+                            </v-card>
+                            
+                        
                           </v-col>
                           <v-col cols="12" sm="6" md="6">
-                            <v-file-input 
+                            <v-card>
+                              <div v-if="editedItem.imageURL!=null">
+                                <v-img 
+                                :src= "editedItem.imageURL"
+                                height="125"
+                                class="grey darken-4"
+                                contain
+                                ></v-img>
+                              </div>
+                              <v-file-input 
                               accept="image/*"
                               label="Image"
                               @change="onUploadImage($event)"
@@ -86,6 +164,17 @@
                               <div v-if="imageIsUploading">
                                 <p> <progress id="progress" :value="uploadValueOfImage" max="100" ></progress> {{uploadValueOfImage.toFixed()+"%"}} </p>
                               </div>
+                            </v-card>
+                      
+                          </v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col >
+                            <v-textarea
+                              outlined
+                              label="Address"
+                              v-model="editedItem.address"
+                            ></v-textarea>
                           </v-col>
                         </v-row>
                         <v-row>
@@ -200,6 +289,13 @@ export default {
     editedItem: {
       name: "",
       description: "",
+      registration_number: null,
+      address: null,
+      phone_number: null,
+      fax_number: null,
+      website: null,
+      facebook: null,
+      instagram: null,
       logoURL: null,
       imageURL: null,
       country: null
@@ -208,6 +304,12 @@ export default {
     defaultItem: {
       name: "",
       description: "",
+      address: null,
+      phone_number: null,
+      fax_number: null,
+      website: null,
+      facebook: null,
+      instagram: null,
       logoURL: null,
       imageURL: null,
       country: null
@@ -253,6 +355,7 @@ export default {
       this.editedIndex = this.companies.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+      console.log(this.editedItem);
     },
 
     deleteItem(item) {
@@ -298,6 +401,7 @@ export default {
       ()=>{this.uploadValueOfLogo=100;
         storageRef.snapshot.ref.getDownloadURL().then((url)=>{
           this.editedItem.logoURL = url;
+          this.logoIsUploading = false;
         });
       }      
       );
@@ -314,6 +418,7 @@ export default {
       ()=>{this.uploadValueOfImage=100;
         storageRef.snapshot.ref.getDownloadURL().then((url)=>{
           this.editedItem.imageURL = url;
+          this.imageIsUploading = false;
         });
       }      
       );
