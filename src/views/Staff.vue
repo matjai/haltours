@@ -27,7 +27,15 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12">
-                      <v-text-field color="primary" v-if="staffs.loading" loading disabled></v-text-field>
+                      <v-file-input
+                        :rules="rules"
+                        accept="image/png, image/jpeg, image/bmp"
+                        placeholder="Pick an avatar"
+                        prepend-icon="mdi-camera"
+                        :loading="imageIsUploading"
+                        @change="onImageUpload($event)"
+                        label="Avatar"
+                      ></v-file-input>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
                       <v-text-field
@@ -131,10 +139,18 @@
 </template>
 
 <script>
+import firebase from "firebase/firebase";
+
 export default {
   data: () => ({
     icons: ["mdi-facebook-box", "mdi-instagram", "mdi-youtube"],
     dialog: false,
+    rules: [
+      value =>
+        !value ||
+        value.size < 2000000 ||
+        "Avatar size should be less than 2 MB!"
+    ],
     headers: [
       {
         align: "left",
@@ -150,6 +166,8 @@ export default {
     snackbar: false,
     top: true,
     right: true,
+    imageIsUploading: false,
+    imageData: null,
     positions: [],
     departments: [],
     staffs: {},
@@ -160,7 +178,8 @@ export default {
       mobile: "",
       email: "",
       position: null,
-      department: null
+      department: null,
+      avatar: null
     },
     text: "This is notification!.",
     defaultItem: {
@@ -168,7 +187,8 @@ export default {
       mobile: "",
       email: "",
       position: null,
-      department: null
+      department: null,
+      avatar: null
     }
   }),
 
@@ -208,6 +228,33 @@ export default {
     indexSelected(item) {
       this.selectedIndex.push(item.id);
     },
+
+    onImageUpload($event) {
+      this.imageIsUploading = true;
+      this.imageData = event.target.files[0];
+
+      //refactor this line into vuex
+      const storageRef = firebase
+        .storage()
+        .ref(`${this.imageData.name}`)
+        .put(this.imageData);
+
+      storageRef.on(
+        `state_changed`,
+        snapshot => {},
+        error => {
+          console.log(error.message);
+          this.imageIsUploading = false;
+        },
+        () => {
+          storageRef.snapshot.ref.getDownloadURL().then(url => {
+            this.editedItem.avatar = url;
+            this.imageIsUploading = false;
+          });
+        }
+      );
+    },
+
     editItem(item) {
       this.editedIndex = this.staffs.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
