@@ -26,6 +26,11 @@
               <v-card-text>
                 <v-container>
                   <v-row>
+                    <v-col cols="12 d-flex justify-center">
+                      <v-avatar class="profile" color="grey" size="164">
+                        <v-img :src="editedItem.avatar"></v-img>
+                      </v-avatar>
+                    </v-col>
                     <v-col cols="12">
                       <v-file-input
                         :rules="rules"
@@ -178,8 +183,7 @@ export default {
       mobile: "",
       email: "",
       position: null,
-      department: null,
-      avatar: null
+      department: null
     },
     text: "This is notification!.",
     defaultItem: {
@@ -187,8 +191,7 @@ export default {
       mobile: "",
       email: "",
       position: null,
-      department: null,
-      avatar: null
+      department: null
     }
   }),
 
