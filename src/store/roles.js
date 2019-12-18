@@ -34,6 +34,7 @@ const fixturedState = [
 ];
 
 export default {
+    namespaced: true,
     state: {
         loading: false,
         //temporary loaded our local dummy state

@@ -10,6 +10,7 @@ import {
 const COLLECTION = 'companies';
 
 export default {
+    namespaced: true,
     state: {
         loading: false,
         data: [],

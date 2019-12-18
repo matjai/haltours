@@ -12,6 +12,7 @@ import {
 const COLLECTION = 'staffs';
 
 export default {
+    namespaced: true,
     state: {
         loading: false,
         data: [],

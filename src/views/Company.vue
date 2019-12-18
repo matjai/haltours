@@ -328,16 +328,13 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("fetch").companies;
+    this.$store.dispatch("companies/fetch");
     this.initialize();
   },
 
   methods: {
     initialize() {
       this.companies = this.$store.state.companies;
-
-      console.log(this.companies);
-
       this.countries = [
         {
           id: 1,
@@ -358,14 +355,13 @@ export default {
       this.editedIndex = this.companies.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
-      console.log(this.editedItem);
     },
 
     deleteItem(item) {
       const index = this.companies.data.indexOf(item);
       const x = confirm("Are you sure you want to delete this company?");
       if (x) {
-        this.$store.dispatch("remove", item).companies;
+        this.$store.dispatch("companies/remove", item);
         this.snackbar = true;
       }
     },
@@ -388,9 +384,9 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.companies.data[this.editedIndex], this.editedItem);
-        this.$store.dispatch("update", this.editedItem).companies;
+        this.$store.dispatch("companies/update", this.editedItem);
       } else {
-        this.$store.dispatch("store", this.editedItem).companies;
+        this.$store.dispatch("companies/store", this.editedItem);
       }
 
       this.close();

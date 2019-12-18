@@ -239,7 +239,7 @@ export default {
 
   computed: {
     getRoles() {
-      return this.$store.getters.getAllRoles;
+      return this.$store.getters["roles/getAllRoles"];
     }
   },
 
@@ -250,7 +250,7 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("fetch").staffs;
+    this.$store.dispatch("staffs/fetch");
     this.initialize();
   },
   methods: {
@@ -314,7 +314,7 @@ export default {
       const index = this.staffs.data.indexOf(item);
       const x = confirm("Are you sure you want to delete this item?");
       if (x) {
-        this.$store.dispatch("remove", item).staffs;
+        this.$store.dispatch("staffs/remove", item);
         this.snackbar = true;
       }
     },
@@ -332,9 +332,9 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.staffs.data[this.editedIndex], this.editedItem);
-        this.$store.dispatch("update", this.editedItem).staffs;
+        this.$store.dispatch("staffs/update", this.editedItem);
       } else {
-        this.$store.dispatch("store", this.editedItem).staffs;
+        this.$store.dispatch("staffs/store", this.editedItem);
       }
 
       this.close();
