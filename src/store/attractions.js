@@ -1,13 +1,13 @@
 import dbInstance from './db';
-import company from './models/company';
+import attraction from './models/attraction';
 import {
-    COMPANY_ERROR, COMPANY_FETCHED,
-    COMPANY_ADDED, COMPANY_UPDATED,
-    COMPANY_REMOVED, COMPANY_INIT
+    ATTRACTION_ERROR, ATTRACTION_FETCHED,
+    ATTRACTION_ADDED, ATTRACTION_UPDATED,
+    ATTRACTION_REMOVED, ATTRACTION_INIT
 } from '../../constant';
 
 
-const COLLECTION = 'companies';
+const COLLECTION = 'attractions';
 
 export default {
     namespaced: true,
@@ -18,31 +18,31 @@ export default {
         errorMessage: ''
     },
     mutations: {
-        COMPANY_INIT(state, payload) {
+        ATTRACTION_INIT(state, payload) {
             state.loading = true
             state.error = false;
             state.errorMessage = '';
         },
-        COMPANY_FETCHED(state, payload) {
+        ATTRACTION_FETCHED(state, payload) {
             state.data = payload.data
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
         },
-        COMPANY_ADDED(state, payload) {
+        ATTRACTION_ADDED(state, payload) {
             state.data.push(payload.data);
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
         },
-        COMPANY_UPDATED(state, payload) {
+        ATTRACTION_UPDATED(state, payload) {
             const { data } = payload;
             state.data = [...state.data, ...data]
             state.loading = false;
             state.error = false;
             state.errorMessage = '';;
         },
-        COMPANY_REMOVED(state, payload) {
+        ATTRACTION_REMOVED(state, payload) {
             const { data } = payload;
             const itemIndex = state.data.indexOf(data)
             state.data.splice(itemIndex, 1)
@@ -51,7 +51,7 @@ export default {
             state.errorMessage = '';
 
         },
-        COMPANY_ERROR(state, payload) {
+        ATTRACTION_ERROR(state, payload) {
             state.error = true;
             state.loading = false;
             state.errorMessage = payload.error
@@ -59,58 +59,57 @@ export default {
     },
     actions: {
         fetch({ commit, rootState, dispatch }) {
-            commit(COMPANY_INIT);
-            const companies = dbInstance.db().collection(COLLECTION).get();
+            commit(ATTRACTION_INIT);
+            const attractions = dbInstance.db().collection(COLLECTION).get();
             const data = []
-            companies.then((querySnapshot) => {
+            attractions.then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const id = doc.id;
                     const _m = Object.assign({}, { ...doc.data(), id })
-                    data.push(company(_m))
+                    data.push(attraction(_m))
                 })
-                commit(COMPANY_FETCHED, { data })
+                commit(ATTRACTION_FETCHED, { data })
             })
                 .catch(error => {
-                    commit(COMPANY_ERROR, { error });
+                    commit(ATTRACTION_ERROR, { error });
                 })
         },
 
         store({ commit, rootState, dispatch }, payload) {
-            commit(COMPANY_INIT);
+            commit(ATTRACTION_INIT);
             dbInstance.db().collection(COLLECTION).add(payload)
                 .then(docRef => {
                     const data = { id: docRef.id, ...payload };
-                    commit(COMPANY_ADDED, { data })
+                    commit(ATTRACTION_ADDED, { data })
                 })
                 .catch(error => {
-                    commit(COMPANY_ERROR, { error });
+                    commit(ATTRACTION_ERROR, { error });
                 });
 
         },
         update({ commit, rootState, dispatch }, payload) {
-            commit(COMPANY_INIT);
+            commit(ATTRACTION_INIT);
             dbInstance.db().collection(COLLECTION).doc(payload.id).set(payload)
                 .then(result => {
                     const data = payload
-                    commit(COMPANY_UPDATED, { data })
+                    commit(ATTRACTION_UPDATED, { data })
                 })
                 .catch(error => {
-                    commit(COMPANY_ERROR, { error });
+                    commit(ATTRACTION_ERROR, { error });
                 });
         },
         remove({ commit, rootState, dispatch }, payload) {
-            commit(COMPANY_INIT);
+            commit(ATTRACTION_INIT);
             dbInstance.db().collection(COLLECTION).doc(payload.id).delete()
                 .then(result => {
-                    commit(COMPANY_REMOVED, { data: payload })
+                    commit(ATTRACTION_REMOVED, { data: payload })
                 })
                 .catch(error => {
-                    commit(COMPANY_ERROR, { error });
+                    commit(ATTRACTION_ERROR, { error });
                 });
         },
     },
     getters: {
-        companies: state => state.data
-
+        attractions: () => state => state.data
     }
 }
