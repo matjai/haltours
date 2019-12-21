@@ -111,6 +111,14 @@ export default {
         },
     },
     getters: {
-        attractions: () => state => state.data
+        attractions: () => state => state.data,
+        mapAttractionByCollectionId: state => {
+            const data = {};
+            state.data.map((attraction) => {
+                data[attraction.id] = attraction.name;
+            });
+
+            return data;
+        }
     }
 };

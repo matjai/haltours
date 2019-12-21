@@ -99,12 +99,18 @@
                                 contain
                               ></v-img>
                             </div>
+                            
+                          </v-row>
+                          <v-row>
                             <v-file-input
                               accept="image/*"
                               label="Image"
                               @change="onUploadHero($event)"
                               prepend-icon="mdi-camera"
                             ></v-file-input>
+                            
+                          </v-row>
+                          <v-row>
                             <div v-if="heroIsUploading">
                               <p>
                                 <progress id="progress" :value="uploadValueOfHero" max="100"></progress>
@@ -180,6 +186,7 @@
 
 <script>
 import firebase from "firebase";
+import { v1 as uuid } from 'uuid';
 
 export default {
   data: () => ({
@@ -200,6 +207,7 @@ export default {
       { text: "Destination", value: "destinationID" },
       { text: "Actions", value: "action", sortable: false }
     ],
+    imageid: null,
     companiesLabel: {},
     destinationLabel: [],
     companies: null,
@@ -309,12 +317,13 @@ export default {
     },
 
     onUploadHero($event) {
+      this.imageid = uuid();
       this.heroIsUploading = true;
       this.uploadValueOfHero = 0;
       this.imageData = event.target.files[0];
       const storageRef = firebase
         .storage()
-        .ref(`${this.imageData.name}`)
+        .ref(`attractions/${this.editedItem.id}/${this.imageid}`)
         .put(this.imageData);
       storageRef.on(
         `state_changed`,
