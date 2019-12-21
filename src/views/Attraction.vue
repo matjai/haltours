@@ -1,21 +1,5 @@
 <template>
   <v-container fluid class="pa-2 mt-10">
-    <!-- <v-toolbar flat>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Haltours Destination Management</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-toolbar-items>
-        <v-btn text>ABOUT US</v-btn>
-        <v-btn text>CONTACT</v-btn>
-        <v-btn text>SOCIALS</v-btn>
-      </v-toolbar-items>
-      <v-btn icon to="/login">
-        <v-icon>mdi-export</v-icon>
-      </v-btn>
-    </v-toolbar>-->
     <v-layout>
       <v-flex>
         <div class="about d-block pa-2">
@@ -105,28 +89,28 @@
                               ></v-select>
                             </v-col>
                           </v-row>
-                          
+
                           <v-row>
-                                <div v-if="editedItem.heroURL!=null">
-                                    <v-img
-                                    :src="editedItem.heroURL"
-                                    height="125"
-                                    class="grey darken-4"
-                                    contain
-                                    ></v-img>
-                                </div>
-                                <v-file-input
-                                    accept="image/*"
-                                    label="Image"
-                                    @change="onUploadHero($event)"
-                                    prepend-icon="mdi-camera"
-                                ></v-file-input>
-                                <div v-if="heroIsUploading">
-                                    <p>
-                                    <progress id="progress" :value="uploadValueOfHero" max="100"></progress>
-                                    {{uploadValueOfHero.toFixed()+"%"}}
-                                    </p>
-                                </div>
+                            <div v-if="editedItem.heroURL!=null">
+                              <v-img
+                                :src="editedItem.heroURL"
+                                height="125"
+                                class="grey darken-4"
+                                contain
+                              ></v-img>
+                            </div>
+                            <v-file-input
+                              accept="image/*"
+                              label="Image"
+                              @change="onUploadHero($event)"
+                              prepend-icon="mdi-camera"
+                            ></v-file-input>
+                            <div v-if="heroIsUploading">
+                              <p>
+                                <progress id="progress" :value="uploadValueOfHero" max="100"></progress>
+                                {{uploadValueOfHero.toFixed()+"%"}}
+                              </p>
+                            </div>
                           </v-row>
                           <v-row>
                             <v-col>
@@ -152,13 +136,11 @@
             </template>
 
             <template v-slot:item.companyID="{ item }">
-               {{companiesLabel[item.companyID]}}
+              <p>{{companies.loading ? 'loading...' : getCompanyLabels[item.companyID] }}</p>
             </template>
 
-            <template v-slot:item.destinationID="{ item }">
-               {{destinationLabel[item.destinationID]}}
-            </template>
-            
+            <template v-slot:item.destinationID="{ item }">{{destinationLabel[item.destinationID]}}</template>
+
             <template v-slot:item.action="{ item }">
               <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
               <v-icon small @click="deleteItem(item)">delete</v-icon>
@@ -246,7 +228,11 @@ export default {
     }
   }),
 
-  computed: {},
+  computed: {
+    getCompanyLabels() {
+      return this.$store.getters["companies/mapCompanyByCollectionId"];
+    }
+  },
 
   watch: {
     dialog(val) {
@@ -255,20 +241,16 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("attractions/fetch");
     this.$store.dispatch("companies/fetch");
+    this.$store.dispatch("attractions/fetch");
     this.initialize();
   },
 
   methods: {
     initialize() {
       this.attractions = this.$store.state.attractions;
-      
       this.companies = this.$store.state.companies;
-      this.companies.data.forEach(data => {
-        this.companiesLabel[data.id] = data.name;
-      });
-      console.log("companies label",this.companiesLabel);
+
       this.destination = [
         {
           id: 1,
@@ -279,9 +261,6 @@ export default {
           name: "Kuala Terengganu"
         }
       ];
-      this.destination.forEach(data => {
-        this.destinationLabel[data.id] = data.name;
-      });
     },
 
     indexSelected(item) {
@@ -296,7 +275,9 @@ export default {
 
     deleteItem(item) {
       const index = this.attractions.data.indexOf(item);
-      const x = confirm("Are you sure you want to delete this attraction record?");
+      const x = confirm(
+        "Are you sure you want to delete this attraction record?"
+      );
       if (x) {
         this.$store.dispatch("attractions/remove", item);
         this.snackbar = true;
@@ -354,9 +335,8 @@ export default {
       );
     },
 
-    testClick($event){
-        console.log(this.editedItem);
-        
+    testClick($event) {
+      console.log(this.editedItem);
     }
   }
 };
