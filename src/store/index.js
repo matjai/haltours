@@ -1,6 +1,7 @@
 import login from "@/store/login";
 import user from "@/store/user";
-
+import lookup from "@/store/lookup";
+import destination from "@/store/destination";
 import Vue from "vue";
 import Vuex from "vuex";
 import { vuexfireMutations } from 'vuexfire';
@@ -10,9 +11,10 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
 import config from "./firebase";
+import UUID from 'vue-uuid';
 
 firebase.initializeApp(config);
-Vue.use(Vuex);
+Vue.use(Vuex,UUID);
 
 const fstore = firebase.firestore();
 const fauth = firebase.auth();
@@ -34,6 +36,8 @@ export default new Vuex.Store({
   mutations: vuexfireMutations,
   modules: {
     login,
-    user
+    user,
+    lookup,
+    destination
   }
 });
