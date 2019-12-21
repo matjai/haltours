@@ -4,6 +4,7 @@ import Login from "./views/Login";
 import Home from "./views/Home";
 import Staff from "./views/Staff";
 import Company from "./views/Company";
+import Attraction from "./views/Attraction";
 
 Vue.use(Router);
 
@@ -35,6 +36,11 @@ export default new Router({
       path: "/companies",
       name: "companies",
       component: Company
+    },
+    {
+      path: "/attractions",
+      name: "attractions",
+      component: Attraction
     },
 
   ]

@@ -2,6 +2,7 @@ import login from "@/store/login";
 import user from "@/store/user";
 import staffs from "@/store/staffs";
 import companies from "@/store/companies";
+import attractions from "@/store/attractions";
 import roles from "@/store/roles";
 
 import Vue from "vue";
@@ -50,7 +51,9 @@ const state = {
   user: null,
   staffs: null,
   companies: null,
-  roles: null
+  roles: null,
+  attractions
+
 };
 
 export default new Vuex.Store({
@@ -62,6 +65,7 @@ export default new Vuex.Store({
     user,
     staffs,
     companies,
-    roles
+    roles,
+    attractions
   }
 });
