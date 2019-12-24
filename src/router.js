@@ -24,7 +24,7 @@ export default new Router({
       path: "/requestForms", name: "requestForms", component: RequestForm
     },
     {
-      path: "/requestForms/create/:company", name: "requestFormsNew", component: RequestFormCreate
+      path: "/requestForms/forms/:company", name: "requestFormsNew", component: RequestFormCreate
     }
   ]
 });
