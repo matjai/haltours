@@ -232,6 +232,7 @@
 
 <script>
 import firebase from "firebase";
+import { v1 as uuid } from 'uuid';
 
 export default {
   data: () => ({
@@ -253,7 +254,7 @@ export default {
       { text: "Countries", value: "countryID" },
       { text: "Actions", value: "action", sortable: false }
     ],
-    countriesLabel: [],
+    imageid: null,
     snackbar: false,
     top: true,
     right: true,
@@ -317,9 +318,7 @@ export default {
           name: "Indonesia"
         }
       ];
-      this.countries.forEach(data => {
-        this.countriesLabel[data.id] = data.name;
-      });
+      
     },
 
     indexSelected(item) {
@@ -368,12 +367,13 @@ export default {
     },
 
     onUploadLogo($event) {
+      this.imageid = uuid();
       this.logoIsUploading = true;
       this.uploadValueOfLogo = 0;
       this.imageData = event.target.files[0];
       const storageRef = firebase
         .storage()
-        .ref(`${this.imageData.name}`)
+        .ref(`companies/${this.editedItem.id}/${this.imageid}`)
         .put(this.imageData);
       storageRef.on(
         `state_changed`,
@@ -395,12 +395,13 @@ export default {
     },
 
     onUploadHero($event) {
+      this.imageid = uuid();
       this.heroIsUploading = true;
       this.uploadValueOfHero = 0;
       this.imageData = event.target.files[0];
       const storageRef = firebase
         .storage()
-        .ref(`${this.imageData.name}`)
+        .ref(`companies/${this.editedItem.id}/${this.imageid}`)
         .put(this.imageData);
       storageRef.on(
         `state_changed`,

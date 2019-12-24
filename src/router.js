@@ -8,6 +8,8 @@ import Countrylookup from "./views/Countrylookup.vue";
 import Staff from "./views/Staff";
 import Company from "./views/Company";
 import Attraction from "./views/Attraction";
+import RequestForm from "./views/RequestForm";
+import RequestFormCreate from "./views/subviews/RequestFormCreate";
 
 Vue.use(Router);
 
@@ -53,5 +55,11 @@ export default new Router({
     { path: "/staffs", name: "staffs", component: Staff },
     { path: "/companies", name: "companies", component: Company },
     { path: "/attractions", name: "attractions", component: Attraction },
+    {
+      path: "/requestForms", name: "requestForms", component: RequestForm
+    },
+    {
+      path: "/requestForms/forms/:company", name: "requestFormsNew", component: RequestFormCreate
+    }
   ]
 });

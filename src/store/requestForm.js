@@ -1,13 +1,14 @@
 import dbInstance from './db';
-import attraction from './models/attraction';
+import requestForm from './models/requestForm';
+
 import {
-    ATTRACTION_ERROR, ATTRACTION_FETCHED,
-    ATTRACTION_ADDED, ATTRACTION_UPDATED,
-    ATTRACTION_REMOVED, ATTRACTION_INIT
+    REQUEST_FORM_ERROR, REQUEST_FORM_FETCHED,
+    REQUEST_FORM_ADDED, REQUEST_FORM_UPDATED,
+    REQUEST_FORM_REMOVED, REQUEST_FORM_INIT
 } from '../../constant';
 
 
-const COLLECTION = 'attractions';
+const COLLECTION = 'requestForms';
 
 export default {
     namespaced: true,
@@ -18,31 +19,31 @@ export default {
         errorMessage: ''
     },
     mutations: {
-        ATTRACTION_INIT(state, payload) {
+        REQUEST_FORM_INIT(state, payload) {
             state.loading = true;
             state.error = false;
             state.errorMessage = '';
         },
-        ATTRACTION_FETCHED(state, payload) {
+        REQUEST_FORM_FETCHED(state, payload) {
             state.data = payload.data;
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
         },
-        ATTRACTION_ADDED(state, payload) {
+        REQUEST_FORM_ADDED(state, payload) {
             state.data.push(payload.data);
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
         },
-        ATTRACTION_UPDATED(state, payload) {
+        REQUEST_FORM_UPDATED(state, payload) {
             const { data } = payload;
             state.data = [...state.data, ...data];
             state.loading = false;
             state.error = false;
             state.errorMessage = '';;
         },
-        ATTRACTION_REMOVED(state, payload) {
+        REQUEST_FORM_REMOVED(state, payload) {
             const { data } = payload;
             const itemIndex = state.data.indexOf(data);
             state.data.splice(itemIndex, 1);
@@ -51,7 +52,7 @@ export default {
             state.errorMessage = '';
 
         },
-        ATTRACTION_ERROR(state, payload) {
+        REQUEST_FORM_ERROR(state, payload) {
             state.error = true;
             state.loading = false;
             state.errorMessage = payload.error;
@@ -59,7 +60,7 @@ export default {
     },
     actions: {
         fetch({ commit, rootState, dispatch }) {
-            commit(ATTRACTION_INIT);
+            commit(REQUEST_FORM_INIT);
             const attractions = dbInstance.db().collection(COLLECTION).get();
             const data = [];
             attractions.then((querySnapshot) => {
@@ -67,58 +68,64 @@ export default {
 
                     const id = doc.id;
                     const _m = Object.assign({}, { ...doc.data(), id });
-                    data.push(attraction(_m));
+                    data.push(requestForm(_m));
                 });
-                commit(ATTRACTION_FETCHED, { data });
+                commit(REQUEST_FORM_FETCHED, { data });
             })
                 .catch(error => {
-                    commit(ATTRACTION_ERROR, { error });
+                    commit(REQUEST_FORM_ERROR, { error });
                 });
         },
 
         store({ commit, rootState, dispatch }, payload) {
-            commit(ATTRACTION_INIT);
-            dbInstance.db().collection(COLLECTION).add(payload)
-                .then(docRef => {
-                    const data = { id: docRef.id, ...payload };
-                    commit(ATTRACTION_ADDED, { data });
-                })
-                .catch(error => {
-                    commit(ATTRACTION_ERROR, { error });
-                });
+            commit(REQUEST_FORM_INIT);
+            return new Promise((resolve, reject) => {
+                dbInstance.db().collection(COLLECTION)
+                    .add(payload.data)
+                    .then(docRef => {
+                        const data = { id: docRef.id, ...payload };
+                        resolve({ data });
+                        commit(REQUEST_FORM_ADDED, { data });
+                    })
+                    .catch(error => {
+                        reject({ error });
+                        commit(REQUEST_FORM_ERROR, { error });
+                    });
+            });
 
         },
         update({ commit, rootState, dispatch }, payload) {
-            commit(ATTRACTION_INIT);
-            dbInstance.db().collection(COLLECTION).doc(payload.id).set(payload)
-                .then(result => {
-                    const data = payload;
-                    commit(ATTRACTION_UPDATED, { data });
-                })
-                .catch(error => {
-                    commit(ATTRACTION_ERROR, { error });
-                });
+            commit(REQUEST_FORM_INIT);
+
+            return new Promise((resolve, reject) => {
+
+                console.log(payload);
+                dbInstance.db().collection(COLLECTION).doc(payload.id)
+                    .set(payload.data)
+                    .then(result => {
+                        const data = payload;
+                        resolve(data);
+                        commit(REQUEST_FORM_UPDATED, { data });
+                    })
+                    .catch(error => {
+                        reject(error);
+
+                        commit(REQUEST_FORM_ERROR, { error });
+                    });
+            });
         },
         remove({ commit, rootState, dispatch }, payload) {
-            commit(ATTRACTION_INIT);
+            commit(REQUEST_FORM_INIT);
             dbInstance.db().collection(COLLECTION).doc(payload.id).delete()
                 .then(result => {
-                    commit(ATTRACTION_REMOVED, { data: payload });
+                    commit(REQUEST_FORM_REMOVED, { data: payload });
                 })
                 .catch(error => {
-                    commit(ATTRACTION_ERROR, { error });
+                    commit(REQUEST_FORM_ERROR, { error });
                 });
         },
     },
     getters: {
-        attractions: () => state => state.data,
-        mapAttractionByCollectionId: state => {
-            const data = {};
-            state.data.map((attraction) => {
-                data[attraction.id] = attraction.name;
-            });
-
-            return data;
-        }
+        requestForms: () => state => state.data
     }
 };
