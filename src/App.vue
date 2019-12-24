@@ -57,6 +57,7 @@ export default {
       { title: "Companies", icon: "dashboard", route: "companies" },
       { title: "Staffs", icon: "dashboard", route: "staffs" },
       { title: "Attractions", icon: "dashboard", route: "attractions" },
+      { title: "Request Forms", icon: "dashboard", route: "requestForms" },
       { title: "About", icon: "question_answer", route: null }
     ]
   }),
@@ -74,9 +75,9 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch('logout').then(() => {
-        this.$router.push("/")
-      })
+      this.$store.dispatch("logout").then(() => {
+        this.$router.push("/");
+      });
     }
   }
 };
