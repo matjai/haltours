@@ -83,8 +83,6 @@ export default {
                 dbInstance.db().collection(COLLECTION)
                     .add(payload.data)
                     .then(docRef => {
-                        console.log(docRef);
-
                         const data = { id: docRef.id, ...payload };
                         resolve({ data });
                         commit(REQUEST_FORM_ADDED, { data });
@@ -99,14 +97,22 @@ export default {
         update({ commit, rootState, dispatch }, payload) {
             commit(REQUEST_FORM_INIT);
 
-            dbInstance.db().collection(COLLECTION).doc(payload.id).set(payload)
-                .then(result => {
-                    const data = payload;
-                    commit(REQUEST_FORM_UPDATED, { data });
-                })
-                .catch(error => {
-                    commit(REQUEST_FORM_ERROR, { error });
-                });
+            return new Promise((resolve, reject) => {
+
+                console.log(payload);
+                dbInstance.db().collection(COLLECTION).doc(payload.id)
+                    .set(payload.data)
+                    .then(result => {
+                        const data = payload;
+                        resolve(data);
+                        commit(REQUEST_FORM_UPDATED, { data });
+                    })
+                    .catch(error => {
+                        reject(error);
+
+                        commit(REQUEST_FORM_ERROR, { error });
+                    });
+            });
         },
         remove({ commit, rootState, dispatch }, payload) {
             commit(REQUEST_FORM_INIT);

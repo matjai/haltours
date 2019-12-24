@@ -13,6 +13,7 @@
                   prepend-inner-icon="mdi-airplane-takeoff"
                   placeholder="Departure To"
                   outlined
+                  v-model="defaultItem.departureTo"
                 ></v-text-field>
               </v-col>
 
@@ -21,6 +22,7 @@
                   label="Return From"
                   prepend-inner-icon="mdi-airplane-takeoff"
                   placeholder="Return From"
+                  v-model="defaultItem.returnFrom"
                   outlined
                 ></v-text-field>
               </v-col>
@@ -28,14 +30,14 @@
               <v-col cols="12" sm="6" md="6">
                 <v-dialog
                   ref="dialog"
-                  v-model="departureModal"
-                  :return-value.sync="defaultItem.departureDate"
+                  v-model="modal"
+                  :return-value.sync="date"
                   persistent
                   width="290px"
                 >
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="defaultItem.departureDate"
+                      v-model="date"
                       label="Departure Date"
                       placeholder="Departure Date"
                       prepend-inner-icon="event"
@@ -44,9 +46,9 @@
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker v-model="defaultItem.departureDate" scrollable>
+                  <v-date-picker v-model="date" scrollable>
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="departureModal = false">Cancel</v-btn>
+                    <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
                     <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
                   </v-date-picker>
                 </v-dialog>
@@ -90,9 +92,12 @@
               </v-col>
 
               <v-col cols="12" sm="6" md="6" xs="6">
-                <v-text-field label="Number of Night"
-                v-model="defaultItem.noOfNight"
-                 placeholder="Number of Nights" outlined></v-text-field>
+                <v-text-field
+                  label="Number of Night"
+                  v-model="defaultItem.noOfNight"
+                  placeholder="Number of Nights"
+                  outlined
+                ></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6" md="6" xs="6">
@@ -109,12 +114,15 @@
               </v-col>
 
               <v-col cols="12" sm="6" md="6" xs="6">
-                <v-text-field label="Meal Remarks" 
-                v-model="defaultItem.mealRemark"
-                placeholder="Meal Remarks" outlined></v-text-field>
+                <v-text-field
+                  label="Meal Remarks"
+                  v-model="defaultItem.mealRemark"
+                  placeholder="Meal Remarks"
+                  outlined
+                ></v-text-field>
               </v-col>
 
-                   <v-col cols="12" sm="6" md="6" xs="6">
+              <v-col cols="12" sm="6" md="6" xs="6">
                 <v-autocomplete
                   v-model="values"
                   :items="items"
@@ -178,7 +186,9 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="save()">Submit</v-btn>
+            <v-btn color="primary" @click="save()" :disabled="isSubmit">
+              <v-progress-circular size="20" indeterminate flat v-if="isSubmit"></v-progress-circular>Submit
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -195,8 +205,18 @@ import NotificationMixin from "../mixins/NotificationMixin";
 import ValidationMixin from "../mixins/NotificationMixin";
 export default {
   mixins: [ValidationMixin, NotificationMixin],
+  created() {
+    this.editMode = this.$router.currentRoute.query.edit ? true : false;
+    this.$store.dispatch("requestForms/fetch");
+
+    this.initialize();
+  },
   data() {
     return {
+      date: new Date().toISOString().substr(0, 10),
+      modal: false,
+      isSubmit: false,
+      editMode: false,
       defaultItem: {
         departureTo: null,
         departureDate: null,
@@ -213,7 +233,7 @@ export default {
         requestStaffId: null,
         requesteeCompanyId: null,
         requesteeStaffId: null,
-        dueDate:null
+        dueDate: null
       },
       departureModal: false,
       returnModal: false,
@@ -224,21 +244,63 @@ export default {
     };
   },
   methods: {
-    save() {
-      this.$store.dispatch('requestForms/store',{
-          company: this.$router.currentRoute.params.company,
-          data:this.defaultItem
+    initialize() {
+      const companyId = this.$router.currentRoute.params.company;
+
+      if (this.editMode) {
+        //overlap our default item
+        const item = this.$store.state.requestForms.data.filter(
+          item => item.id == companyId
+        );
+
+        if (item[0]) {
+          this.defaultItem = { ...this.defaultItem, ...item[0] };
+          console.log(this.defaultItem);
         }
-        )
-      .then((result) => {
-        this.showToast("Successfully create request form.");
-        setTimeout(() => {
-            this.$router.go(-1);
-        }, 2000);
-      })
-      .catch(error => {
-        console.log(error)
-      })
+      }
+    },
+    save() {
+      this.isSubmit = true;
+
+      if (this.editMode) {
+        this.$store
+          .dispatch("requestForms/update", {
+            id: this.$router.currentRoute.params.company,
+            data: this.defaultItem
+          })
+          .then(result => {
+            this.isSubmit = false;
+            this.showToast("Request from is saved.");
+            setTimeout(() => {
+              this.$router.go(-1);
+            }, 2000);
+          })
+          .catch(error => {
+            this.isSubmit = false;
+
+            console.log(error);
+          });
+      } else if (!this.editMode) {
+        this.isSubmit = true;
+
+        this.$store
+          .dispatch("requestForms/store", {
+            company: this.$router.currentRoute.params.company,
+            data: this.defaultItem
+          })
+          .then(result => {
+            this.isSubmit = false;
+
+            this.showToast("Request from is submitted.");
+            setTimeout(() => {
+              this.$router.go(-1);
+            }, 2000);
+          })
+          .catch(error => {
+            this.isSubmit = false;
+            console.log(error);
+          });
+      }
     }
   }
 };

@@ -113,16 +113,15 @@ export default {
         sortable: false
       },
       { text: "Departure To", value: "departureTo" },
-      { text: "Departure Date", value: "departureDate" },
       { text: "Return From", value: "returnFrom" },
+      { text: "Departure Date", value: "departureDate" },
       { text: "Return Date", value: "returnDate" },
       { text: "Pax Number", value: "paxNo" },
-      { text: "Destination", value: "mealRemark" },
-      { text: "No of Night", value: "dateOfNight" },
+      { text: "No of Night", value: "noOfNight" },
       { text: "Destination", value: "destination" },
       { text: "Due Date", value: "dueDate" },
       { text: "Date Request", value: "dateRequest" },
-      { text: "Date Request", value: "action" }
+      { text: "Action", value: "action" }
     ],
     top: true,
     right: true,
@@ -171,7 +170,6 @@ export default {
       this.attractions = this.$store.state.attractions;
       this.companies = this.$store.state.companies;
       this.requestForms = this.$store.state.requestForms;
-
     },
     createForm() {
       return this.$router.push({
@@ -188,9 +186,9 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.$router.push({
         name: "requestFormsNew",
-        query:{edit:true},
-        params: {company: item.id}
-        })
+        query: { edit: true },
+        params: { company: item.id }
+      });
     },
 
     deleteItem(item) {
@@ -219,7 +217,10 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.requestForms.data[this.editedIndex], this.editedItem);
+        Object.assign(
+          this.requestForms.data[this.editedIndex],
+          this.editedItem
+        );
         this.$store.dispatch("requestF/update", this.editedItem);
       } else {
       }
