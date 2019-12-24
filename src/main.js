@@ -6,6 +6,8 @@ import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false;
 
+const LANDING_PAGE = '/companies'
+
 new Vue({
   router,
   store,
@@ -18,10 +20,13 @@ new Vue({
         store.dispatch('bindUser', { userId: user.uid })
           .then(() => {
             store.commit('login')
-            if (router.currentRoute.name.toLowerCase() === 'login') router.push("/main").catch(err => { })
+            if (router.currentRoute.name.toLowerCase() === 'login') router.push(LANDING_PAGE).catch(err => { })
           })
         //console.log(user) //REFACTOR function getUser
-      } else console.log('No active login.')
+      } else {
+        console.log('No active login.')
+        router.push("/")
+      }
     });
   }
 }).$mount("#app");

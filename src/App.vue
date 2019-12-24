@@ -7,7 +7,7 @@
         <span class="font-weight-light">MATERIAL DESIGN</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="$store.dispatch('logout')" class="elevation-0">
+      <v-btn @click="logout" class="elevation-0">
         <span class="mr-2">Logout</span>
       </v-btn>
     </v-app-bar>
@@ -56,22 +56,28 @@ export default {
       { title: "Home", icon: "dashboard", route: null },
       { title: "Companies", icon: "dashboard", route: "companies" },
       { title: "Staffs", icon: "dashboard", route: "staffs" },
-      { title: "Attractions", icon: "dashboard", route: null },
+      { title: "Attractions", icon: "dashboard", route: "attractions" },
       { title: "About", icon: "question_answer", route: null }
     ]
   }),
-  watch: {
-    isLoggedIn(val) {
-      if (!val) {
-        this.$router.push("/");
-      }
-    }
-  },
+  // watch: {
+  //   isLoggedIn(val) { //if user exist, push to restricted landing page
+  //     if (!val) {
+  //       this.$router.push("/companies");
+  //     }
+  //   }
+  // },
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
     }
   },
-  methods: {}
+  methods: {
+    logout() {
+      this.$store.dispatch('logout').then(() => {
+        this.$router.push("/")
+      })
+    }
+  }
 };
 </script>
