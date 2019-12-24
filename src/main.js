@@ -8,7 +8,11 @@ import VueAxios from 'vue-axios';
 
 Vue.config.productionTip = false;
 
+<<<<<<< HEAD
 Vue.use(VueAxios, axios);
+=======
+const LANDING_PAGE = '/companies'
+>>>>>>> origin/master
 
 new Vue({
   router,
@@ -20,12 +24,15 @@ new Vue({
       if (user) {
         console.log('user logged in')
         store.dispatch('bindUser', { userId: user.uid })
-        .then(() => {
-          store.commit('login')
-          if(router.currentRoute.name.toLowerCase() === 'login') router.push("/main").catch(err => {})
-        })
+          .then(() => {
+            store.commit('login')
+            if (router.currentRoute.name.toLowerCase() === 'login') router.push(LANDING_PAGE).catch(err => { })
+          })
         //console.log(user) //REFACTOR function getUser
-      } else console.log('No active login.')
+      } else {
+        console.log('No active login.')
+        router.push("/")
+      }
     });
   }
 }).$mount("#app");
