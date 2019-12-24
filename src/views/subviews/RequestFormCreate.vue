@@ -29,13 +29,13 @@
                 <v-dialog
                   ref="dialog"
                   v-model="departureModal"
-                  :return-value.sync="departureDate"
+                  :return-value.sync="defaultItem.departureDate"
                   persistent
                   width="290px"
                 >
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="departureDate"
+                      v-model="defaultItem.departureDate"
                       label="Departure Date"
                       placeholder="Departure Date"
                       prepend-inner-icon="event"
@@ -44,7 +44,7 @@
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker v-model="departureDate" scrollable>
+                  <v-date-picker v-model="defaultItem.departureDate" scrollable>
                     <v-spacer></v-spacer>
                     <v-btn text color="primary" @click="departureModal = false">Cancel</v-btn>
                     <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
@@ -56,13 +56,13 @@
                 <v-dialog
                   ref="dialog"
                   v-model="returnModal"
-                  :return-value.sync="returnDate"
+                  :return-value.sync="defaultItem.returnDate"
                   persistent
                   width="290px"
                 >
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="returnDate"
+                      v-model="defaultItem.returnDate"
                       label="Return Date"
                       placeholder="Return Date"
                       prepend-inner-icon="event"
@@ -71,7 +71,7 @@
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker v-model="returnDate" scrollable>
+                  <v-date-picker v-model="defaultItem.returnDate" scrollable>
                     <v-spacer></v-spacer>
                     <v-btn text color="primary" @click="returnModal = false">Cancel</v-btn>
                     <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
@@ -82,6 +82,7 @@
               <v-col cols="12" sm="6" md="6" xs="6">
                 <v-text-field
                   label="Number of Pax"
+                  v-model="defaultItem.paxNo"
                   prepend-inner-icon="mdi-account-group-outline"
                   placeholder="Number of Pax"
                   outlined
@@ -89,7 +90,9 @@
               </v-col>
 
               <v-col cols="12" sm="6" md="6" xs="6">
-                <v-text-field label="Number of Night" placeholder="Number of Nights" outlined></v-text-field>
+                <v-text-field label="Number of Night"
+                v-model="defaultItem.noOfNight"
+                 placeholder="Number of Nights" outlined></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6" md="6" xs="6">
@@ -106,17 +109,36 @@
               </v-col>
 
               <v-col cols="12" sm="6" md="6" xs="6">
-                <v-text-field label="Meal Remarks" placeholder="Meal Remarks" outlined></v-text-field>
+                <v-text-field label="Meal Remarks" 
+                v-model="defaultItem.mealRemark"
+                placeholder="Meal Remarks" outlined></v-text-field>
+              </v-col>
+
+                   <v-col cols="12" sm="6" md="6" xs="6">
+                <v-autocomplete
+                  v-model="values"
+                  :items="items"
+                  outlined
+                  chips
+                  small-chips
+                  label="Destinations"
+                  placeholder="Destinations"
+                  multiple
+                ></v-autocomplete>
               </v-col>
 
               <v-col cols="12" sm="6" md="6" xs="6">
-                <v-text-field label="Destinations" placeholder="Destinations" outlined></v-text-field>
+                <v-autocomplete
+                  v-model="values"
+                  :items="items"
+                  outlined
+                  chips
+                  small-chips
+                  label="Tour Options"
+                  placeholder="Tour Options"
+                  multiple
+                ></v-autocomplete>
               </v-col>
-
-              <v-col cols="12" sm="6" md="6" xs="6">
-                <v-text-field label="Tour Options" placeholder="Tour Options" outlined></v-text-field>
-              </v-col>
-
               <v-col cols="12" sm="6" md="6" xs="6">
                 <v-text-field
                   label="Tour Options Remarks"
@@ -129,13 +151,13 @@
                 <v-dialog
                   ref="dialog"
                   v-model="dueDateModal"
-                  :return-value.sync="dueDate"
+                  :return-value.sync="defaultItem.dueDate"
                   persistent
                   width="290px"
                 >
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="dueDate"
+                      v-model="defaultItem.dueDate"
                       label="Due Date"
                       placeholder="Due Date"
                       prepend-inner-icon="event"
@@ -144,7 +166,7 @@
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker v-model="dueDate" scrollable>
+                  <v-date-picker v-model="defaultItem.dueDate" scrollable>
                     <v-spacer></v-spacer>
                     <v-btn text color="primary" @click="dueDateModal = false">Cancel</v-btn>
                     <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
@@ -156,7 +178,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="submit">Submit</v-btn>
+            <v-btn color="primary" @click="save()">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -175,20 +197,48 @@ export default {
   mixins: [ValidationMixin, NotificationMixin],
   data() {
     return {
+      defaultItem: {
+        departureTo: null,
+        departureDate: null,
+        returnFrom: null,
+        returnDate: null,
+        paxNo: null,
+        mealType: null,
+        noOfNight: null,
+        mealRemark: null,
+        destination: null,
+        tourOption: null,
+        tourOptionRemark: null,
+        requestorCompanyId: null,
+        requestStaffId: null,
+        requesteeCompanyId: null,
+        requesteeStaffId: null,
+        dueDate:null
+      },
       departureModal: false,
       returnModal: false,
-      departureDate: null,
-      returnDate: null,
       dueDateModal: false,
-      dueDate: null,
-      items: ["foo", "bar", "fizz", "buzz"],
-      values: ["foo", "bar"],
+      items: ["Type A", "Type B", "Type C", "Type D"],
+      values: ["Type A", "Type B"],
       value: null
     };
   },
   methods: {
-    submit() {
-      this.showToast("submit complex form");
+    save() {
+      this.$store.dispatch('requestForms/store',{
+          company: this.$router.currentRoute.params.company,
+          data:this.defaultItem
+        }
+        )
+      .then((result) => {
+        this.showToast("Successfully create request form.");
+        setTimeout(() => {
+            this.$router.go(-1);
+        }, 2000);
+      })
+      .catch(error => {
+        console.log(error)
+      })
     }
   }
 };

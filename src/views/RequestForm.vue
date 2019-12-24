@@ -49,6 +49,9 @@
                                 :loading="companies.loading"
                                 item-text="name"
                                 item-value="id"
+                                outlined
+                                label="Select Company"
+                                placeholder="Select Company"
                                 v-model="selectedCompany"
                               ></v-select>
                             </v-col>
@@ -169,7 +172,6 @@ export default {
       this.companies = this.$store.state.companies;
       this.requestForms = this.$store.state.requestForms;
 
-      console.log(this.requestForms);
     },
     createForm() {
       return this.$router.push({
@@ -184,7 +186,11 @@ export default {
     editItem(item) {
       this.editedIndex = this.requestForms.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+      this.$router.push({
+        name: "requestFormsNew",
+        query:{edit:true},
+        params: {company: item.id}
+        })
     },
 
     deleteItem(item) {
@@ -193,7 +199,7 @@ export default {
         "Are you sure you want to delete this attraction record?"
       );
       if (x) {
-        //this.$store.dispatch("attractions/remove", item);
+        this.$store.dispatch("requestForms/remove", item);
         this.snackbar = true;
       }
     },
@@ -213,10 +219,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.requestF.data[this.editedIndex], this.editedItem);
+        Object.assign(this.requestForms.data[this.editedIndex], this.editedItem);
         this.$store.dispatch("requestF/update", this.editedItem);
       } else {
-        this.$store.dispatch("requestF/store", this.editedItem);
       }
 
       this.close();
