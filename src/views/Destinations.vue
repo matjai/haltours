@@ -37,10 +37,12 @@
           <v-col cols="3" v-for="destination in loadDestination" v-bind:key="destination.id">
             <v-card>
               <v-card-text>
-                <div>{{destination.name}}</div>
-                <p class="display-1 text--primary">
-
-                </p>
+                
+                <div><v-btn @click="editDestination(destination.id)" class="mb-1" color="primary"  text small>{{destination.name}}</v-btn> <v-menu offset-y>
+      <v-list>
+ 
+      </v-list>
+    </v-menu></div>
                 <v-img :src="destination.fileUrl" aspect-ratio="1" max-height="200" max-width="500"
                   class="grey lighten-2"></v-img>
                 <p>{{destination.otherName}}</p>
@@ -84,6 +86,7 @@
 
 <script>
   import _ from 'lodash';
+  import router from "../router";
   export default {
     data: () => ({
       destList: null,
@@ -125,6 +128,10 @@
         this.dialogInfo=true
         this.infoForSummary = info
       },
+      editDestination(desId){
+          // "/destinations/:companyId/:action/:destinationId",
+          router.push(`/destinations/${this.$route.params.companyId}/edit/${desId}`)
+      }
     }
   };
 </script>

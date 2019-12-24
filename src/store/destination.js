@@ -4,7 +4,8 @@ import _ from 'lodash';
 export default {
   state: {
       companyInfo:null,
-      companyDesitnation:[]
+      companyDesitnation:[],
+      destination:null
   },
   mutations: {},
   actions: {
@@ -24,7 +25,13 @@ export default {
         console.log(payload)
         // let query =  await context.rootState.db
         //   .collection("destinations").doc(payload[0]).set(payload[1])
-        let colluid = uuid.v1()
+        let colluid = null
+        if(payload[3]==true){
+          colluid = payload[4]
+        } else {
+          colluid = uuid.v1()
+        }
+
         const storageRef = await context.rootState.fs.ref(`destinations/${payload[0]}/${colluid}.jpeg`).put(payload[2]);
         storageRef.ref.getDownloadURL().then( async downloadURL=> {
           console.log("File available at", downloadURL);
@@ -40,8 +47,14 @@ export default {
         .doc(payload)
         return context.bindFirestoreRef("companyDesitnation", query);
       }),
+      getDestinationInfo:firestoreAction( async (context, payload) => {
+        let query =  await context.rootState.db
+        .collection("destinations")
+        .doc(`${payload[0]}`)
+        
+        return query.get();
+      }),
   },
 
-  
   getters: {}
 };

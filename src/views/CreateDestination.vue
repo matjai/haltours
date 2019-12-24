@@ -27,14 +27,13 @@
 
             <v-row>
                 <v-col cols="6" md="6">
-                    <!-- <input type="file" accept="image/*" @change="uploadImage"> -->
-
                     <v-textarea v-model="summary" outlined name="input-7-4" label="Summary"
                         placeholder="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through.">
                     </v-textarea>
 
                 </v-col>
-                <v-col cols="6" md="6">
+                <v-col cols="3" md="3">
+                    
                     <picture-input ref="pictureInput" @change="onChange()" width="250" height="250" margin="16"
                         accept="image/jpeg,image/png" size="10" buttonClass="btn" :customStrings="{
         upload: '<h1>Bummer!</h1>',
@@ -42,6 +41,10 @@
       }">
                     </picture-input>
                 </v-col>
+                         <v-col v-if="editmode==true" cols="3" md="3">
+                               <v-img :src="image" aspect-ratio="1" width="250" height="250" 
+                  class="grey lighten-2"></v-img>
+                           </v-col>
             </v-row>
             <v-btn class="ma-2" @click="saveBtnAction()" :disabled="btmComplete" tile color="indigo" dark>Save</v-btn>
         </v-container>
@@ -57,8 +60,11 @@
             summary: "",
             items: null,
             selectedCountry: "",
-            
-            image:"",
+
+
+            editmode:false,
+
+            image: "",
             select: [],
             search: "", //sync search
 
@@ -82,9 +88,14 @@
                 this.saveNotification()
             },
         },
+
         mounted() {
             this.$store.dispatch('companyInfo', this.$route.params.companyId)
                 .then(result => {
+                    if ((this.$route.params.action) == "edit") {
+                        this.editmode = true
+                        this.destinationInfo();
+                    }
 
                 })
                 .catch(err => console.log(err));
@@ -97,8 +108,24 @@
         },
 
         methods: {
+            destinationInfo() {
+                this.$store.dispatch('getDestinationInfo', [this.$route.params.companyId, this.$route.params
+                        .destinationId
+                    ])
+                    .then(result => {
+                        let infos = (result.data())[this.$route.params.destinationId]
+                        console.log(infos)
+                        this.name = infos.name
+                        console.log(this.name)
+                        this.otherName = infos.otherName
+                        this.summary = infos.summary
+                        this.image = infos.fileUrl
+                        this.selectedCountry = infos.selectedCountry
+                    })
+                    .catch(err => console.log(err));
+            },
             saveNotification() {
-                if (this.name != "" && this.selectedCountry != "" && this.summary != "" & this.image !="") {
+                if (this.name != "" && this.selectedCountry != "" && this.summary != "" & this.image != "") {
                     this.btmComplete = false
                 }
             },
@@ -111,23 +138,23 @@
                 });
             },
             onChange() {
-               console.log("event",this.$refs.pictureInput.file)
-               this.image = this.$refs.pictureInput.file;
-         
+                console.log("event", this.$refs.pictureInput.file)
+                this.image = this.$refs.pictureInput.file;
+
             },
             saveBtnAction() {
                 let temp = {
-                    "name":this.name,
-                    "otherName":this.otherName,
-                    "selectedCountry":this.selectedCountry,
-                    "summary":this.summary
+                    "name": this.name,
+                    "otherName": this.otherName,
+                    "selectedCountry": this.selectedCountry,
+                    "summary": this.summary
                 }
 
-                this.$store.dispatch('saveDestinations', [this.$route.params.companyId,temp,this.image])
-                .then(result => {
-                   this.$router.push(`/destinations/${this.$route.params.companyId}`)
-                })
-                .catch(err => console.log(err));
+                this.$store.dispatch('saveDestinations', [this.$route.params.companyId, temp, this.image,this.editmode,this.$route.params.destinationId])
+                    .then(result => {
+                        this.$router.push(`/destinations/${this.$route.params.companyId}`)
+                    })
+                    .catch(err => console.log(err));
             }
         }
     };
