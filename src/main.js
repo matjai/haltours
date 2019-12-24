@@ -8,11 +8,8 @@ import VueAxios from 'vue-axios';
 
 Vue.config.productionTip = false;
 
-<<<<<<< HEAD
 Vue.use(VueAxios, axios);
-=======
 const LANDING_PAGE = '/companies'
->>>>>>> origin/master
 
 new Vue({
   router,

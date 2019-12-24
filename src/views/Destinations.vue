@@ -86,7 +86,6 @@
 
 <script>
   import _ from 'lodash';
-  import router from "../router";
   export default {
     data: () => ({
       destList: null,
@@ -104,7 +103,7 @@
     mounted() {
       this.$store.dispatch('getListDestinationByCompany', this.$route.params.companyId)
         .then(async result => {
-
+          result= result.data()
           this.destList = await _.chain(Object.keys(result).map(key => (_.assign(result[key], {
               "id": key
             }))))
@@ -130,7 +129,7 @@
       },
       editDestination(desId){
           // "/destinations/:companyId/:action/:destinationId",
-          router.push(`/destinations/${this.$route.params.companyId}/edit/${desId}`)
+          this.$router.push(`/destinations/${this.$route.params.companyId}/edit/${desId}`)
       }
     }
   };

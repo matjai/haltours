@@ -42,7 +42,7 @@
                     </picture-input>
                 </v-col>
                          <v-col v-if="editmode==true" cols="3" md="3">
-                               <v-img :src="image" aspect-ratio="1" width="250" height="250" 
+                               <v-img :src="dbImage" aspect-ratio="1" width="250" height="250" 
                   class="grey lighten-2"></v-img>
                            </v-col>
             </v-row>
@@ -65,6 +65,8 @@
             editmode:false,
 
             image: "",
+            dbImage:"",
+
             select: [],
             search: "", //sync search
 
@@ -119,13 +121,19 @@
                         console.log(this.name)
                         this.otherName = infos.otherName
                         this.summary = infos.summary
-                        this.image = infos.fileUrl
+                        this.dbImage = infos.fileUrl
                         this.selectedCountry = infos.selectedCountry
                     })
                     .catch(err => console.log(err));
             },
             saveNotification() {
-                if (this.name != "" && this.selectedCountry != "" && this.summary != "" & this.image != "") {
+             
+
+                if(this.editmode == true){
+                    if(this.name != "" && this.selectedCountry != "" && this.summary != "" ){
+                         this.btmComplete = false
+                    }
+                } else if(this.name != "" && this.selectedCountry != "" && this.summary != "" & this.image != ""){
                     this.btmComplete = false
                 }
             },
@@ -138,6 +146,7 @@
                 });
             },
             onChange() {
+              
                 console.log("event", this.$refs.pictureInput.file)
                 this.image = this.$refs.pictureInput.file;
 
@@ -149,7 +158,13 @@
                     "selectedCountry": this.selectedCountry,
                     "summary": this.summary
                 }
+                    if(this.editmode == true){
 
+                        if(this.image == ""){
+                            this.image = this.dbImage
+                        }
+                     
+                    }
                 this.$store.dispatch('saveDestinations', [this.$route.params.companyId, temp, this.image,this.editmode,this.$route.params.destinationId])
                     .then(result => {
                         this.$router.push(`/destinations/${this.$route.params.companyId}`)
