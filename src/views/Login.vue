@@ -8,7 +8,6 @@
             <div class="flex-grow-1"></div>
           </v-toolbar>
           <v-card-text>
-            <div>Current user: {{ $store.state.user }}</div>
             <v-form>
               <v-text-field label="Email" prepend-icon="person" type="text" v-model="email"></v-text-field>
               <v-text-field label="Password" prepend-icon="lock" type="password" v-model="password"></v-text-field>

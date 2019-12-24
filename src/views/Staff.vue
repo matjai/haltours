@@ -155,28 +155,14 @@
       </template>
     </v-data-table>
 
-    <!-- 
+    <!--
     <div class="text-center ma-2">
       <v-snackbar v-model="snackbar" top="top" right="right">
         {{ text }}
         <v-btn color="pink" text @click="snackbar = false">Close</v-btn>
       </v-snackbar>
     </div>
-    <v-footer dark padless absolute>
-      <v-card flat class="indigo lighten-1 white--text text-center" style="width: 100%;">
-        <v-card-text>
-          <v-btn v-for="icon in icons" :key="icon" class="mx-4 white--text" icon large>
-            <v-icon large>{{ icon }}</v-icon>
-          </v-btn>
-        </v-card-text>
-
-        <v-card-text class="white--text pt-0">3 Tower Jalan Ampang 68000 Selangor Malaysia</v-card-text>
-        <v-card-text class="white--text">
-          {{ new Date().getFullYear() }} —
-          <strong>Haltours</strong>
-        </v-card-text>
-      </v-card>
-    </v-footer>-->
+    -->
   </v-container>
 </template>
 
@@ -185,7 +171,6 @@ import firebase from "firebase/firebase";
 
 export default {
   data: () => ({
-    icons: ["mdi-facebook-box", "mdi-instagram", "mdi-youtube"],
     dialog: false,
     rules: [
       value =>

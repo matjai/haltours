@@ -4,6 +4,7 @@ import staffs from "@/store/staffs";
 import companies from "@/store/companies";
 import attractions from "@/store/attractions";
 import roles from "@/store/roles";
+import requestForms from "@/store/requestForm";
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -14,7 +15,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
 import config from "./firebase";
-import createLogger from 'vuex/dist/logger'
+import createLogger from 'vuex/dist/logger';
 
 
 //debug logger for browser console 
@@ -22,16 +23,16 @@ import createLogger from 'vuex/dist/logger'
 const logger = createLogger({
   collapsed: false,
   filter(mutation, stateBefore, stateAfter) {
-    return mutation.type !== "aBlacklistedMutation"
+    return mutation.type !== "aBlacklistedMutation";
   },
   transformer(state) {
-    return state.subTree
+    return state.subTree;
   },
   mutationTransformer(mutation) {
-    return mutation.type
+    return mutation.type;
   },
   logger: console,
-})
+});
 
 firebase.initializeApp(config);
 Vue.use(Vuex);
@@ -52,7 +53,8 @@ const state = {
   staffs: null,
   companies: null,
   roles: null,
-  attractions
+  attractions,
+  requestForms,
 
 };
 
@@ -66,6 +68,7 @@ export default new Vuex.Store({
     staffs,
     companies,
     roles,
-    attractions
+    attractions,
+    requestForms
   }
 });
