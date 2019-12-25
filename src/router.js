@@ -18,21 +18,6 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/",
-      name: "home",
-      component: Home
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: Login
-    },
-    {
-      path: "/main",
-      name: "main",
-      component: () => import("./views/Main.vue")
-    },
-    {
       // View Destination created
       path: "/destinations/:companyId",
       name: "destinations",
