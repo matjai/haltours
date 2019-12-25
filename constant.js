@@ -4,6 +4,7 @@ export const STAFF_ADDED = 'STAFF_ADDED';
 export const STAFF_UPDATED = 'STAFF_UPDATED';
 export const STAFF_REMOVED = 'STAFF_REMOVED';
 export const STAFF_ERROR = 'STAFF_ERROR';
+export const STAFF_GET_BY_ID = 'STAFF_GET_BY_ID';
 
 
 //companies constant

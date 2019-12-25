@@ -6,6 +6,7 @@ import Destinations from "./views/Destinations.vue";
 import CreateDestination from "./views/CreateDestination.vue";
 import Countrylookup from "./views/Countrylookup.vue";
 import Staff from "./views/Staff";
+import StaffView from "./views/subviews/StaffView";
 import Company from "./views/Company";
 import Attraction from "./views/Attraction";
 import RequestForm from "./views/RequestForm";
@@ -38,6 +39,7 @@ export default new Router({
     { path: "/login", name: "login", component: Login },
     { path: "/main", name: "main", component: () => import("./views/Main.vue") },
     { path: "/staffs", name: "staffs", component: Staff },
+    { path: "/staffs/:company/:staff", name: "staff", component: StaffView },
     { path: "/companies", name: "companies", component: Company },
     { path: "/attractions", name: "attractions", component: Attraction },
     {
