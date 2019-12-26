@@ -3,7 +3,7 @@ import company from './models/company';
 import {
     COMPANY_ERROR, COMPANY_FETCHED,
     COMPANY_ADDED, COMPANY_UPDATED,
-    COMPANY_REMOVED, COMPANY_INIT
+    COMPANY_REMOVED, COMPANY_INIT,COMPANY_GET_BY_ID
 } from '../../constant';
 
 
@@ -14,6 +14,7 @@ export default {
     state: {
         loading: false,
         data: [],
+        object: {},
         error: false,
         errorMessage: ''
     },
@@ -25,6 +26,13 @@ export default {
         },
         COMPANY_FETCHED(state, payload) {
             state.data = payload.data;
+            state.loading = false;
+            state.error = false;
+            state.errorMessage = '';
+        },
+        COMPANY_GET_BY_ID(state, payload) {
+            //state.object = {...state.object,...payload.data};
+            state.object = payload.data;
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
@@ -73,6 +81,13 @@ export default {
                 .catch(error => {
                     commit(COMPANY_ERROR, { error });
                 });
+        },
+        async getCompanyByID({ commit, rootState, dispatch },id) {
+            commit(COMPANY_INIT);
+            
+            const company = await dbInstance.db().collection(COLLECTION).doc(id).get();
+            commit(COMPANY_GET_BY_ID,{data: company.data()});
+            //console.log(company.data())
         },
 
         store({ commit, rootState, dispatch }, payload) {

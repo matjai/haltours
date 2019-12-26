@@ -3,7 +3,7 @@
     <!-- <h2 class="font-weight-bold">Staffs Management</h2> -->
     <v-data-table
       :headers="headers"
-      :items="staffs.data"
+      :items="getStaffs"
       sort-by="calories"
       class="elevation-1"
       :loading="staffs.loading"
@@ -14,6 +14,12 @@
             <img alt="Avatar" src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460" />
           </v-avatar>
         </div>
+      </template>
+
+      <template v-slot:item.name="{ item }">
+        <router-link
+          :to="{name:'staff',params:{company:item.companyId,staff:item.id}}"
+        >{{ item.name }}</router-link>
       </template>
 
       <template v-slot:top>
@@ -121,7 +127,7 @@
                       ></v-select>
                     </v-col>
 
-                    <v-col cols="12" sm="12" md="12">
+                    <v-col cols="6" sm="6" md="6">
                       <v-select
                         :items="getRoles"
                         item-text="name"
@@ -129,6 +135,18 @@
                         v-model="editedItem.roles"
                         outlined
                         return-object
+                      ></v-select>
+                    </v-col>
+
+                    <v-col cols="6" sm="6" md="6">
+                      <v-select
+                        :items="getCompanies"
+                        item-text="name"
+                        item-value="id"
+                        label="Company"
+                        placeholder="Company"
+                        v-model="editedItem.companyId"
+                        outlined
                       ></v-select>
                     </v-col>
                   </v-row>
@@ -168,8 +186,12 @@
 
 <script>
 import firebase from "firebase/firebase";
+import CreateDestination from "./CreateDestination";
 
 export default {
+  components: {
+    destination: CreateDestination
+  },
   data: () => ({
     dialog: false,
     rules: [
@@ -209,7 +231,9 @@ export default {
       email: "",
       position: null,
       department: null,
-      roles: null
+      companyId: null,
+      roles: null,
+      company: null
     },
     text: "This is notification!.",
     defaultItem: {
@@ -218,13 +242,24 @@ export default {
       email: "",
       position: null,
       department: null,
-      roles: null
+      roles: null,
+      companyId: null,
+      company: null
     }
   }),
 
   computed: {
     getRoles() {
       return this.$store.getters["roles/getAllRoles"];
+    },
+    getStaffs() {
+      return this.$store.getters["staffs/staffs"];
+    },
+    getCompanies() {
+      return this.$store.getters["companies/companies"];
+    },
+    getCompanyLabel() {
+      return $this.store.getters["companies/mapCompanyByCollectionId"];
     }
   },
 
@@ -236,6 +271,7 @@ export default {
 
   created() {
     this.$store.dispatch("staffs/fetch");
+    this.$store.dispatch("companies/fetch");
     this.initialize();
   },
   methods: {
@@ -276,7 +312,6 @@ export default {
           `state_changed`,
           snapshot => {},
           error => {
-            console.log(error.message);
             this.imageIsUploading = false;
           },
           () => {

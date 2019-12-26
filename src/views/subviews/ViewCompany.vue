@@ -65,12 +65,11 @@
             color="deep-purple accent-4"
             left
             >
-                <v-tab>Landscape</v-tab>
-                <v-tab>City</v-tab>
-                <v-tab>Abstract</v-tab>
-                <v-tab-item>{{component}}
-                </v-tab-item>
+            <v-tab v-for="tab in tabs" :key="tab.id" :to="tab.route" exact>
+                {{ tab.name }}
+            </v-tab>
             </v-tabs>
+            <router-view></router-view>
         </v-card>
     </v-col>
   </v-row>
@@ -81,11 +80,12 @@
 <script>
 import firebase from "firebase";
 import { v1 as uuid } from 'uuid';
-import Company from "./views/Company";
-
 export default {
   data: () => ({
-    component: Company,
+      tabs: [
+        { id: 1, name: "companies", route: `/companies/` },
+        { id: 2, name: "staffs", route: `/staffs` }
+      ],
     dialog: false,
     search: "",
     imageData: null,

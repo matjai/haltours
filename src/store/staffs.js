@@ -3,6 +3,7 @@ import staff from './models/staff';
 import {
     STAFF_INIT, STAFF_FETCHED,
     STAFF_ERROR,
+    STAFF_GET_BY_ID,
     STAFF_REMOVED,
     STAFF_UPDATED,
     STAFF_ADDED
@@ -16,12 +17,13 @@ export default {
     state: {
         loading: false,
         data: [],
+        object: {},
         error: false,
         errorMessage: ''
     },
     mutations: {
         STAFF_INIT(state, payload) {
-            state.loading = true
+            state.loading = true;
             state.error = false;
             state.errorMessage = '';
         },
@@ -38,18 +40,23 @@ export default {
             state.errorMessage = '';
 
         },
-        STAFF_UPDATED(state, payload) {
-            const { data } = payload;
-            state.data = [...state.data, ...data]
+
+        STAFF_GET_BY_ID(state, payload) {
+            state.object = { ...state.object, ...payload.data };
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
 
         },
+        STAFF_UPDATED(state, payload) {
+            state.loading = false;
+            state.error = false;
+            state.errorMessage = '';
+        },
         STAFF_REMOVED(state, payload) {
             const { data } = payload;
-            const itemIndex = state.data.indexOf(data)
-            state.data.splice(itemIndex, 1)
+            const itemIndex = state.data.indexOf(data);
+            state.data.splice(itemIndex, 1);
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
@@ -58,33 +65,44 @@ export default {
         STAFF_ERROR(state, payload) {
             state.error = true;
             state.loading = false;
-            state.errorMessage = payload.error
+            state.errorMessage = payload.error;
         },
     },
     actions: {
         fetch({ commit, rootState, dispatch }) {
             commit(STAFF_INIT);
             const staffs = dbInstance.db().collection(COLLECTION).get();
-            const data = []
+            const data = [];
             staffs.then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const id = doc.id;
-                    const _m = Object.assign({}, { ...doc.data(), id })
-                    data.push(staff(_m))
-                })
-                commit(STAFF_FETCHED, { data })
+                    const _m = Object.assign({}, { ...doc.data(), id });
+                    data.push(staff(_m));
+                });
+
+                commit(STAFF_FETCHED, { data });
             })
                 .catch(error => {
                     commit(STAFF_ERROR, { error });
-                })
+                });
         },
 
+        async getById({ commit, rootState, dispatch }, payload) {
+
+            commit(STAFF_INIT);
+
+            const firebaseStore = await dbInstance.db().collection(COLLECTION).doc(payload.id).get();
+            const data = { ...firebaseStore.data(), ...{ id: payload.id } };
+            commit(STAFF_GET_BY_ID, { data: staff(data) });
+
+
+        },
         store({ commit, rootState, dispatch }, payload) {
             commit(STAFF_INIT);
             dbInstance.db().collection(COLLECTION).add(payload)
                 .then(docRef => {
                     const data = { id: docRef.id, ...payload };
-                    commit(STAFF_ADDED, { data })
+                    commit(STAFF_ADDED, { data });
                 })
                 .catch(error => {
                     commit(STAFF_ERROR, { error });
@@ -93,12 +111,14 @@ export default {
         },
         update({ commit, rootState, dispatch }, payload) {
             commit(STAFF_INIT);
-            dbInstance.db().collection(COLLECTION).doc(payload.id).set(payload)
+            dbInstance.db()
+                .collection(COLLECTION).doc(payload.id).set(payload)
                 .then(result => {
-                    const data = payload
-                    commit(STAFF_UPDATED, { data })
+                    const data = payload;
+                    commit(STAFF_UPDATED, { data });
                 })
                 .catch(error => {
+                    console.log(error);
                     commit(STAFF_ERROR, { error });
                 });
         },
@@ -106,7 +126,7 @@ export default {
             commit(STAFF_INIT);
             dbInstance.db().collection(COLLECTION).doc(payload.id).delete()
                 .then(result => {
-                    commit(STAFF_REMOVED, { data: payload })
+                    commit(STAFF_REMOVED, { data: payload });
                 })
                 .catch(error => {
                     commit(STAFF_ERROR, { error });
@@ -114,6 +134,7 @@ export default {
         },
     },
     getters: {
-        staffs: () => state => state.data
+        staffs: state => state.data,
+        getStaff: state => state.object,
     }
-}
+};

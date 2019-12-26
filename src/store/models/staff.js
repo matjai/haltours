@@ -9,9 +9,10 @@ export default (data) => {
         mobile: data.mobile || null,
         email: data.email || null,
         position: data.position || {},
+        companyId: data.companyId || {},
         department: data.department || {},
         permissions: data.permissions || [],
         roles: data.roles || null,
-    }
+    };
 
 }

@@ -20,4 +20,5 @@ yarn-error.log*
 *.sln
 *.sw?
 
+firebase.js
 /src/store/firebase.js

@@ -11,6 +11,11 @@
             :loading="companies.loading"
             :search="search"
           >
+            <template v-slot:item.name="{ item }">
+              <router-link :to="{ name: 'viewCompany',params:{company: item.id}}">{{item.name}}</router-link>
+
+            </template>
+
             <template v-slot:top>
               <v-toolbar flat color="white">
                 <v-toolbar-title>Company</v-toolbar-title>
@@ -191,6 +196,9 @@
                               ></v-textarea>
                             </v-col>
                           </v-row>
+                          <v-row>
+                            <router-link :to="'/destinations/' + editedItem.id">Add Destination</router-link>
+                          </v-row>
                         </v-container>
                       </v-card-text>
 
@@ -204,9 +212,9 @@
                 </v-spacer>
               </v-toolbar>
             </template>
-            <template v-slot:item.countryID="{ item }">
+            <!-- <template v-slot:item.countryID="{ item }">
                {{countriesLabel[item.countryID]}}
-            </template>
+            </template> -->
 
             <template v-slot:item.action="{ item }">
               <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
@@ -249,6 +257,7 @@ export default {
         align: "left",
         sortable: false
       },
+      { text: "id", value: "id" },
       { text: "Name", value: "name" },
       { text: "Description", value: "description" },
       { text: "Countries", value: "countryID" },
@@ -259,6 +268,7 @@ export default {
     top: true,
     right: true,
     countries: [],
+    countriesLabel: [],
     editedIndex: -1,
     selectedIndex: [],
     countriesLabel: [],
@@ -309,6 +319,7 @@ export default {
   methods: {
     initialize() {
       this.companies = this.$store.state.companies;
+      console.log(this.companies)
       this.countries = [
         {
           id: 1,
@@ -319,7 +330,7 @@ export default {
           name: "Indonesia"
         }
       ];
-      
+
     },
 
     indexSelected(item) {

@@ -4,6 +4,7 @@ export const STAFF_ADDED = 'STAFF_ADDED';
 export const STAFF_UPDATED = 'STAFF_UPDATED';
 export const STAFF_REMOVED = 'STAFF_REMOVED';
 export const STAFF_ERROR = 'STAFF_ERROR';
+export const STAFF_GET_BY_ID = 'STAFF_GET_BY_ID';
 
 
 //companies constant
@@ -13,6 +14,8 @@ export const COMPANY_ADDED = 'COMPANY_ADDED';
 export const COMPANY_UPDATED = 'COMPANY_UPDATED';
 export const COMPANY_REMOVED = 'COMPANY_REMOVED';
 export const COMPANY_ERROR = 'COMPANY_ERROR';
+export const COMPANY_GET_BY_ID = 'COMPANY_GET_BY_ID';
+
 
 //attraction constant
 export const ATTRACTION_INIT = 'ATTRACTION_INIT';
