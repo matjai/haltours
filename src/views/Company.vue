@@ -261,6 +261,7 @@ export default {
     countries: [],
     editedIndex: -1,
     selectedIndex: [],
+    countriesLabel: [],
     editedItem: {
       name: null,
       description: "",
