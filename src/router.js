@@ -43,14 +43,16 @@ export default new Router({
     { path: "/staffs/:company/:staff", name: "staff", component: StaffView },
     { path: "/companies", name: "companies", component: Company },
     {
-      path: "/companies/:company", name: "viewCompany", component: ViewCompany,props: true,
+      path: "/companies/:company", name: "viewCompany", component: ViewCompany, props: true,
       children: [
         {
-          path: "/companies",
+          path: "/company",
+          name: 'subcompany',
           component: Company
         },
         {
           path: "/staffs",
+          name: 'substaff',
           component: Staff
         }
       ]
@@ -59,7 +61,7 @@ export default new Router({
     {
       path: "/requestForms", name: "requestForms", component: RequestForm
     },
-    
+
     {
       path: "/requestForms/forms/:company", name: "requestFormsNew", component: RequestFormCreate
     }

@@ -1,91 +1,59 @@
 
 <template>
-
-
   <v-container fluid>
-    <v-card
-    
-    class="mx-auto"
-    height="250"
-    tile
-    :loading="companies.loading"
-  >
-    <v-img
-      height="100%"
-      :src="getCompany.heroURL"
-    >
-      <v-row
-        align="end"
-        class="fill-height"
-      >
-        <v-col
-          align-self="start"
-          class="pa-0"
-          cols="12"
-        >
+    <v-card class="mx-auto" height="250" tile :loading="companies.loading">
+      <v-img height="100%" :src="getCompany.heroURL">
+        <v-row align="end" class="fill-height">
+          <v-col align-self="start" class="pa-0" cols="12">
             <v-hover>
-                <template v-slot="{ hover }">
-                    <v-card
-                    :elevation="hover ? 24 : 6"
-                    class="pa-2 ma-6"
-                    width="180"
-                    height="180"
-                    
-                    >
-                    <v-avatar
-                    class="profile mx-auto"
-                    color="grey"
-                    size="164"
-                    tile
-                    >
-                    <v-img :src="getCompany.logoURL" ></v-img>
-                    </v-avatar>
-                    </v-card>
-                </template>
+              <template v-slot="{ hover }">
+                <v-card :elevation="hover ? 24 : 6" class="pa-2 ma-6" width="180" height="180">
+                  <v-avatar class="profile mx-auto" color="grey" size="164" tile>
+                    <v-img :src="getCompany.logoURL"></v-img>
+                  </v-avatar>
+                </v-card>
+              </template>
             </v-hover>
-        </v-col>
-       
-      </v-row>
-    </v-img>
-  </v-card>
-  <v-row class ="pt-6">
-   <v-col md="auto">
-        <v-list-item
-        >
-        <v-list-item-content>
+          </v-col>
+        </v-row>
+      </v-img>
+    </v-card>
+    <v-row class="pt-6">
+      <v-col md="auto">
+        <v-list-item>
+          <v-list-item-content>
             <v-list-item-title>{{getCompany.name}}</v-list-item-title>
-            <v-list-item-subtitle>{{getCompany.countryID}} </v-list-item-subtitle>
-        </v-list-item-content>
+            <v-list-item-subtitle>{{getCompany.countryID}}</v-list-item-subtitle>
+          </v-list-item-content>
         </v-list-item>
-    </v-col>
-    <v-col class="py-0">
+      </v-col>
+      <v-col class="py-0">
         <v-card>
-            <v-tabs
-            background-color="white"
-            color="deep-purple accent-4"
-            left
-            >
-            <v-tab v-for="tab in tabs" :key="tab.id" :to="tab.route" exact>
-                {{ tab.name }}
-            </v-tab>
-            </v-tabs>
-            <router-view></router-view>
+          <v-tabs background-color="white" color="deep-purple accent-4" left>
+            <v-tab
+              v-for="tab in tabs"
+              :key="tab.id"
+              @click="$router.push({name:tab.route,params:{company: companyId}})"
+              exact
+            >{{ tab.name }}</v-tab>
+          </v-tabs>
+          <router-view></router-view>
         </v-card>
-    </v-col>
-  </v-row>
-  <v-icon x-large color="blue darken-2" h>mdi-facebook-box</v-icon>
-  <v-icon x-large color="red darken-2">mdi-instagram</v-icon>
+      </v-col>
+    </v-row>
+    <v-icon x-large color="blue darken-2" h>mdi-facebook-box</v-icon>
+    <v-icon x-large color="red darken-2">mdi-instagram</v-icon>
   </v-container>
 </template>
 <script>
 import firebase from "firebase";
-import { v1 as uuid } from 'uuid';
+import { v1 as uuid } from "uuid";
 export default {
   data: () => ({
-      tabs: [
-        { id: 1, name: "companies", route: `/companies/` },
-        { id: 2, name: "staffs", route: `/staffs` }
-      ],
+    tabs: [
+      { id: 1, name: "company", route: "subcompany", active: true },
+      { id: 2, name: "staff", route: "substaff", active: false }
+    ],
     dialog: false,
     search: "",
     imageData: null,
@@ -99,7 +67,7 @@ export default {
     top: true,
     right: true,
     countries: [],
-    companyId:null,
+    companyId: null,
     editedIndex: -1,
     selectedIndex: [],
     editedItem: {
@@ -129,18 +97,17 @@ export default {
       instagram: null,
       logoURL: null,
       heroURL: null,
-      countryID: null,
-      
+      countryID: null
     }
   }),
 
   computed: {
     getCompanyLabels() {
-      return this.$store.getters["companies/getCompany",this.companyId];
+      return this.$store.getters[("companies/getCompany", this.companyId)];
     },
     getCompany() {
-        return this.companies = this.$store.state.companies.object;
-        console.log(this.companies)
+      return (this.companies = this.$store.state.companies.object);
+      console.log(this.companies);
     }
   },
 
@@ -152,10 +119,9 @@ export default {
 
   created() {
     this.companyId = this.$router.currentRoute.params.company;
-    this.$store.dispatch("companies/getCompanyByID",this.companyId);
+    this.$store.dispatch("companies/getCompanyByID", this.companyId);
     this.companies = this.$store.state.companies;
     this.initialize();
-    
   },
 
   methods: {
@@ -170,7 +136,6 @@ export default {
           name: "Indonesia"
         }
       ];
-      
     },
 
     indexSelected(item) {
