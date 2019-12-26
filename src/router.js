@@ -10,6 +10,7 @@ import Company from "./views/Company";
 import Attraction from "./views/Attraction";
 import RequestForm from "./views/RequestForm";
 import RequestFormCreate from "./views/subviews/RequestFormCreate";
+import ViewCompany from "./views/subviews/ViewCompany";
 
 Vue.use(Router);
 
@@ -54,6 +55,19 @@ export default new Router({
     { path: "/main", name: "main", component: () => import("./views/Main.vue") },
     { path: "/staffs", name: "staffs", component: Staff },
     { path: "/companies", name: "companies", component: Company },
+    {
+      path: "/companies/:company", name: "viewCompany", component: ViewCompany,props: true,
+      children: [
+        {
+          path: "/companies",
+          component: Company
+        },
+        {
+          path: "/staffs",
+          component: Staff
+        }
+      ]
+    },
     { path: "/attractions", name: "attractions", component: Attraction },
     {
       path: "/requestForms", name: "requestForms", component: RequestForm

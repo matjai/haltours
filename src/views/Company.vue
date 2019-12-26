@@ -11,6 +11,11 @@
             :loading="companies.loading"
             :search="search"
           >
+            <template v-slot:item.name="{ item }">
+              <router-link :to="{ name: 'viewCompany',params:{company: item.id}}">{{item.name}}</router-link>
+
+            </template>
+
             <template v-slot:top>
               <v-toolbar flat color="white">
                 <v-toolbar-title>Company</v-toolbar-title>
@@ -259,6 +264,7 @@ export default {
     top: true,
     right: true,
     countries: [],
+    countriesLabel: [],
     editedIndex: -1,
     selectedIndex: [],
     editedItem: {
