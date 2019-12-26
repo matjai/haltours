@@ -6,7 +6,8 @@ import {
     STAFF_GET_BY_ID,
     STAFF_REMOVED,
     STAFF_UPDATED,
-    STAFF_ADDED
+    STAFF_ADDED,
+    STAFF_FETCHED_BY_COMPANY
 } from '../../constant';
 
 
@@ -28,6 +29,12 @@ export default {
             state.errorMessage = '';
         },
         STAFF_FETCHED(state, payload) {
+            state.data = payload.data;
+            state.loading = false;
+            state.error = false;
+            state.errorMessage = '';
+        },
+        STAFF_FETCHED_BY_COMPANY(state, payload) {
             state.data = payload.data;
             state.loading = false;
             state.error = false;
@@ -81,6 +88,24 @@ export default {
                 });
 
                 commit(STAFF_FETCHED, { data });
+            })
+                .catch(error => {
+                    commit(STAFF_ERROR, { error });
+                });
+        },
+        fetchByCompanyID({ commit, rootState, dispatch },payload) {
+            commit(STAFF_INIT);
+            const staffs = dbInstance.db().collection(COLLECTION).where("companyId", "==", payload).get();
+            const data = [];
+            staffs.then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const id = doc.id;
+                    const _m = Object.assign({}, { ...doc.data(), id });
+                    data.push(staff(_m));
+                });
+
+                console.log(data);
+                commit(STAFF_FETCHED_BY_COMPANY, { data });
             })
                 .catch(error => {
                     commit(STAFF_ERROR, { error });

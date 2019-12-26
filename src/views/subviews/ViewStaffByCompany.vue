@@ -147,6 +147,7 @@
                         placeholder="Company"
                         v-model="editedItem.companyId"
                         outlined
+                        disabled
                       ></v-select>
                     </v-col>
                   </v-row>
@@ -182,17 +183,12 @@
     </div>
     -->
   </v-container>
-  
 </template>
 
 <script>
 import firebase from "firebase/firebase";
-import CreateDestination from "./CreateDestination";
 
 export default {
-  components: {
-    destination: CreateDestination
-  },
   data: () => ({
     dialog: false,
     rules: [
@@ -225,6 +221,7 @@ export default {
     departments: [],
     staffs: {},
     editedIndex: -1,
+    companyId: null,
     selectedIndex: [],
     editedItem: {
       name: "",
@@ -271,7 +268,8 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("staffs/fetch");
+    this.companyId = this.$router.currentRoute.params.company;
+    this.$store.dispatch("staffs/fetchByCompanyID",this.companyId);
     this.$store.dispatch("companies/fetch");
     this.initialize();
   },
@@ -351,6 +349,7 @@ export default {
     },
 
     save() {
+        
       if (this.editedIndex > -1) {
         Object.assign(this.staffs.data[this.editedIndex], this.editedItem);
         this.$store.dispatch("staffs/update", this.editedItem);

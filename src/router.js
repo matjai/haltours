@@ -43,20 +43,7 @@ export default new Router({
     { path: "/staffs/:company/:staff", name: "staff", component: StaffView },
     { path: "/companies", name: "companies", component: Company },
     {
-      path: "/companies/:company", name: "viewCompany", component: ViewCompany, props: true,
-      children: [
-        {
-          path: "/company",
-          name: 'subcompany',
-          component: Company
-        },
-        {
-          path: "/staffs",
-          name: 'substaff',
-          component: Staff
-        }
-      ]
-    },
+      path: "/companies/:company", name: "viewCompany", component: ViewCompany},
     { path: "/attractions", name: "attractions", component: Attraction },
     {
       path: "/requestForms", name: "requestForms", component: RequestForm

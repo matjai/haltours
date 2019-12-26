@@ -20,40 +20,99 @@
     </v-card>
     <v-row class="pt-6">
       <v-col md="auto">
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title>{{getCompany.name}}</v-list-item-title>
-            <v-list-item-subtitle>{{getCompany.countryID}}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+          <v-card 
+            class="mx-auto"
+            min-width="344">
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title>{{getCompany.name}}</v-list-item-title>
+                    <v-list-item-subtitle>{{getCompany.countryID}}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{getCompany.website}}</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+            <v-icon x-large color="blue darken-2" h>mdi-facebook-box</v-icon>
+            <v-icon x-large color="red darken-2">mdi-instagram</v-icon>
+          </v-card>
       </v-col>
-      <v-col class="py-0">
+      <v-col class="auto">
         <v-card>
-          <v-tabs background-color="white" color="deep-purple accent-4" left>
-            <v-tab
-              v-for="tab in tabs"
-              :key="tab.id"
-              @click="$router.push({name:tab.route,params:{company: companyId}})"
-              exact
-            >{{ tab.name }}</v-tab>
-          </v-tabs>
-          <router-view></router-view>
+          <v-tabs
+            background-color="white"
+            color="deep-purple accent-4"
+            left
+            >
+            <v-tab>About</v-tab>  
+            <v-tab>Destinations</v-tab>
+            <v-tab>Staffs</v-tab>
+            <v-tab-item>
+                <v-container fluid>
+                    <v-card flat>
+                        <v-card-text>
+                        <v-row class="mb-4" align="center">
+                            <strong class="title">{{getCompany.name}}</strong>
+                            <v-spacer></v-spacer>
+                        </v-row>
+                        <p>
+                            {{getCompany.countryId}}
+                        </p>
+                        <p>
+                            {{getCompany.description}}
+                        </p>
+                        <p>
+                            <strong>Address</strong>   : {{getCompany.address}}
+                        </p>
+                        <p>
+                            <strong>Registration Number</strong>  : {{getCompany.registration_number}}
+                        </p>
+                        <p>
+                            <strong>Phone Number</strong>  : {{getCompany.phone_number}}
+                        </p>
+                        <p>
+                            <strong>Fax Number</strong>  : {{getCompany.fax_number}}
+                        </p>
+                        <p>
+                            <strong>Website</strong>  : {{getCompany.website}}
+                        </p>
+                        <p>
+                            <strong>Facebook</strong>  : {{getCompany.facebook}}
+                        </p>
+                        <p>
+                            <strong>Instagram</strong>  : {{getCompany.instagram}}
+                        </p>
+
+                        </v-card-text>
+                    </v-card>
+                </v-container>
+            </v-tab-item>           
+            <v-tab-item>
+                <v-container fluid>
+                    <destination/>
+                </v-container>
+            </v-tab-item>
+            <v-tab-item>
+                <v-container fluid>
+                    <staff/>
+                </v-container>
+            </v-tab-item>
+            </v-tabs>
         </v-card>
       </v-col>
     </v-row>
-    <v-icon x-large color="blue darken-2" h>mdi-facebook-box</v-icon>
-    <v-icon x-large color="red darken-2">mdi-instagram</v-icon>
+    
   </v-container>
 </template>
 <script>
 import firebase from "firebase";
 import { v1 as uuid } from "uuid";
+import displayStaff from "./ViewStaffByCompany";
+import displayDestination from "./ViewDestinationByCompany";
+
 export default {
+   components: {
+    staff: displayStaff,
+    destination: displayDestination
+  },
   data: () => ({
-    tabs: [
-      { id: 1, name: "company", route: "subcompany", active: true },
-      { id: 2, name: "staff", route: "substaff", active: false }
-    ],
     dialog: false,
     search: "",
     imageData: null,
@@ -61,7 +120,7 @@ export default {
     uploadValueOfHero: 0,
     logoIsUploading: false,
     heroIsUploading: false,
-
+    staffs: [],
     imageid: null,
     snackbar: false,
     top: true,
@@ -120,12 +179,14 @@ export default {
   created() {
     this.companyId = this.$router.currentRoute.params.company;
     this.$store.dispatch("companies/getCompanyByID", this.companyId);
+    this.$store.dispatch("staffs/fetchByCompanyID",this.companyId);
     this.companies = this.$store.state.companies;
     this.initialize();
   },
 
   methods: {
     initialize() {
+        this.staffs = this.$store.state.staffs;
       this.countries = [
         {
           id: 1,
