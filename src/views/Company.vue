@@ -196,6 +196,9 @@
                               ></v-textarea>
                             </v-col>
                           </v-row>
+                          <v-row>
+                            <router-link :to="'/destinations/' + editedItem.id">Add Destination</router-link>
+                          </v-row>
                         </v-container>
                       </v-card-text>
 
@@ -209,9 +212,9 @@
                 </v-spacer>
               </v-toolbar>
             </template>
-            <template v-slot:item.countryID="{ item }">
+            <!-- <template v-slot:item.countryID="{ item }">
                {{countriesLabel[item.countryID]}}
-            </template>
+            </template> -->
 
             <template v-slot:item.action="{ item }">
               <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
@@ -254,6 +257,7 @@ export default {
         align: "left",
         sortable: false
       },
+      { text: "id", value: "id" },
       { text: "Name", value: "name" },
       { text: "Description", value: "description" },
       { text: "Countries", value: "countryID" },
@@ -314,6 +318,7 @@ export default {
   methods: {
     initialize() {
       this.companies = this.$store.state.companies;
+      console.log(this.companies)
       this.countries = [
         {
           id: 1,
@@ -324,7 +329,7 @@ export default {
           name: "Indonesia"
         }
       ];
-      
+
     },
 
     indexSelected(item) {

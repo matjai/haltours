@@ -54,10 +54,10 @@ export default {
     drawer: null,
     items: [
       { title: "Home", icon: "dashboard", route: null },
-      { title: "Companies", icon: "dashboard", route: "companies" },
-      { title: "Staffs", icon: "dashboard", route: "staffs" },
-      { title: "Attractions", icon: "dashboard", route: "attractions" },
-      { title: "Request Forms", icon: "dashboard", route: "requestForms" },
+      { title: "Companies", icon: "dashboard", route: "/companies" },
+      { title: "Staffs", icon: "dashboard", route: "/staffs" },
+      { title: "Attractions", icon: "dashboard", route: "/attractions" },
+      { title: "Request Forms", icon: "dashboard", route: "/requestForms" },
       { title: "About", icon: "question_answer", route: null }
     ]
   }),
