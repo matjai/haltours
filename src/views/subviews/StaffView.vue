@@ -126,8 +126,9 @@ export default {
   created() {
     const staff = this.$router.currentRoute.params.staff;
     const company = this.$router.currentRoute.params.company;
+    const doc = this.$router.currentRoute.query.doc;
 
-    this.$store.dispatch("staffs/getById", { id: staff });
+    this.$store.dispatch("staffs/getById", { uuid: staff, doc: doc });
     this.$store.dispatch("companies/fetch");
     this.$store.dispatch("roles/fetch");
     this.initialize();
