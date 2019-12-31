@@ -66,7 +66,7 @@
 
                             <v-col cols="12" sm="6" md="6">
                               <v-select
-                                :items="countries"
+                                :items="listCountry"
                                 item-text="name"
                                 label="Countries"
                                 item-value="id"
@@ -268,6 +268,7 @@ export default {
     top: true,
     right: true,
     countries: [],
+    listCountry:[],
     countriesLabel: [],
     editedIndex: -1,
     selectedIndex: [],
@@ -313,6 +314,11 @@ export default {
 
   created() {
     this.$store.dispatch("companies/fetch");
+    this.$store.dispatch('bindCountry')
+        .then(result => {
+            this.listCountry = result.country
+        })
+        .catch(err => console.log(err));
     this.initialize();
   },
 

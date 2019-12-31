@@ -30,8 +30,12 @@
                     <v-list-item-subtitle>{{getCompany.website}}</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
-            <v-icon x-large color="blue darken-2" h>mdi-facebook-box</v-icon>
-            <v-icon x-large color="red darken-2">mdi-instagram</v-icon>
+            <v-btn icon :href="`//${getCompany.facebook}`" target="_blank">
+                <v-icon x-large color="blue darken-2" >mdi-facebook-box</v-icon>
+            </v-btn>
+            <v-btn icon :href="`//${getCompany.instagram}`" target="_blank">
+                <v-icon x-large color="red darken-2" >mdi-instagram</v-icon>
+            </v-btn>
           </v-card>
       </v-col>
       <v-col class="auto">
