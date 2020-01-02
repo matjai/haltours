@@ -2,13 +2,12 @@
   <v-container fluid class="pa-2 mt-10">
     <v-layout>
       <v-flex>
-        <div class="about d-block pa-2">
+        <div v-if="attractions" class="about d-block pa-2">
           <v-data-table
             :headers="headers"
-            :items="attractions.data"
+            :items="attractions"
             sort-by="calories"
             class="elevation-1"
-            :loading="attractions.loading"
             :search="search"
           >
             <template v-slot:top>
@@ -69,7 +68,7 @@
 
                             <v-col cols="12" sm="6" md="6">
                               <v-select
-                                :items="companies.data"
+                                :items="companies"
                                 item-text="name"
                                 label="Company"
                                 item-value="id"
@@ -80,7 +79,7 @@
                             </v-col>
                             <v-col cols="12" sm="6" md="6">
                               <v-select
-                                :items="destination"
+                                :items="destinations"
                                 item-text="name"
                                 label="Destination"
                                 item-value="id"
@@ -133,7 +132,7 @@
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                        <v-btn color="blue darken-1" text @click="saveAttraction">Save</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -141,8 +140,11 @@
               </v-toolbar>
             </template>
 
-            <template v-slot:item.companyID="{ item }">
+            <!-- <template v-slot:item.companyID="{ item }">
               <p>{{companies.loading ? 'loading...' : getCompanyLabels[item.companyID] }}</p>
+            </template> -->
+            <template v-if ="companies" v-slot:item.companyID="{ item }">
+              {{companiesLabel[item.companyID] }}
             </template>
 
             <template v-slot:item.destinationID="{ item }">{{destinationLabel[item.destinationID]}}</template>
@@ -192,9 +194,11 @@ export default {
       { text: "Actions", value: "action", sortable: false }
     ],
     imageid: null,
-    companiesLabel: {},
+    attractions:[],
+    destinations:[],
+    companiesLabel: [],
     destinationLabel: [],
-    companies: null,
+    companies: [],
     snackbar: false,
     top: true,
     right: true,
@@ -222,7 +226,7 @@ export default {
 
   computed: {
     getCompanyLabels() {
-      return this.$store.getters["companies/mapCompanyByCollectionId"];
+      return this.$store.getters["companiesV2/mapCompanyByCollectionId"];
     }
   },
 
@@ -232,46 +236,56 @@ export default {
     }
   },
 
-  created() {
-    this.$store.dispatch("companies/fetch");
-    this.$store.dispatch("attractions/fetch");
-    this.initialize();
+  mounted() {
+    this.$store.dispatch('fetchCompany')
+      .then(result => {
+        this.companies = result;
+        result.forEach(data => {
+          this.companiesLabel[data.id] = data.name;
+        });
+
+        console.log("companies",this.companies)
+        
+      })
+      .catch(err => console.log(err));
+    
+    this.$store.dispatch('fetchAttraction')
+      .then(result => {
+        this.attractions = result;
+      })
+      .catch(err => console.log(err));
+
+    this.$store.dispatch('getAllDestinations')
+      .then(result => {
+        result.forEach(data => {
+          for (var value in data) {
+            var destination = data[value];
+            destination.id = value;
+            this.destinations.push(destination);
+            this.destinationLabel[value] = data[value].name;
+          }
+        });
+        
+      })
+      .catch(err => console.log(err));
   },
 
   methods: {
-    initialize() {
-      this.attractions = this.$store.state.attractions;
-      this.companies = this.$store.state.companies;
-
-      this.destination = [
-        {
-          id: 1,
-          name: "Terengganu"
-        },
-        {
-          id: 2,
-          name: "Kuala Terengganu"
-        }
-      ];
-    },
 
     indexSelected(item) {
       this.selectedIndex.push(item.id);
     },
 
     editItem(item) {
-      this.editedIndex = this.attractions.data.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedIndex = this.attractions.indexOf(item);
+      this.editedItem =item;
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.attractions.data.indexOf(item);
-      const x = confirm(
-        "Are you sure you want to delete this attraction record?"
-      );
+      const x = confirm("Are you sure you want to delete this company?");
       if (x) {
-        this.$store.dispatch("attractions/remove", item);
+        this.$store.dispatch('deleteAttraction', item.id);
         this.snackbar = true;
       }
     },
@@ -289,15 +303,25 @@ export default {
       }, 300);
     },
 
-    save() {
+    saveAttraction(){
       if (this.editedIndex > -1) {
-        Object.assign(this.attractions.data[this.editedIndex], this.editedItem);
-        this.$store.dispatch("attractions/update", this.editedItem);
+        Object.assign(this.attractions[this.editedIndex], this.editedItem);
+        this.$store.dispatch('updateAttraction', [this.editedItem.id, this.editedItem])
+        .then(result => {
+          console.log("Attraction info updated")
+        })
+        .catch(err => console.log(err));
+
       } else {
-        this.$store.dispatch("attractions/store", this.editedItem);
+        this.$store.dispatch('storeAttraction', [this.editedItem.id, this.editedItem])
+        .then(result => {
+          console.log("New attraction info stored")
+        })
+        .catch(err => console.log(err));
       }
 
       this.close();
+
     },
 
     onUploadHero($event) {
