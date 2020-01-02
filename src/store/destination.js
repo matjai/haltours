@@ -62,6 +62,12 @@ export default {
         
         return query.get();
       }),
+
+      getAllDestinations:firestoreAction( async (context) => {
+        const snapshot =  await context.rootState.db.collection("destinations").get()
+
+        return snapshot.docs.map(doc => doc.data());
+      }),
   },
 
   getters: {}

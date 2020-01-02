@@ -1,124 +1,60 @@
-import dbInstance from './db';
-import attraction from './models/attraction';
-import {
-    ATTRACTION_ERROR, ATTRACTION_FETCHED,
-    ATTRACTION_ADDED, ATTRACTION_UPDATED,
-    ATTRACTION_REMOVED, ATTRACTION_INIT
-} from '../../constant';
-
-
-const COLLECTION = 'attractions';
+import { firestoreAction } from "vuexfire";
 
 export default {
-    namespaced: true,
-    state: {
-        loading: false,
-        data: [],
-        error: false,
-        errorMessage: ''
-    },
-    mutations: {
-        ATTRACTION_INIT(state, payload) {
-            state.loading = true;
-            state.error = false;
-            state.errorMessage = '';
-        },
-        ATTRACTION_FETCHED(state, payload) {
-            state.data = payload.data;
-            state.loading = false;
-            state.error = false;
-            state.errorMessage = '';
-        },
-        ATTRACTION_ADDED(state, payload) {
-            state.data.push(payload.data);
-            state.loading = false;
-            state.error = false;
-            state.errorMessage = '';
-        },
-        ATTRACTION_UPDATED(state, payload) {
-            const { data } = payload;
-            state.data = [...state.data, ...data];
-            state.loading = false;
-            state.error = false;
-            state.errorMessage = '';;
-        },
-        ATTRACTION_REMOVED(state, payload) {
-            const { data } = payload;
-            const itemIndex = state.data.indexOf(data);
-            state.data.splice(itemIndex, 1);
-            state.loading = false;
-            state.error = false;
-            state.errorMessage = '';
+  state: {
+    attractionInfo:null
+  },
+  mutations: {},
+  actions: {
 
-        },
-        ATTRACTION_ERROR(state, payload) {
-            state.error = true;
-            state.loading = false;
-            state.errorMessage = payload.error;
-        },
-    },
-    actions: {
-        fetch({ commit, rootState, dispatch }) {
-            commit(ATTRACTION_INIT);
-            const attractions = dbInstance.db().collection(COLLECTION).get();
-            const data = [];
-            attractions.then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
+    fetchAttraction: firestoreAction( async (context) => {
 
-                    const id = doc.id;
-                    const _m = Object.assign({}, { ...doc.data(), id });
-                    data.push(attraction(_m));
-                });
-                commit(ATTRACTION_FETCHED, { data });
-            })
-                .catch(error => {
-                    commit(ATTRACTION_ERROR, { error });
-                });
-        },
+        return context.bindFirestoreRef("attractionInfo", await context.rootState.db
+        .collection("attractions"));
+          
+    }),
 
-        store({ commit, rootState, dispatch }, payload) {
-            commit(ATTRACTION_INIT);
-            dbInstance.db().collection(COLLECTION).add(payload)
-                .then(docRef => {
-                    const data = { id: docRef.id, ...payload };
-                    commit(ATTRACTION_ADDED, { data });
-                })
-                .catch(error => {
-                    commit(ATTRACTION_ERROR, { error });
-                });
+    fetchAttractionByID:firestoreAction( async (context, payload) => {
+        
+        return await context.rootState.db
+        .collection("attractions")
+        .doc(payload).get();
 
-        },
-        update({ commit, rootState, dispatch }, payload) {
-            commit(ATTRACTION_INIT);
-            dbInstance.db().collection(COLLECTION).doc(payload.id).set(payload)
-                .then(result => {
-                    const data = payload;
-                    commit(ATTRACTION_UPDATED, { data });
-                })
-                .catch(error => {
-                    commit(ATTRACTION_ERROR, { error });
-                });
-        },
-        remove({ commit, rootState, dispatch }, payload) {
-            commit(ATTRACTION_INIT);
-            dbInstance.db().collection(COLLECTION).doc(payload.id).delete()
-                .then(result => {
-                    commit(ATTRACTION_REMOVED, { data: payload });
-                })
-                .catch(error => {
-                    commit(ATTRACTION_ERROR, { error });
-                });
-        },
-    },
-    getters: {
-        attractions: () => state => state.data,
-        mapAttractionByCollectionId: state => {
-            const data = {};
-            state.data.map((attraction) => {
-                data[attraction.id] = attraction.name;
-            });
+    }),
+    
+    fetchAttractionByDestinationID:firestoreAction( async (context, payload) => {
+        
+        return await context.rootState.db
+        .collection("attractions")
+        .where("destinationID", "==", payload).get();
 
-            return data;
-        }
-    }
+    }),
+
+    storeAttraction: firestoreAction( async (context, payload) => {
+
+        await context.rootState.db
+        .collection("attractions").add(payload[1])
+    
+    }),
+
+    updateAttraction: firestoreAction( async (context, payload) => {
+
+        await context.rootState.db
+        .collection("attractions").doc(payload[0]).set(payload[1])
+
+    }),
+
+    deleteAttraction: firestoreAction( async (context, payload) => {
+
+        await context.rootState.db
+        .collection("attractions").doc(payload).delete()
+
+    }),
+
+      
+  },
+
+  getters: {
+      
+  }
 };

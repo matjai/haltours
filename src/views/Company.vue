@@ -68,8 +68,7 @@
                                 :items="listCountry"
                                 item-text="name"
                                 label="Countries"
-                                :reduce = "key"
-                                item-value="key"
+                                item-value="id"
                                 v-model="editedItem.countryID"
                                 outlined
                               ></v-select>
@@ -322,6 +321,7 @@ export default {
     this.$store.dispatch('bindCountry')
       .then(result => {
         this.listCountry = result.country
+        console.log(this.listCountry)
       })
       .catch(err => console.log(err));
   },

@@ -4,7 +4,6 @@ import lookup from "@/store/lookup";
 import destination from "@/store/destination";
 import staffs from "@/store/staffs";
 import companies from "@/store/companies";
-import companiesV2 from "@/store/companiesV2";
 import attractions from "@/store/attractions";
 import roles from "@/store/roles";
 import requestForms from "@/store/requestForm";
@@ -56,9 +55,8 @@ const state = {
   user: null,
   staffs: null,
   companies: null,
-  companiesV2: null,
   roles: null,
-  attractions,
+  attractions:null,
   requestForms,
 
 };
@@ -74,7 +72,6 @@ export default new Vuex.Store({
     destination,
     staffs,
     companies,
-    companiesV2,
     roles,
     attractions,
     requestForms
