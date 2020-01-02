@@ -306,14 +306,14 @@ export default {
     saveAttraction(){
       if (this.editedIndex > -1) {
         Object.assign(this.attractions[this.editedIndex], this.editedItem);
-        this.$store.dispatch('updateAttraction', [this.editedItem.id, this.editedItem])
+        this.$store.dispatch('updateAttraction', this.editedItem)
         .then(result => {
           console.log("Attraction info updated")
         })
         .catch(err => console.log(err));
 
       } else {
-        this.$store.dispatch('storeAttraction', [this.editedItem.id, this.editedItem])
+        this.$store.dispatch('storeAttraction', this.editedItem)
         .then(result => {
           console.log("New attraction info stored")
         })
