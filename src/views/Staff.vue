@@ -18,7 +18,7 @@
 
       <template v-slot:item.name="{ item }">
         <router-link
-          :to="{name:'staff',params:{company:item.companyId,staff:item.id}}"
+          :to="{name:'staff',params:{company:item.companyId,staff:item.uuid},query:{doc: item.id}}"
         >{{ item.name }}</router-link>
       </template>
 
@@ -182,7 +182,6 @@
     </div>
     -->
   </v-container>
-  
 </template>
 
 <script>

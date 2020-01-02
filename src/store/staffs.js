@@ -1,5 +1,7 @@
 import dbInstance from './db';
 import staff from './models/staff';
+import uuid from 'uuid';
+
 import {
     STAFF_INIT, STAFF_FETCHED,
     STAFF_ERROR,
@@ -45,15 +47,12 @@ export default {
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
-
         },
-
         STAFF_GET_BY_ID(state, payload) {
             state.object = { ...state.object, ...payload.data };
             state.loading = false;
             state.error = false;
             state.errorMessage = '';
-
         },
         STAFF_UPDATED(state, payload) {
             state.loading = false;
@@ -76,6 +75,8 @@ export default {
         },
     },
     actions: {
+
+
         fetch({ commit, rootState, dispatch }) {
             commit(STAFF_INIT);
             const staffs = dbInstance.db().collection(COLLECTION).get();
@@ -86,14 +87,14 @@ export default {
                     const _m = Object.assign({}, { ...doc.data(), id });
                     data.push(staff(_m));
                 });
-
                 commit(STAFF_FETCHED, { data });
             })
                 .catch(error => {
                     commit(STAFF_ERROR, { error });
                 });
         },
-        fetchByCompanyID({ commit, rootState, dispatch },payload) {
+
+        fetchByCompanyID({ commit, rootState, dispatch }, payload) {
             commit(STAFF_INIT);
             const staffs = dbInstance.db().collection(COLLECTION).where("companyId", "==", payload).get();
             const data = [];
@@ -104,7 +105,6 @@ export default {
                     data.push(staff(_m));
                 });
 
-                console.log(data);
                 commit(STAFF_FETCHED_BY_COMPANY, { data });
             })
                 .catch(error => {
@@ -115,41 +115,53 @@ export default {
         async getById({ commit, rootState, dispatch }, payload) {
 
             commit(STAFF_INIT);
+            const firebaseStore = await dbInstance.db().collection(COLLECTION)
+                .doc(payload.doc)
+                .get();
 
-            const firebaseStore = await dbInstance.db().collection(COLLECTION).doc(payload.id).get();
-            const data = { ...firebaseStore.data(), ...{ id: payload.id } };
-            commit(STAFF_GET_BY_ID, { data: staff(data) });
-
-
+            commit(STAFF_GET_BY_ID, { data: staff(firebaseStore.data()) });
         },
+
+
         store({ commit, rootState, dispatch }, payload) {
             commit(STAFF_INIT);
-            dbInstance.db().collection(COLLECTION).add(payload)
+            const data = {
+                ...payload, ...{ uuid: uuid.v4() }
+            };
+            dbInstance.db().collection(COLLECTION)
+                .add(data)
                 .then(docRef => {
                     const data = { id: docRef.id, ...payload };
                     commit(STAFF_ADDED, { data });
                 })
                 .catch(error => {
+
                     commit(STAFF_ERROR, { error });
                 });
 
         },
+
         update({ commit, rootState, dispatch }, payload) {
             commit(STAFF_INIT);
             dbInstance.db()
-                .collection(COLLECTION).doc(payload.id).set(payload)
+                .collection(COLLECTION).doc(payload.companyId)
+                .where('id', '==', payload.uuid)
+                .set(payload, { merge: true })
                 .then(result => {
                     const data = payload;
                     commit(STAFF_UPDATED, { data });
                 })
                 .catch(error => {
-                    console.log(error);
                     commit(STAFF_ERROR, { error });
                 });
         },
+
+
         remove({ commit, rootState, dispatch }, payload) {
             commit(STAFF_INIT);
-            dbInstance.db().collection(COLLECTION).doc(payload.id).delete()
+            dbInstance.db().collection(COLLECTION)
+                .doc(payload.id)
+                .delete()
                 .then(result => {
                     commit(STAFF_REMOVED, { data: payload });
                 })

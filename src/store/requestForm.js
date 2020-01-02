@@ -77,6 +77,28 @@ export default {
                 });
         },
 
+        getById({ commit, rootState, dispatch }, id) {
+            commit(REQUEST_FORM_INIT);
+            const attractions = dbInstance.db()
+                .collection(COLLECTION)
+                .where('uuid', '==', id);
+
+
+            const data = [];
+            attractions.then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+
+                    const id = doc.id;
+                    const _m = Object.assign({}, { ...doc.data(), id });
+                    data.push(requestForm(_m));
+                });
+                commit(REQUEST_FORM_FETCHED, { data });
+            })
+                .catch(error => {
+                    commit(REQUEST_FORM_ERROR, { error });
+                });
+        },
+
         store({ commit, rootState, dispatch }, payload) {
             commit(REQUEST_FORM_INIT);
             return new Promise((resolve, reject) => {
