@@ -1,15 +1,15 @@
 
 <template>
-  <v-container fluid>
-    <v-card class="mx-auto" height="250" tile :loading="companies.loading">
-      <v-img height="100%" :src="getCompany.heroURL">
+  <v-container  fluid>
+    <v-card v-if="companies" class="mx-auto" height="250" tile >
+      <v-img height="100%" :src="companies.heroURL">
         <v-row align="end" class="fill-height">
           <v-col align-self="start" class="pa-0" cols="12">
             <v-hover>
               <template v-slot="{ hover }">
                 <v-card :elevation="hover ? 24 : 6" class="pa-2 ma-6" width="180" height="180">
                   <v-avatar class="profile mx-auto" color="grey" size="164" tile>
-                    <v-img :src="getCompany.logoURL"></v-img>
+                    <v-img :src="companies.logoURL"></v-img>
                   </v-avatar>
                 </v-card>
               </template>
@@ -18,22 +18,22 @@
         </v-row>
       </v-img>
     </v-card>
-    <v-row class="pt-6">
+    <v-row v-if="companies" class="pt-6">
       <v-col md="auto">
           <v-card 
             class="mx-auto"
             min-width="344">
             <v-list-item>
                 <v-list-item-content>
-                    <v-list-item-title>{{getCompany.name}}</v-list-item-title>
-                    <v-list-item-subtitle>{{getCompany.countryID}}</v-list-item-subtitle>
-                    <v-list-item-subtitle>{{getCompany.website}}</v-list-item-subtitle>
+                    <v-list-item-title>{{companies.name}}</v-list-item-title>
+                    <v-list-item-subtitle>{{companies.countryID}}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{companies.website}}</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
-            <v-btn icon :href="`//${getCompany.facebook}`" target="_blank">
+            <v-btn icon :href="`//${companies.facebook}`" target="_blank">
                 <v-icon x-large color="blue darken-2" >mdi-facebook-box</v-icon>
             </v-btn>
-            <v-btn icon :href="`//${getCompany.instagram}`" target="_blank">
+            <v-btn icon :href="`//${companies.instagram}`" target="_blank">
                 <v-icon x-large color="red darken-2" >mdi-instagram</v-icon>
             </v-btn>
           </v-card>
@@ -53,35 +53,35 @@
                     <v-card flat>
                         <v-card-text>
                         <v-row class="mb-4" align="center">
-                            <strong class="title">{{getCompany.name}}</strong>
+                            <strong class="title">{{companies.name}}</strong>
                             <v-spacer></v-spacer>
                         </v-row>
                         <p>
-                            {{getCompany.countryId}}
+                            {{companies.countryId}}
                         </p>
                         <p>
-                            {{getCompany.description}}
+                            {{companies.description}}
                         </p>
                         <p>
-                            <strong>Address</strong>   : {{getCompany.address}}
+                            <strong>Address</strong>   : {{companies.address}}
                         </p>
                         <p>
-                            <strong>Registration Number</strong>  : {{getCompany.registration_number}}
+                            <strong>Registration Number</strong>  : {{companies.registration_number}}
                         </p>
                         <p>
-                            <strong>Phone Number</strong>  : {{getCompany.phone_number}}
+                            <strong>Phone Number</strong>  : {{companies.phone_number}}
                         </p>
                         <p>
-                            <strong>Fax Number</strong>  : {{getCompany.fax_number}}
+                            <strong>Fax Number</strong>  : {{companies.fax_number}}
                         </p>
                         <p>
-                            <strong>Website</strong>  : {{getCompany.website}}
+                            <strong>Website</strong>  : {{companies.website}}
                         </p>
                         <p>
-                            <strong>Facebook</strong>  : {{getCompany.facebook}}
+                            <strong>Facebook</strong>  : {{companies.facebook}}
                         </p>
                         <p>
-                            <strong>Instagram</strong>  : {{getCompany.instagram}}
+                            <strong>Instagram</strong>  : {{companies.instagram}}
                         </p>
 
                         </v-card-text>
@@ -130,6 +130,7 @@ export default {
     top: true,
     right: true,
     countries: [],
+    companies: null,
     companyId: null,
     editedIndex: -1,
     selectedIndex: [],
@@ -182,10 +183,22 @@ export default {
 
   created() {
     this.companyId = this.$router.currentRoute.params.company;
-    this.$store.dispatch("companies/getCompanyByID", this.companyId);
+    // this.$store.dispatch('fetchCompany', this.companyId);
     this.$store.dispatch("staffs/fetchByCompanyID",this.companyId);
-    this.companies = this.$store.state.companies;
+    // this.companies = this.$store.state.companies;
     this.initialize();
+  },
+  mounted() {
+    this.companyId = this.$router.currentRoute.params.company;
+    this.$store.dispatch('fetchCompanyByID', this.companyId).then(async result => {
+          
+          result= result.data()
+          this.companies = result;
+          console.log(this.companies)
+          
+          
+        })
+        .catch(err => console.log(err));
   },
 
   methods: {

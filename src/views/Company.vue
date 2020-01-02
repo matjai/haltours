@@ -2,13 +2,12 @@
   <v-container fluid class="pa-2 mt-10">
     <v-layout>
       <v-flex>
-        <div class="about d-block pa-2">
+        <div v-if="companies" class="about d-block pa-2">
           <v-data-table
             :headers="headers"
-            :items="companies.data"
+            :items="companies"
             sort-by="calories"
             class="elevation-1"
-            :loading="companies.loading"
             :search="search"
           >
             <template v-slot:item.name="{ item }">
@@ -69,7 +68,8 @@
                                 :items="listCountry"
                                 item-text="name"
                                 label="Countries"
-                                item-value="id"
+                                :reduce = "key"
+                                item-value="key"
                                 v-model="editedItem.countryID"
                                 outlined
                               ></v-select>
@@ -205,7 +205,7 @@
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                        <v-btn color="blue darken-1" text @click="saveCompany">Save</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -244,6 +244,7 @@ import { v1 as uuid } from 'uuid';
 
 export default {
   data: () => ({
+    companies:[],
     dialog: false,
     search: "",
     imageData: null,
@@ -259,7 +260,7 @@ export default {
       },
       { text: "id", value: "id" },
       { text: "Name", value: "name" },
-      { text: "Description", value: "description" },
+      { text: "Registration Number", value: "registration_number" },
       { text: "Countries", value: "countryID" },
       { text: "Actions", value: "action", sortable: false }
     ],
@@ -269,10 +270,8 @@ export default {
     right: true,
     countries: [],
     listCountry:[],
-    countriesLabel: [],
     editedIndex: -1,
     selectedIndex: [],
-    countriesLabel: [],
     editedItem: {
       name: null,
       description: "",
@@ -312,48 +311,38 @@ export default {
     }
   },
 
-  created() {
-    this.$store.dispatch("companies/fetch");
+  mounted() {
+    this.$store.dispatch('fetchCompany')
+      .then(result => {
+        this.companies = result;
+        
+      })
+      .catch(err => console.log(err));
+
     this.$store.dispatch('bindCountry')
-        .then(result => {
-            this.listCountry = result.country
-        })
-        .catch(err => console.log(err));
-    this.initialize();
+      .then(result => {
+        this.listCountry = result.country
+      })
+      .catch(err => console.log(err));
   },
-
+  
   methods: {
-    initialize() {
-      this.companies = this.$store.state.companies;
-      console.log(this.companies)
-      this.countries = [
-        {
-          id: 1,
-          name: "Malaysia"
-        },
-        {
-          id: 2,
-          name: "Indonesia"
-        }
-      ];
-
-    },
 
     indexSelected(item) {
       this.selectedIndex.push(item.id);
     },
 
     editItem(item) {
-      this.editedIndex = this.companies.data.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedIndex = this.companies.indexOf(item);
+      this.editedItem = item;
+      console.log(this.editedItem)
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.companies.data.indexOf(item);
       const x = confirm("Are you sure you want to delete this company?");
       if (x) {
-        this.$store.dispatch("companies/remove", item);
+        this.$store.dispatch('deleteCompany', item.id);
         this.snackbar = true;
       }
     },
@@ -373,15 +362,25 @@ export default {
       }, 300);
     },
 
-    save() {
+    saveCompany(){
       if (this.editedIndex > -1) {
-        Object.assign(this.companies.data[this.editedIndex], this.editedItem);
-        this.$store.dispatch("companies/update", this.editedItem);
+        Object.assign(this.companies[this.editedIndex], this.editedItem);
+        this.$store.dispatch('updateCompany', [this.editedItem.id, this.editedItem])
+        .then(result => {
+          console.log("Company info updated")
+        })
+        .catch(err => console.log(err));
+
       } else {
-        this.$store.dispatch("companies/store", this.editedItem);
+        this.$store.dispatch('storeCompany', [this.editedItem.id, this.editedItem])
+        .then(result => {
+          console.log("New company info stored")
+        })
+        .catch(err => console.log(err));
       }
 
       this.close();
+
     },
 
     onUploadLogo($event) {
