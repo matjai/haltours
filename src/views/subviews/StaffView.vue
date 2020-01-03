@@ -9,7 +9,7 @@
           <v-row>
             <v-col cols="12 d-flex justify-center">
               <v-avatar class="profile" color="grey" size="164">
-                <v-img :src="getStaff.avatar"></v-img>
+                <v-img :src="staff.avatar"></v-img>
               </v-avatar>
             </v-col>
             <v-col cols="12">
@@ -25,14 +25,14 @@
               ></v-file-input>
             </v-col>
             <v-col cols="12" sm="6" md="6">
-              <v-text-field disabled label="Name" v-model="getStaff.name" placeholder="Name" filled></v-text-field>
+              <v-text-field disabled label="Name" v-model="staff.name" placeholder="Name" filled></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6" md="6">
               <v-text-field
                 disabled
                 label="Mobile"
-                v-model="getStaff.mobile"
+                v-model="staff.mobile"
                 placeholder="Mobile"
                 filled
               ></v-text-field>
@@ -42,31 +42,25 @@
               <v-text-field
                 disabled
                 label="Staff ID"
-                v-model="getStaff.staffId"
+                v-model="staff.staffId"
                 placeholder="Employee ID"
                 filled
               ></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6" md="6">
-              <v-text-field
-                disabled
-                label="Email"
-                v-model="getStaff.email"
-                placeholder="Email"
-                filled
-              ></v-text-field>
+              <v-text-field disabled label="Email" v-model="staff.email" placeholder="Email" filled></v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6" md="6">
               <v-select
                 :items="departments"
                 item-text="name"
+                item-value="name"
                 disabled
                 label="Department"
-                v-model="getStaff.department"
+                v-model="staff.department"
                 filled
-                return-object
               ></v-select>
             </v-col>
 
@@ -74,36 +68,36 @@
               <v-select
                 :items="positions"
                 item-text="name"
+                item-value="name"
                 disabled
                 label="Position"
-                v-model="getStaff.position"
+                v-model="staff.position"
                 filled
-                return-object
               ></v-select>
             </v-col>
 
             <v-col cols="6" sm="6" md="6">
               <v-select
-                :items="getRoles"
+                :items="roles"
                 item-text="name"
+                item-value="name"
                 disabled
                 label="Access Roles"
-                v-model="getStaff.roles"
+                v-model="staff.roles"
                 filled
-                return-object
               ></v-select>
             </v-col>
 
             <v-col cols="6" sm="6" md="6">
               <v-select
-                :items="getCompanies"
+                :items="companies"
                 item-text="name"
+                item-value="id"
                 disabled
                 label="Company"
                 placeholder="Company"
-                v-model="getStaff.company"
+                v-model="staff.companyId"
                 filled
-                return-object
               ></v-select>
             </v-col>
           </v-row>
@@ -123,26 +117,29 @@
 import firebase from "firebase/firebase";
 
 export default {
-  created() {
+  mounted() {
     const staff = this.$router.currentRoute.params.staff;
     const company = this.$router.currentRoute.params.company;
 
-    this.$store.dispatch("staffs/getById", { id: staff });
-    this.$store.dispatch("companies/fetch");
-    this.$store.dispatch("roles/fetch");
+    this.$store
+      .dispatch("fetchStaffByID", staff)
+      .then(result => {
+        this.staff = result.data();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    this.$store
+      .dispatch("fetchCompany")
+      .then(result => {
+        this.companies = result;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
     this.initialize();
-  },
-  computed: {
-    getStaff() {
-      const data = this.$store.getters["staffs/getStaff"];
-      return { ...this.defaultItem, ...data };
-    },
-    getRoles() {
-      return this.$store.getters["roles/getAllRoles"];
-    },
-    getCompanies() {
-      return this.$store.getters["companies/companies"];
-    }
   },
   methods: {
     save() {},
@@ -165,18 +162,32 @@ export default {
           name: "Manager"
         }
       ];
+      this.roles = [
+        {
+          name: "Technical"
+        },
+        {
+          name: "Administrator"
+        },
+        {
+          name: "Branch"
+        }
+      ];
     }
   },
   data: () => ({
     imageIsUploading: false,
     departments: [],
+    companies: [],
     positions: [],
+    roles: [],
     rules: [
       value =>
         !value ||
         value.size < 2000000 ||
         "Avatar size should be less than 2 MB!"
     ],
+    staff: {},
     editedItem: {}
   })
 };

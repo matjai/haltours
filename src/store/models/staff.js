@@ -1,6 +1,7 @@
 export default (data) => {
 
     return {
+        uuid: data.uuid || 0,
         id: data.id || 0,
         companyId: data.companyId || null,
         staffId: data.staffId || null,

@@ -12,7 +12,9 @@
                   label="Departure To"
                   prepend-inner-icon="mdi-airplane-takeoff"
                   placeholder="Departure To"
-                  outlined
+                  :readonly="!this.editMode"
+                  :filled="!this.editMode"
+                  :outlined="this.editMode"
                   v-model="defaultItem.departureTo"
                 ></v-text-field>
               </v-col>
@@ -218,6 +220,7 @@ export default {
       isSubmit: false,
       editMode: false,
       defaultItem: {
+        companyId: null,
         departureTo: null,
         departureDate: null,
         returnFrom: null,
@@ -246,6 +249,9 @@ export default {
   methods: {
     initialize() {
       const companyId = this.$router.currentRoute.params.company;
+      const recordId = this.$router.currentRoute.query.id;
+
+      this.defaultItem.companyId = companyId;
 
       if (this.editMode) {
         //overlap our default item
@@ -265,7 +271,7 @@ export default {
       if (this.editMode) {
         this.$store
           .dispatch("requestForms/update", {
-            id: this.$router.currentRoute.params.company,
+            id: this.recordId,
             data: this.defaultItem
           })
           .then(result => {

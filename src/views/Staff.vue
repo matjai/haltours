@@ -3,15 +3,15 @@
     <!-- <h2 class="font-weight-bold">Staffs Management</h2> -->
     <v-data-table
       :headers="headers"
-      :items="getStaffs"
+      :items="staffs"
       sort-by="calories"
       class="elevation-1"
-      :loading="staffs.loading"
+      :loading="staffs == null"
     >
       <template v-slot:item.avatar="{ item }">
         <div style="padding:1em;">
           <v-avatar size="62">
-            <img alt="Avatar" src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460" />
+            <img alt="Avatar" :src="item.avatar" />
           </v-avatar>
         </div>
       </template>
@@ -109,10 +109,10 @@
                       <v-select
                         :items="departments"
                         item-text="name"
+                        item-value="name"
                         label="Department"
                         v-model="editedItem.department"
                         outlined
-                        return-object
                       ></v-select>
                     </v-col>
 
@@ -120,27 +120,27 @@
                       <v-select
                         :items="positions"
                         item-text="name"
+                        item-value="name"
                         label="Position"
                         v-model="editedItem.position"
                         outlined
-                        return-object
                       ></v-select>
                     </v-col>
 
                     <v-col cols="6" sm="6" md="6">
                       <v-select
-                        :items="getRoles"
+                        :items="roles"
                         item-text="name"
+                        item-value="name"
                         label="Access Roles"
                         v-model="editedItem.roles"
                         outlined
-                        return-object
                       ></v-select>
                     </v-col>
 
                     <v-col cols="6" sm="6" md="6">
                       <v-select
-                        :items="getCompanies"
+                        :items="companies"
                         item-text="name"
                         item-value="id"
                         label="Company"
@@ -164,7 +164,7 @@
       </template>
 
       <template v-slot:item.roles="{ item }">
-        <v-chip class="ma-2 text-center justify-center" color="primary" pill>{{ item.roles.name }}</v-chip>
+        <v-chip class="ma-2 text-center justify-center" color="primary" pill>{{ item.roles }}</v-chip>
       </template>
 
       <template v-slot:item.action="{ item }">
@@ -182,7 +182,6 @@
     </div>
     -->
   </v-container>
-  
 </template>
 
 <script>
@@ -210,8 +209,8 @@ export default {
       { text: "Name", value: "name" },
       { text: "Staff ID", value: "staffId" },
       { text: "Mobile", value: "mobile" },
-      { text: "Position", value: "position.name" },
-      { text: "Department", value: "department.name" },
+      { text: "Position", value: "position" },
+      { text: "Department", value: "department" },
       { text: "Roles", value: "roles" },
       { text: "Actions", value: "action", sortable: false }
     ],
@@ -223,7 +222,9 @@ export default {
     imageData: null,
     positions: [],
     departments: [],
-    staffs: {},
+    staffs: [],
+    roles: [],
+    companies: [],
     editedIndex: -1,
     selectedIndex: [],
     editedItem: {
@@ -249,51 +250,70 @@ export default {
     }
   }),
 
-  computed: {
-    getRoles() {
-      return this.$store.getters["roles/getAllRoles"];
-    },
-    getStaffs() {
-      return this.$store.getters["staffs/staffs"];
-    },
-    getCompanies() {
-      return this.$store.getters["companies/companies"];
-    },
-    getCompanyLabel() {
-      return $this.store.getters["companies/mapCompanyByCollectionId"];
-    }
-  },
-
   watch: {
     dialog(val) {
       val || this.close();
     }
   },
 
-  created() {
-    this.$store.dispatch("staffs/fetch");
-    this.$store.dispatch("companies/fetch");
+  mounted() {
     this.initialize();
+
+    this.$store
+      .dispatch("fetchStaff")
+      .then(result => {
+        console.log(result);
+
+        this.staffs = result;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    this.$store
+      .dispatch("fetchCompany")
+      .then(result => {
+        this.companies = result;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
+
   methods: {
     initialize() {
-      this.staffs = this.$store.state.staffs;
-      (this.departments = [
+      this.departments = [
         {
           name: "Executive"
         },
         {
           name: "Management"
         }
-      ]),
-        (this.positions = [
-          {
-            name: "Engineer"
-          },
-          {
-            name: "Manager"
-          }
-        ]);
+      ];
+
+      this.positions = [
+        {
+          name: "Engineer"
+        },
+        {
+          name: "Manager"
+        }
+      ];
+
+      this.roles = [
+        {
+          name: "Staff"
+        },
+        {
+          name: "Technical"
+        },
+        {
+          name: "Branch"
+        }
+      ];
+    },
+    getCompany(id) {
+      return this.$store.dispatch("fetchCompanyByID", id);
     },
 
     indexSelected(item) {
@@ -326,16 +346,16 @@ export default {
     },
 
     editItem(item) {
-      this.editedIndex = this.staffs.data.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedIndex = this.staffs.indexOf(item);
+      this.editedItem = this.staffs[this.editedIndex];
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.staffs.data.indexOf(item);
+      const index = this.staffs.indexOf(item);
       const x = confirm("Are you sure you want to delete this item?");
       if (x) {
-        this.$store.dispatch("staffs/remove", item);
+        this.$store.dispatch("deleteStaff", item);
         this.snackbar = true;
       }
     },
@@ -352,10 +372,10 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.staffs.data[this.editedIndex], this.editedItem);
-        this.$store.dispatch("staffs/update", this.editedItem);
+        Object.assign(this.staffs[this.editedIndex], this.editedItem);
+        this.$store.dispatch("updateStaff", this.editedItem);
       } else {
-        this.$store.dispatch("staffs/store", this.editedItem);
+        this.$store.dispatch("storeStaff", this.editedItem);
       }
 
       this.close();

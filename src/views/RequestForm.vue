@@ -70,6 +70,12 @@
               </v-toolbar>
             </template>
 
+            <template v-slot:item.companyId="{ item }">
+              <router-link
+                :to="{name:'requestFormsNew',params:{company:item.companyId},query:{edit:false,id:item.id}}"
+              >{{ item.companyId }}</router-link>
+            </template>
+
             <template v-slot:item.action="{ item }">
               <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
               <v-icon small @click="deleteItem(item)">delete</v-icon>
@@ -112,6 +118,7 @@ export default {
         align: "left",
         sortable: false
       },
+      { text: "ID", value: "companyId" },
       { text: "Departure To", value: "departureTo" },
       { text: "Return From", value: "returnFrom" },
       { text: "Departure Date", value: "departureDate" },
@@ -129,6 +136,7 @@ export default {
     editedIndex: -1,
     selectedIndex: [],
     editedItem: {
+      companyId: null,
       departureTo: null,
       departureDate: null,
       returnFrom: null,
@@ -144,9 +152,11 @@ export default {
       requestStaffId: null,
       requesteeCompanyId: null,
       requesteeStaffId: null,
-      dateRequest: null
+      dateRequest: null,
+      requestorCompanyId: null
     },
     defaultItem: {
+      companyId: null,
       departureTo: null,
       departureDate: null,
       returnFrom: null,
@@ -162,7 +172,8 @@ export default {
       requestStaffId: null,
       requesteeCompanyId: null,
       requesteeStaffId: null,
-      dateRequest: null
+      dateRequest: null,
+      requestorCompanyId: null
     }
   }),
   methods: {
@@ -174,7 +185,8 @@ export default {
     createForm() {
       return this.$router.push({
         name: "requestFormsNew",
-        params: { company: this.selectedCompany }
+        params: { company: this.selectedCompany },
+        query: { create: true }
       });
     },
     indexSelected(item) {
@@ -186,8 +198,8 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.$router.push({
         name: "requestFormsNew",
-        query: { edit: true },
-        params: { company: item.id }
+        query: { edit: true, id: item.id },
+        params: { company: item.companyId }
       });
     },
 

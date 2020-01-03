@@ -3,6 +3,7 @@ export default (data) => {
 
     return {
         id: data.id || null,
+        companyId: data.companyId || null,
         departureTo: data.departureTo || null,
         departureDate: data.departureDate || null,
         returnFrom: data.returnFrom || null,
