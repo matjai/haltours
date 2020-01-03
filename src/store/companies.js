@@ -32,14 +32,14 @@ export default {
     storeCompany: firestoreAction( async (context, payload) => {
 
         await context.rootState.db
-        .collection("companies").add(payload[1])
+        .collection("companies").add(payload)
     
     }),
 
     updateCompany: firestoreAction( async (context, payload) => {
 
         await context.rootState.db
-        .collection("companies").doc(payload[0]).set(payload[1])
+        .collection("companies").doc(payload.id).set(payload)
 
     }),
 

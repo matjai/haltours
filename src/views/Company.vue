@@ -365,14 +365,14 @@ export default {
     saveCompany(){
       if (this.editedIndex > -1) {
         Object.assign(this.companies[this.editedIndex], this.editedItem);
-        this.$store.dispatch('updateCompany', [this.editedItem.id, this.editedItem])
+        this.$store.dispatch('updateCompany', this.editedItem)
         .then(result => {
           console.log("Company info updated")
         })
         .catch(err => console.log(err));
 
       } else {
-        this.$store.dispatch('storeCompany', [this.editedItem.id, this.editedItem])
+        this.$store.dispatch('storeCompany', this.editedItem)
         .then(result => {
           console.log("New company info stored")
         })

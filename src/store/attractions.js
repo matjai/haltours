@@ -33,14 +33,14 @@ export default {
     storeAttraction: firestoreAction( async (context, payload) => {
 
         await context.rootState.db
-        .collection("attractions").add(payload[1])
+        .collection("attractions").add(payload)
     
     }),
 
     updateAttraction: firestoreAction( async (context, payload) => {
 
         await context.rootState.db
-        .collection("attractions").doc(payload[0]).set(payload[1])
+        .collection("attractions").doc(payload.id).set(payload)
 
     }),
 
