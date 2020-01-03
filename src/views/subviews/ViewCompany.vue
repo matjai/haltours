@@ -2,14 +2,14 @@
 <template>
   <v-container  fluid>
     <v-card v-if="companies" class="mx-auto" height="250" tile >
-      <v-img height="100%" :src="companies.heroURL">
+      <v-img height="100%" :src="companies.heroURL ? companies.heroURL : emptyImageUrl" @error="imgUrlAlt">
         <v-row align="end" class="fill-height">
           <v-col align-self="start" class="pa-0" cols="12">
             <v-hover>
               <template v-slot="{ hover }">
                 <v-card :elevation="hover ? 24 : 6" class="pa-2 ma-6" width="180" height="180">
                   <v-avatar class="profile mx-auto" color="grey" size="164" tile>
-                    <v-img :src="companies.logoURL"></v-img>
+                    <v-img :src="companies.logoURL? companies.logoURL : emptyImageUrl" @error="imgUrlAlt"></v-img>
                   </v-avatar>
                 </v-card>
               </template>
@@ -19,7 +19,7 @@
       </v-img>
     </v-card>
     <v-row v-if="companies" class="pt-6">
-      <v-col md="auto">
+      <v-col :cols="4">
           <v-card 
             class="mx-auto"
             min-width="344">
@@ -38,7 +38,7 @@
             </v-btn>
           </v-card>
       </v-col>
-      <v-col class="auto">
+      <v-col :cols="8">
         <v-card>
           <v-tabs
             background-color="white"
@@ -117,6 +117,7 @@ export default {
     destination: displayDestination
   },
   data: () => ({
+    emptyImageUrl : "https://firebasestorage.googleapis.com/v0/b/cikgumurnitravel-1c58c.appspot.com/o/image-not-available.jpg?alt=media&token=2ed2e48e-87c1-48c4-ba68-4889be8370b2",
     dialog: false,
     search: "",
     imageData: null,
@@ -315,7 +316,10 @@ export default {
           });
         }
       );
-    }
+    },
+    imgUrlAlt(event) {
+        event.target.src = this.emptyImageUrl;
+      }
   }
 };
 </script>

@@ -24,11 +24,24 @@ export default {
     
     fetchAttractionByDestinationID:firestoreAction( async (context, payload) => {
         
-        return await context.rootState.db
+        
+        const snapshot =  await context.rootState.db
         .collection("attractions")
         .where("destinationID", "==", payload).get();
 
+        return snapshot.docs.map(doc => doc.data());
+
     }),
+
+    fetchAttractionByCompanyID:firestoreAction( async (context, payload) => {
+        
+      const snapshot =  await context.rootState.db
+        .collection("attractions")
+        .where("companyID", "==", payload).get();
+
+        return snapshot.docs.map(doc => doc.data());
+
+  }),
 
     storeAttraction: firestoreAction( async (context, payload) => {
 

@@ -17,6 +17,7 @@
     "uuid": "^3.3.3",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.5",
+    "vue-carousel-3d": "^0.2.0",
     "vue-picture-input": "^2.1.6",
     "vue-router": "^3.0.3",
     "vue-uuid": "^1.1.1",

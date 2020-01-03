@@ -63,6 +63,16 @@ export default {
         return query.get();
       }),
 
+      copyDataToNewDoc:firestoreAction( async (context, payload) => {
+        let query =  await context.rootState.db
+        .collection("destinations")
+        .doc(payload[0]).get();
+
+        await context.rootState.db
+        .collection("destinations").doc(payload[1]).set(query.data());
+        
+      }),
+
       getAllDestinations:firestoreAction( async (context) => {
         const snapshot =  await context.rootState.db.collection("destinations").get()
 

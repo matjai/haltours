@@ -1,98 +1,72 @@
 <template>
-  <v-row>
-    <v-col class="mt-3" cols="2">
-      <v-card>
-        <v-navigation-drawer permanent>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="title">
-                Destinations
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{countryDestination}}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-divider></v-divider>
-
-          <v-list dense nav>
-            <v-list-item v-for="item in destList" :key="item.destination">
-              <!-- <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon> -->
-
-              <v-list-item-content>
-                <v-btn text small @click="loadData(item.data)">{{ item.destination }}</v-btn>
-
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-navigation-drawer>
-      </v-card>
-    </v-col>
-    <v-col cols="10">
-      <div v-if="loadDestination != null">
-        <v-row>
-          <v-col cols="3" v-for="destination in loadDestination" v-bind:key="destination.id">
-            <v-card>
-              <v-card-text>
-                
-                <div><v-btn @click="editDestination(destination.id)" class="mb-1" color="primary"  text small>{{destination.name}}</v-btn> <v-menu offset-y>
-      <v-list>
- 
-      </v-list>
-    </v-menu></div>
-                <v-img :src="destination.fileUrl" aspect-ratio="1" max-height="200" max-width="500"
-                  class="grey lighten-2"></v-img>
-                <p>{{destination.otherName}}</p>
-                <!-- <div class="text--primary">{{destination.value.summary}}</div> -->
-                <span>{{destination.summary.slice(0, 120)}} </span>
-                <a class="" href="#" @click="moreInfoSummary(destination)">
-                  Read more...
-                </a>
-              </v-card-text>
-            </v-card>
-
-          </v-col>
-        </v-row>
-      </div>
-    </v-col>
-    <v-dialog v-if="infoForSummary"
-      v-model="dialogInfo"
+  <v-container fluid>
+    <v-select :items="destList" @change="changeDestinationList" item-text="destination" label="Country" clearable return-object @click:clear="clearSelection"></v-select>
+    <v-data-table
+      :headers="headers"
+      :items="destinationData"
+      sort-by="calories"
+      class="elevation-1"
+      :expanded.sync="expanded"
+      single-expand
+      @click:row="expandRow"
     >
-      <v-card>
-        <v-card-title class="headline">{{infoForSummary.name}} ({{infoForSummary.otherName}})</v-card-title>
+      <template v-slot:expanded-item="{ headers }">
+        <td :colspan="headers.length" style="background: linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(255, 255, 255, 0.5) 100%);">
+          <carousel-3d>
+            <slide v-for="(item,i) in attractionList"
+              :key="i"
+               
+              :index="i">
+                  <v-img
+                    class="white--text align-end"
+                    height="100%"
+                    :src="item.heroURL ? item.heroURL : emptyImageUrl"
+                    @error="imgUrlAlt"
+                  >
+                    <v-row align="end" class="lightbox white--text pa-2 fill-height">
+                      <v-col>
+                        <div class="subheading" ><h2 style="background: linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(255, 255, 255, 0.5) 100%);">{{item.name}}</h2></div>
+                      </v-col>
+                    </v-row>
+                  </v-img>
 
-        <v-card-text>
-         {{infoForSummary.summary}}
-        </v-card-text>
+            </slide>
+          </carousel-3d>
+        </td>
+      </template>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            color="green darken-1"
-            text
-            @click="dialogInfo = false"
-          >
-            OK
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
+    </v-data-table>
+  </v-container>
 </template>
 
 <script>
+  import { Carousel3d, Slide } from 'vue-carousel-3d';
   import _ from 'lodash';
+  
   export default {
+    components: {
+        Carousel3d,
+        Slide
+      },
     data: () => ({
+      emptyImageUrl : "https://firebasestorage.googleapis.com/v0/b/cikgumurnitravel-1c58c.appspot.com/o/image-not-available.jpg?alt=media&token=2ed2e48e-87c1-48c4-ba68-4889be8370b2",
+      attractionList:[],
+      expanded: [],
       destList: null,
       loadDestination: null,
       countryDestination:"",
       dialogInfo:false,
-      infoForSummary:null
+      infoForSummary:null,
+      destinationData:[],
+      attractions:[],
+      headers: [
+      {
+        align: "left",
+        sortable: false
+      },
+      { text: "Name", value: "name" },
+      { text: "Summary", value: "summary" }
+    ],
     }),
     watch: {
 
@@ -113,8 +87,16 @@
               data: value
             }))
             .value()
+
+            console.log("list",this.destList)
         })
         .catch(err => console.log(err));
+      this.$store.dispatch('fetchAttractionByCompanyID',this.$router.currentRoute.params.company)
+      .then(result => {
+        this.attractions = result;
+        console.log(this.attractions)
+      })
+      .catch(err => console.log(err));
     },
     methods: {
        async loadData(data) {
@@ -130,6 +112,26 @@
       editDestination(desId){
           // "/destinations/:companyId/:action/:destinationId",
           this.$router.push(`/destinations/${this.$router.currentRoute.params.company}/edit/${desId}`)
+      },
+
+      changeDestinationList(item){
+        this.destinationData = item.data;
+        console.log(this.destinationData)
+      },
+      clearSelection(){
+        this.destinationData = [];
+        this.attractionList = [];
+        this.expanded = [];
+      },
+
+      expandRow(item) {
+        this.expanded = item === this.expanded[0] ? [] : [item]
+        this.attractionList = this.attractions.filter(attr => {
+          return attr.destinationID === item.id
+        })
+      },
+      imgUrlAlt(event) {
+        event.target.src = this.emptyImageUrl;
       }
     }
   };

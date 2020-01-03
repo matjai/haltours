@@ -140,7 +140,7 @@
 
                     <v-col cols="6" sm="6" md="6">
                       <v-select
-                        :items="getCompanies"
+                        :items="companies"
                         item-text="name"
                         item-value="id"
                         label="Company"
@@ -211,6 +211,8 @@ export default {
       { text: "Roles", value: "roles" },
       { text: "Actions", value: "action", sortable: false }
     ],
+    companies: [],
+    companiesLabel: [],
     search: "",
     snackbar: false,
     top: true,
@@ -270,9 +272,22 @@ export default {
   created() {
     this.companyId = this.$router.currentRoute.params.company;
     this.$store.dispatch("staffs/fetchByCompanyID",this.companyId);
-    this.$store.dispatch("companies/fetch");
     this.initialize();
   },
+
+  mounted() {
+    this.$store.dispatch('fetchCompany')
+      .then(result => {
+        this.companies = result;
+        result.forEach(data => {
+          this.companiesLabel[data.id] = data.name;
+        });
+        
+      })
+      .catch(err => console.log(err));
+  },
+
+  
   methods: {
     initialize() {
       this.staffs = this.$store.state.staffs;
