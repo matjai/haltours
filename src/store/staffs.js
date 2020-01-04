@@ -21,6 +21,16 @@ export default {
 
         }),
 
+        fetchStaffByCompanyID:firestoreAction( async (context, payload) => {
+      
+            const snapshot =   await context.rootState.db
+            .collection("staffs")
+            .where("companyId", "==", payload).get();
+
+            return snapshot.docs.map(doc => doc.data());
+      
+          }),
+
         storeStaff: firestoreAction(async (context, payload) => {
             await context.rootState.db
                 .collection("staffs").add(payload);

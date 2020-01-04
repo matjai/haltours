@@ -185,7 +185,7 @@ export default {
   created() {
     this.companyId = this.$router.currentRoute.params.company;
     // this.$store.dispatch('fetchCompany', this.companyId);
-    this.$store.dispatch("staffs/fetchByCompanyID",this.companyId);
+    this.$store.dispatch("fetchStaffByCompanyID",this.companyId);
     // this.companies = this.$store.state.companies;
     this.initialize();
   },

@@ -17,7 +17,7 @@
               :key="i"
                
               :index="i">
-                  <v-img
+                  <!-- <v-img
                     class="white--text align-end"
                     height="100%"
                     :src="item.heroURL ? item.heroURL : emptyImageUrl"
@@ -28,8 +28,19 @@
                         <div class="subheading" ><h2 style="background: linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(255, 255, 255, 0.5) 100%);">{{item.name}}</h2></div>
                       </v-col>
                     </v-row>
-                  </v-img>
+                  </v-img> -->
 
+              <figure>
+                <v-img
+                    height="100%"
+                    :src="item.heroURL ? item.heroURL : emptyImageUrl"
+                    @error="imgUrlAlt"
+                ></v-img>
+                <figcaption>
+                  {{item.name}}
+
+                </figcaption>
+              </figure>
             </slide>
           </carousel-3d>
         </td>
