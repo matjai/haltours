@@ -1,6 +1,5 @@
 <template>
-  <v-container fluid>
-    <v-select :items="destList" @change="changeDestinationList" item-text="destination" label="Country" clearable return-object @click:clear="clearSelection"></v-select>
+  <v-container fluid class="pa-2 mt-10">
     <v-data-table
       :headers="headers"
       :items="destinationData"
@@ -10,6 +9,15 @@
       single-expand
       @click:row="expandRow"
     >
+      <template v-slot:top>
+        <v-toolbar flat color="white">
+          <v-toolbar-title>Destination Management</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-select :items="destList" @change="changeDestinationList" item-text="destination" label="Country" clearable return-object @click:clear="clearSelection" 
+           single-line></v-select>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+      </template>
       <template v-slot:expanded-item="{ headers }">
         <td :colspan="headers.length" style="background: linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(255, 255, 255, 0.5) 100%);">
           <carousel-3d>
@@ -17,19 +25,6 @@
               :key="i"
                
               :index="i">
-                  <!-- <v-img
-                    class="white--text align-end"
-                    height="100%"
-                    :src="item.heroURL ? item.heroURL : emptyImageUrl"
-                    @error="imgUrlAlt"
-                  >
-                    <v-row align="end" class="lightbox white--text pa-2 fill-height">
-                      <v-col>
-                        <div class="subheading" ><h2 style="background: linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(255, 255, 255, 0.5) 100%);">{{item.name}}</h2></div>
-                      </v-col>
-                    </v-row>
-                  </v-img> -->
-
               <figure>
                 <v-img
                     height="100%"
@@ -38,7 +33,6 @@
                 ></v-img>
                 <figcaption>
                   {{item.name}}
-
                 </figcaption>
               </figure>
             </slide>
@@ -84,6 +78,7 @@
       destList: function () {
         this.loadData(this.destList[0].data)
       },
+      
     },
     mounted() {
       this.$store.dispatch('getListDestinationByCompany', this.$router.currentRoute.params.company)

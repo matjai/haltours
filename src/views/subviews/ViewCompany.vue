@@ -1,109 +1,120 @@
 
-<template>
-  <v-container  fluid>
-    <v-card v-if="companies" class="mx-auto" height="250" tile >
-      <v-img height="100%" :src="companies.heroURL ? companies.heroURL : emptyImageUrl" @error="imgUrlAlt">
-        <v-row align="end" class="fill-height">
-          <v-col align-self="start" class="pa-0" cols="12">
-            <v-hover>
-              <template v-slot="{ hover }">
-                <v-card :elevation="hover ? 24 : 6" class="pa-2 ma-6" width="180" height="180">
-                  <v-avatar class="profile mx-auto" color="grey" size="164" tile>
-                    <v-img :src="companies.logoURL? companies.logoURL : emptyImageUrl" @error="imgUrlAlt"></v-img>
-                  </v-avatar>
-                </v-card>
-              </template>
-            </v-hover>
-          </v-col>
-        </v-row>
-      </v-img>
-    </v-card>
-    <v-row v-if="companies" class="pt-6">
-      <v-col :cols="4">
-          <v-card 
-            class="mx-auto"
-            min-width="344">
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title>{{companies.name}}</v-list-item-title>
-                    <v-list-item-subtitle>{{companies.countryID}}</v-list-item-subtitle>
-                    <v-list-item-subtitle>{{companies.website}}</v-list-item-subtitle>
-                </v-list-item-content>
-            </v-list-item>
-            <v-btn icon :href="`//${companies.facebook}`" target="_blank">
-                <v-icon x-large color="blue darken-2" >mdi-facebook-box</v-icon>
-            </v-btn>
-            <v-btn icon :href="`//${companies.instagram}`" target="_blank">
-                <v-icon x-large color="red darken-2" >mdi-instagram</v-icon>
-            </v-btn>
-          </v-card>
-      </v-col>
-      <v-col :cols="8">
-        <v-card>
-          <v-tabs
-            background-color="white"
-            color="deep-purple accent-4"
-            left
-            >
-            <v-tab>About</v-tab>  
-            <v-tab>Destinations</v-tab>
-            <v-tab>Staffs</v-tab>
-            <v-tab-item>
-                <v-container fluid>
-                    <v-card flat>
-                        <v-card-text>
-                        <v-row class="mb-4" align="center">
-                            <strong class="title">{{companies.name}}</strong>
-                            <v-spacer></v-spacer>
-                        </v-row>
-                        <p>
-                            {{companies.countryId}}
-                        </p>
-                        <p>
-                            {{companies.description}}
-                        </p>
-                        <p>
-                            <strong>Address</strong>   : {{companies.address}}
-                        </p>
-                        <p>
-                            <strong>Registration Number</strong>  : {{companies.registration_number}}
-                        </p>
-                        <p>
-                            <strong>Phone Number</strong>  : {{companies.phone_number}}
-                        </p>
-                        <p>
-                            <strong>Fax Number</strong>  : {{companies.fax_number}}
-                        </p>
-                        <p>
-                            <strong>Website</strong>  : {{companies.website}}
-                        </p>
-                        <p>
-                            <strong>Facebook</strong>  : {{companies.facebook}}
-                        </p>
-                        <p>
-                            <strong>Instagram</strong>  : {{companies.instagram}}
-                        </p>
+<template >
 
-                        </v-card-text>
-                    </v-card>
-                </v-container>
-            </v-tab-item>           
-            <v-tab-item>
-                <v-container fluid>
-                    <destination/>
-                </v-container>
-            </v-tab-item>
-            <v-tab-item>
-                <v-container fluid>
-                    <staff/>
-                </v-container>
-            </v-tab-item>
-            </v-tabs>
-        </v-card>
+  <v-container fluid :style="{
+    backgroundAttachment: 'fixed',
+    backgroundPosition: 'center',
+    backgroundImage: companies.heroURL ? 'url(\'' +   companies.heroURL  + '\')' : 'url(\'' +  emptyImageUrl + '\')',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover'
+    }">
+      
+    
+    <div v-if="companies" class="ma-10">
+    <v-row class="pt-6">
+      <v-col > 
+          <div class="text-center">
+            <v-card
+                class="mx-auto"
+                max-width="400"
+            >
+                <v-img
+                class="white--text align-end"
+                height="200px"
+                :src="companies.logoURL? companies.logoURL : emptyImageUrl" @error="imgUrlAlt"
+                contain
+                >
+                    <v-card-title 
+                    style="text-shadow: 0 0 2px #000;
+                    -moz-text-shadow: 0 0 2px #000;
+                    -webkit-text-shadow: 0 0 2px #000;" class="justify-center">
+                    {{companies.name}}
+                    </v-card-title>
+                </v-img>
+
+                <v-card-subtitle class="pb-0">{{companies.countryID}}</v-card-subtitle>
+
+                <v-card-text class="text--primary">
+
+                <div>{{companies.phone_number}}</div>
+                </v-card-text>
+
+                <v-card-actions >
+                    <v-row
+                    align="center"
+                    justify="center"
+                    >
+                    <v-btn
+                    color="orange"
+                    text
+                    @click="aboutModal = !aboutModal"
+                >
+                    About
+                </v-btn>
+                    </v-row>
+                
+                </v-card-actions>
+            </v-card>
+            
+                
+                </div>
+                
+            <v-dialog v-model="aboutModal" max-width="500px">
+          <v-card  min-width="400" >
+              <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn text color="primary" @click="aboutModal = false"><v-icon>mdi-close</v-icon></v-btn>
+            </v-card-actions>
+                    <v-card-text>
+                        <strong class="title">{{companies.name}}</strong>
+                    <p>
+                         <v-divider></v-divider>
+                        {{companies.countryID}}
+                    </p>
+                    <p>
+                        {{companies.description}}
+                    </p>
+                    <p>
+                        <strong>Address</strong>   : {{companies.address}}
+                    </p>
+                    <p>
+                        <strong>Registration Number</strong>  : {{companies.registration_number}}
+                    </p>
+                    <p>
+                        <strong>Phone Number</strong>  : {{companies.phone_number}}
+                    </p>
+                    <p>
+                        <strong>Fax Number</strong>  : {{companies.fax_number}}
+                    </p>
+                    <p>
+                        <strong>Website</strong>  : {{companies.website}}
+                    </p>
+                    <p>
+                        <strong>Facebook</strong>  : {{companies.facebook}}
+                    </p>
+                    <p>
+                        <strong>Instagram</strong>  : {{companies.instagram}}
+                    </p>
+
+                    </v-card-text>
+
+            
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
+    <v-row>
+        <destination/>
+    </v-row>
+    <v-row>
+        <staff/>
+    </v-row>
     
+    </div>
   </v-container>
+
 </template>
 <script>
 import firebase from "firebase";
@@ -114,11 +125,12 @@ import displayDestination from "./ViewDestinationByCompany";
 export default {
    components: {
     staff: displayStaff,
-    destination: displayDestination
+    destination: displayDestination,
   },
   data: () => ({
     emptyImageUrl : "https://firebasestorage.googleapis.com/v0/b/cikgumurnitravel-1c58c.appspot.com/o/image-not-available.jpg?alt=media&token=2ed2e48e-87c1-48c4-ba68-4889be8370b2",
     dialog: false,
+    aboutModal: false,
     search: "",
     imageData: null,
     uploadValueOfLogo: 0,

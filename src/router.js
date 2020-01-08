@@ -9,9 +9,14 @@ import Staff from "./views/Staff";
 import StaffView from "./views/subviews/StaffView";
 import Company from "./views/Company";
 import Attraction from "./views/Attraction";
+import Package from "./views/Package";
+import Inventory from "./views/Inventory";
 import RequestForm from "./views/RequestForm";
 import RequestFormCreate from "./views/subviews/RequestFormCreate";
 import ViewCompany from "./views/subviews/ViewCompany";
+import ViewPackage from "./views/subviews/ViewPackage";
+import ViewFlight from "./views/subviews/ViewFlight";
+import CreatePackage from "./views/subviews/CreatePackage";
 
 Vue.use(Router);
 
@@ -42,9 +47,13 @@ export default new Router({
     { path: "/staffs", name: "staffs", component: Staff },
     { path: "/staffs/:company/:staff", name: "staff", component: StaffView },
     { path: "/companies", name: "companies", component: Company },
-    {
-      path: "/companies/:company", name: "viewCompany", component: ViewCompany},
+    { path: "/companies/:company", name: "viewCompany", component: ViewCompany},
     { path: "/attractions", name: "attractions", component: Attraction },
+    { path: "/packages", name: "packages", component: Package },
+    { path: "/packages/:package", name: "viewPackage", component: ViewPackage},
+    { path: "/packages/:companyId/createpackage", name: "createPackage", component: CreatePackage},
+    { path: "/inventories/:companyId/", name: "inventories", component: Inventory },
+    { path: "/inventories/:companyId/flight/:flightId", name: "flight", component: ViewFlight },
     {
       path: "/requestForms", name: "requestForms", component: RequestForm
     },

@@ -1,4 +1,5 @@
 <template>
+
   <v-container fluid class="pa-2 mt-10">
     <v-layout>
       <v-flex>
@@ -147,13 +148,8 @@
                                   label="Logo"
                                   @change="onUploadLogo($event)"
                                   prepend-icon="mdi-camera"
+                                  :loading="logoIsUploading"
                                 ></v-file-input>
-                                <div v-if="logoIsUploading">
-                                  <p>
-                                    <progress id="progress" :value="uploadValueOfLogo" max="100"></progress>
-                                    {{uploadValueOfLogo.toFixed()+"%"}}
-                                  </p>
-                                </div>
                               </v-card>
                             </v-col>
                             <v-col cols="12" sm="6" md="6">
@@ -171,13 +167,8 @@
                                   label="Image"
                                   @change="onUploadHero($event)"
                                   prepend-icon="mdi-camera"
+                                  :loading="heroIsUploading"
                                 ></v-file-input>
-                                <div v-if="heroIsUploading">
-                                  <p>
-                                    <progress id="progress" :value="uploadValueOfHero" max="100"></progress>
-                                    {{uploadValueOfHero.toFixed()+"%"}}
-                                  </p>
-                                </div>
                               </v-card>
                             </v-col>
                           </v-row>

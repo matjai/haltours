@@ -5,6 +5,8 @@ import destination from "@/store/destination";
 import staffs from "@/store/staffs";
 import companies from "@/store/companies";
 import attractions from "@/store/attractions";
+import packages from "@/store/packages";
+import flights from "@/store/flights";
 import roles from "@/store/roles";
 import requestForms from "@/store/requestForm";
 
@@ -54,9 +56,11 @@ const state = {
   fsTimestamp: fsTimestamp,
   user: null,
   staffs: null,
+  flights: null,
   companies: null,
   roles: null,
   attractions:null,
+  packages: null,
   requestForms,
 
 };
@@ -71,9 +75,11 @@ export default new Vuex.Store({
     lookup,
     destination,
     staffs,
+    flights,
     companies,
     roles,
     attractions,
+    packages,
     requestForms
   }
 });
