@@ -16,6 +16,7 @@ import RequestFormCreate from "./views/subviews/RequestFormCreate";
 import ViewCompany from "./views/subviews/ViewCompany";
 import ViewPackage from "./views/subviews/ViewPackage";
 import ViewFlight from "./views/subviews/ViewFlight";
+import ViewHotel from "./views/subviews/ViewHotel";
 import CreatePackage from "./views/subviews/CreatePackage";
 
 Vue.use(Router);
@@ -47,13 +48,14 @@ export default new Router({
     { path: "/staffs", name: "staffs", component: Staff },
     { path: "/staffs/:company/:staff", name: "staff", component: StaffView },
     { path: "/companies", name: "companies", component: Company },
-    { path: "/companies/:company", name: "viewCompany", component: ViewCompany},
+    { path: "/companies/:company", name: "viewCompany", component: ViewCompany },
     { path: "/attractions", name: "attractions", component: Attraction },
     { path: "/packages", name: "packages", component: Package },
-    { path: "/packages/:package", name: "viewPackage", component: ViewPackage},
-    { path: "/packages/:companyId/createpackage", name: "createPackage", component: CreatePackage},
+    { path: "/packages/:package", name: "viewPackage", component: ViewPackage },
+    { path: "/packages/:companyId/createpackage", name: "createPackage", component: CreatePackage },
     { path: "/inventories/:companyId/", name: "inventories", component: Inventory },
     { path: "/inventories/:companyId/flight/:flightId", name: "flight", component: ViewFlight },
+    { path: "/inventories/:companyId/hotel/:hotelId", name: "hotel", component: ViewHotel },
     {
       path: "/requestForms", name: "requestForms", component: RequestForm
     },

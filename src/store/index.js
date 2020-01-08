@@ -9,6 +9,7 @@ import packages from "@/store/packages";
 import flights from "@/store/flights";
 import roles from "@/store/roles";
 import requestForms from "@/store/requestForm";
+import hotels from "@/store/hotels";
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -20,7 +21,7 @@ import "firebase/firestore";
 import "firebase/storage";
 import config from "./firebase";
 import UUID from 'vue-uuid';
-import createLogger from 'vuex/dist/logger'
+import createLogger from 'vuex/dist/logger';
 
 
 //debug logger for browser console 
@@ -40,7 +41,7 @@ const logger = createLogger({
 });
 
 firebase.initializeApp(config);
-Vue.use(Vuex,UUID);
+Vue.use(Vuex, UUID);
 
 const fstore = firebase.firestore();
 const fauth = firebase.auth();
@@ -59,9 +60,10 @@ const state = {
   flights: null,
   companies: null,
   roles: null,
-  attractions:null,
+  attractions: null,
   packages: null,
   requestForms,
+  hotels
 
 };
 
@@ -80,6 +82,7 @@ export default new Vuex.Store({
     roles,
     attractions,
     packages,
-    requestForms
+    requestForms,
+    hotels
   }
 });

@@ -8,7 +8,7 @@
           <v-card-text>
             <v-row>
               <v-col cols="12" sm="12" md="12">
-                <h2>Manage Flight {{ flight.packageId }}</h2>
+                <h2>Manage Hotels {{ defaultItem.packageId }}</h2>
               </v-col>
               <v-col cols="12" sm="6" md="6">
                 <v-select
@@ -16,76 +16,54 @@
                   item-text="name"
                   item-value="name"
                   label="Package ID"
-                  v-model="flight.packageId"
+                  v-model="defaultItem.packageId"
                   outlined
                 ></v-select>
               </v-col>
 
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                  label="Description"
-                  v-model="flight.description"
-                  placeholder="Description"
+                  label="Hotel Name"
+                  v-model="defaultItem.name"
+                  placeholder="Hotel Name"
                   outlined
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                  label="All In Ticket Fare"
-                  v-model="flight.allInTicketFare"
-                  placeholder="0.00"
-                  prefix="RM"
+                  label="Hotel Code"
+                  v-model="defaultItem.code"
+                  placeholder="Hotel Code"
                   outlined
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                  label="All In flight Tax"
-                  v-model="flight.allInFlightTax"
-                  placeholder="0.00"
-                  prefix="RM"
+                  label="Hotel Location"
+                  v-model="defaultItem.location"
+                  placeholder="Hotel Location"
                   outlined
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                  label="Avaialable Seats"
-                  v-model="flight.availableSeats"
-                  placeholder="Available Seats"
-                  type="number"
+                  label="Available Rooms"
+                  v-model="defaultItem.availableRooms"
+                  placeholder="Available Rooms"
                   outlined
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6" md="6">
-                <v-menu
-                  ref="menu"
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  :return-value.sync="flight.expiryDate"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="flight.expiryDate"
-                      label="Expiry"
-                      readonly
-                      placeholder="Expiry"
-                      outlined
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker v-model="date" no-title scrollable>
-                    <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                    <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-                  </v-date-picker>
-                </v-menu>
+                <v-text-field
+                  label="Available Beds"
+                  v-model="defaultItem.availableBeds"
+                  placeholder="Available Beds"
+                  outlined
+                ></v-text-field>
               </v-col>
 
               <v-col cols="12" md="12" sm="12" class="pa-4">
@@ -114,75 +92,63 @@
                           <v-container>
                             <v-row>
                               <v-col cols="12" sm="12" md="12">
-                                <h2 v-if="editedIndex > -1">{{flightItem.number}}</h2>
-                                <h2 v-else>Create New Flight</h2>
+                                <h2 v-if="editedIndex > -1">{{roomItem.roomCode}}</h2>
+                                <h2 v-else>Create New Rooms</h2>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
                                 <v-select
-                                  :items="flightType"
+                                  :items="roomTypes"
                                   item-text="name"
                                   item-value="name"
-                                  label="Direction"
-                                  v-model="flightItem.type"
+                                  label="Room Type"
+                                  v-model="roomItem.roomType"
                                   outlined
                                 ></v-select>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
                                 <v-select
-                                  :items="airline"
+                                  :items="bedTypes"
                                   item-text="name"
                                   item-value="name"
-                                  label="Airline"
-                                  v-model="flightItem.airline"
+                                  label="Bed Type"
+                                  v-model="roomItem.bedType"
                                   outlined
                                 ></v-select>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
                                 <v-text-field
-                                  v-model="flightItem.number"
-                                  label="Flight Number"
-                                  placeholder="Flight Number"
+                                  v-model="roomItem.name"
+                                  label="Room Name"
+                                  placeholder="Room Name"
                                   outlined
                                 ></v-text-field>
                               </v-col>
+
                               <v-col cols="12" sm="6" md="6">
-                                <v-menu
-                                  ref="menu2"
-                                  v-model="menu2"
-                                  :close-on-content-click="false"
-                                  :return-value.sync="flightItem.date"
-                                  transition="scale-transition"
-                                  offset-y
-                                  min-width="290px"
-                                >
-                                  <template v-slot:activator="{ on }">
-                                    <v-text-field
-                                      v-model="flightItem.date"
-                                      label="Date"
-                                      readonly
-                                      placeholder="Date"
-                                      outlined
-                                      v-on="on"
-                                    ></v-text-field>
-                                  </template>
-                                  <v-date-picker v-model="date" no-title scrollable>
-                                    <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click="menu2 = false">Cancel</v-btn>
-                                    <v-btn text color="primary" @click="$refs.menu2.save(date)">OK</v-btn>
-                                  </v-date-picker>
-                                </v-menu>
+                                <v-text-field
+                                  label="Room Code"
+                                  placeholder="Room Code"
+                                  outlined
+                                  v-model="roomItem.roomCode"
+                                ></v-text-field>
                               </v-col>
 
                               <v-col cols="12" sm="6" md="6">
-                                <v-text-field label="Time" placeholder="Time" outlined></v-text-field>
+                                <v-text-field
+                                  v-model="roomItem.availableRooms"
+                                  label="Available Rooms"
+                                  placeholder="Available Rooms (0)"
+                                  outlined
+                                ></v-text-field>
                               </v-col>
 
                               <v-col cols="12" sm="6" md="6">
-                                <v-text-field label="From" placeholder="From" outlined></v-text-field>
-                              </v-col>
-
-                              <v-col cols="12" sm="6" md="6">
-                                <v-text-field label="To" placeholder="To" outlined></v-text-field>
+                                <v-text-field
+                                  label="Available Beds"
+                                  placeholder="Available Beds (0)"
+                                  outlined
+                                  v-model="roomItem.availableBeds"
+                                ></v-text-field>
                               </v-col>
                             </v-row>
                           </v-container>
@@ -198,25 +164,21 @@
 
                     <thead>
                       <tr>
-                        <th class="text-left">Direction</th>
-                        <th class="text-left">Airline</th>
-                        <th class="text-left">Flight No</th>
-                        <th class="text-left">Time</th>
-                        <th class="text-left">Date</th>
-                        <th class="text-left">From</th>
-                        <th class="text-left">To</th>
+                        <th class="text-left">Room Code</th>
+                        <th class="text-left">Room Type</th>
+                        <th class="text-left">Available Rooms</th>
+                        <th class="text-left">Bed Type</th>
+                        <th class="text-left">Available Beds</th>
                         <th class="text-left">Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="item in flightChild" :key="item.id">
-                        <td>{{ item.type }}</td>
-                        <td>{{ item.airline }}</td>
-                        <td>{{ item.number }}</td>
-                        <td>{{ item.date }}</td>
-                        <td>{{ item.time }}</td>
-                        <td>{{ item.from }}</td>
-                        <td>{{ item.to }}</td>
+                      <tr v-for="item in rooms" :key="item.id">
+                        <td>{{ item.roomCode }}</td>
+                        <td>{{ item.roomType }}</td>
+                        <td>{{ item.availableRooms }}</td>
+                        <td>{{ item.bedType }}</td>
+                        <td>{{ item.availableBeds }}</td>
                         <td>
                           <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
                           <v-icon small @click="deleteItem(item)">delete</v-icon>
@@ -246,6 +208,34 @@ import ValidationMixin from "../mixins/NotificationMixin";
 
 export default {
   mixins: [ValidationMixin, NotificationMixin],
+  mounted() {
+    this.hotelId = this.$router.currentRoute.params.hotelId;
+    this.companyId = this.$router.currentRoute.params.companyId;
+
+    this.$store
+      .dispatch("fetchHotelsRooms", this.hotelId)
+      .then(result => {
+        result == undefined ? [] : result;
+        this.rooms = result;
+
+        console.log(this.rooms);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    this.$store
+      .dispatch("fetchHotelByID", this.hotelId)
+      .then(result => {
+        this.defaultItem = result.data();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    this.initialize();
+  },
+
   data: () => ({
     dialog: false,
     headers: [
@@ -257,7 +247,6 @@ export default {
       { text: "To", value: "to" },
       { text: "Actions", value: "action", sortable: false }
     ],
-    dessets: [],
     date: new Date().toISOString().substr(0, 10),
     menu: false,
     modal: false,
@@ -265,37 +254,37 @@ export default {
     date: new Date().toISOString().substr(0, 10),
     isSubmit: false,
     editMode: false,
-    airline: [],
-    flightType: [],
+    roomTypes: [],
+    bedTypes: [],
     search: "",
     companyId: null,
-    snackbar: false,
     top: true,
     right: true,
     flight: {},
     flightChild: [],
-    flights: [],
+    rooms: [],
     editedIndex: -1,
     packages: [],
     selectedIndex: [],
-    flightItem: {
-      airline: null,
-      number: null,
-      date: null,
-      time: null,
-      from: null,
-      type: null,
-      to: null
+    roomItem: {
+      name: null,
+      roomType: null,
+      roomCode: null,
+      bedType: null,
+      availableRooms: null,
+      availableBeds: null
     },
     text: "This is notification!.",
     defaultItem: {
-      airline: null,
-      number: null,
-      date: null,
-      time: null,
-      from: null,
-      type: null,
-      to: null
+      id: null,
+      name: "",
+      code: null,
+      packageId: null,
+      location: "",
+      stars: "",
+      availableRooms: 0,
+      availableBeds: 0,
+      companyId: null
     }
   }),
 
@@ -305,43 +294,39 @@ export default {
     }
   },
 
-  mounted() {
-    this.initialize();
-    this.flightId = this.$router.currentRoute.params.flightId;
-    console.log(this.flightId);
-    this.companyId = this.$router.currentRoute.params.companyId;
-    this.$store
-      .dispatch("fetchFlightByID", this.flightId)
-      .then(result => {
-        console.log(result.data());
-
-        this.flight = result.data();
-        this.flightChild = this.flight.child;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  },
-
   methods: {
     initialize() {
-      this.flightType = [{ name: "Departure" }, { name: "Arrival" }];
-      this.airline = [{ name: "MAS" }, { name: "AIR ASIA" }];
+      this.roomTypes = [
+        { name: "Solo" },
+        { name: "Family" },
+        { name: "Large Room" }
+      ];
+      this.bedTypes = [
+        { name: "Single Bed" },
+        { name: "Queen Bed" },
+        { name: "King Bed" }
+      ];
     },
 
     editItem(item) {
-      this.editedIndex = this.flightChild.indexOf(item);
-      this.flightItem = item;
+      this.editedIndex = this.rooms.indexOf(item);
+      this.roomItem = item;
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.flights.indexOf(item);
+      const index = this.rooms.indexOf(item);
       const x = confirm("Are you sure you want to delete this item?");
       if (x) {
-        this.$store.dispatch("deleteFlight", item);
-        console.log(item);
-        this.snackbar = true;
+        this.$store
+          .dispatch("deleteHotelRooms", {
+            hotelId: this.hotelId,
+            data: item
+          })
+          .then(result => {
+            this.message = "Room removed.";
+            this.snackbar = true;
+          });
       }
     },
 
@@ -349,7 +334,7 @@ export default {
       this.dialog = false;
 
       setTimeout(() => {
-        this.flightItem = Object.assign({}, this.defaultItem);
+        //this.roomItem = Object.assign({}, this.roomItem);
         this.editedIndex = -1;
         this.snackbar = true;
       }, 300);
@@ -357,18 +342,45 @@ export default {
 
     saveChild() {
       if (this.editedIndex > -1) {
-        Object.assign(this.flightChild[this.editedIndex], this.flightItem);
+        const data = this.roomItem;
+
+        this.$store
+          .dispatch("updateHotelRooms", { hotelId: this.hotelId, data: data })
+          .then(result => {
+            this.message = "Room Changes saved.";
+            this.snackbar = true;
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
-        this.flightChild.push(this.flightItem);
+        const data = this.roomItem;
+
+        this.$store
+          .dispatch("storeHotelRooms", { hotelId: this.hotelId, data: data })
+          .then(result => {
+            this.message = "Room Added.";
+            this.snackbar = true;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        //this.rooms.push(this.roomItem);
       }
 
       this.close();
     },
 
     save() {
-      this.flight.id = this.flightId;
-      this.flight.child = this.flightChild;
-      this.$store.dispatch("updateFlight", this.flight);
+      this.$store
+        .dispatch("updateHotels", {
+          ...this.defaultItem,
+          ...{ id: this.hotelId }
+        })
+        .then(result => {
+          this.message = "Hotels record updated.";
+          this.snackbar = true;
+        });
     }
   }
 };

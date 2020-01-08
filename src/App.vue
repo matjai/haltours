@@ -3,8 +3,7 @@
     <v-app-bar app v-if="isLoggedIn">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span class="font-weight-light">Haltours</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn @click="logout" class="elevation-0">
