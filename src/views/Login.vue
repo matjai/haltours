@@ -10,12 +10,20 @@
           <v-card-text>
             <v-form>
               <v-text-field label="Email" prepend-icon="person" type="text" v-model="email"></v-text-field>
-              <v-text-field label="Password" prepend-icon="lock" type="password" v-model="password"></v-text-field>
+              <v-text-field
+                label="Password"
+                prepend-icon="lock"
+                type="password"
+                v-model="password"
+                v-on:keyup.enter="login"
+              ></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
-            <v-btn @click="login" color="primary">Login</v-btn>
+            <v-btn @click="login" color="primary">
+              <v-progress-circular v-show="isLoading" size="20" indeterminate color="white"></v-progress-circular>&nbsp;Login
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -28,17 +36,23 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      isLoading: false
     };
   },
   methods: {
     login() {
+      this.isLoading = true;
       this.$store
         .dispatch("login", { email: this.email, password: this.password })
         .then(result => {
+          this.isLoading = false;
           //console.log(result)
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          this.isLoading = false;
+          console.log(err);
+        });
     }
   }
 };
