@@ -1,5 +1,7 @@
 <template>
+
   <v-container fluid class="pa-2 mt-10">
+      
     <v-data-table
       :headers="headers"
       :items="flights"
@@ -7,12 +9,6 @@
       class="elevation-1"
       :loading="flights == null"
     >
-
-      <template v-slot:item.description="{ item }">
-        <router-link
-          :to="{name:'flight',params:{companyId:item.companyID,flightId:item.id}}"
-        >{{ item.description }}</router-link>
-      </template>
 
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -42,71 +38,8 @@
               </v-card-title>
 
               <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select
-                        :items="packages"
-                        item-text="name"
-                        item-value="id"
-                        label="Package"
-                        v-model="editedItem.packageID"
-                        outlined
-                      ></v-select>
-                    </v-col>
-
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        label="Description"
-                        v-model="editedItem.description"
-                        placeholder="Description"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        label="All-In Ticket Fare"
-                        v-model="editedItem.allInTicketFare"
-                        placeholder="All-In Ticket Fare"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        label="All-In Flight Tax"
-                        v-model="editedItem.allInFlightTax"
-                        placeholder="All-In Flight Tax"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        label="Expiry Date"
-                        v-model="editedItem.expiryDate"
-                        placeholder="Expiry Date"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        label="Available Seat"
-                        v-model="editedItem.availableSeat"
-                        placeholder="Available Seat"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
+                <viewflight :flightObject="editedItem" :editMode="editMode" @closeModal="updateMessage"/>
               </v-card-text>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-              </v-card-actions>
             </v-card>
           </v-dialog>
         </v-toolbar>
@@ -122,10 +55,15 @@
 
 <script>
 import firebase from "firebase/firebase";
-
+import viewflight from "./ViewFlight";
 export default {
+    components:{
+        viewflight: viewflight
+    },
   data: () => ({
     dialog: false,
+    dialog2: false,
+    editMode: false,
     headers: [
       { text: "ID", value: "id" },
       { text: "Package ID", value: "packageID" },
@@ -201,7 +139,7 @@ export default {
     editItem(item) {
       this.editedIndex = this.flights.indexOf(item);
       this.editedItem = item;
-      console.log(this.editedItem)
+      this.editMode = true;
       this.dialog = true;
     },
 
@@ -217,6 +155,7 @@ export default {
 
     close() {
       this.dialog = false;
+      this.editMode = false;
 
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
@@ -235,6 +174,9 @@ export default {
       }
 
       this.close();
+    },
+    updateMessage(variable) {
+      this.dialog= variable;
     }
   }
 };

@@ -320,7 +320,7 @@ export default {
   methods: {
 
     indexSelected(item) {
-      this.selectedIndex.push(item.id);
+      this.selectedIndex.push(item.id); 
     },
 
     editItem(item) {

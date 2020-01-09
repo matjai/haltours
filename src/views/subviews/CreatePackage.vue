@@ -65,6 +65,7 @@
       date: new Date().toISOString().substr(0, 10),
       menu: false,
       datetime: new Date(),
+      currentJsonFile:[]
     }),
     mounted() {
       this.$store.dispatch('getListDestinationByCompany', this.$router.currentRoute.params.companyId)
@@ -83,6 +84,7 @@
             console.log("list",this.destList)
         })
         .catch(err => console.log(err));
+        
     },
     methods: {
         changeDestinationList(item){
