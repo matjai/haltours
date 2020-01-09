@@ -10,6 +10,7 @@ import flights from "@/store/flights";
 import roles from "@/store/roles";
 import requestForms from "@/store/requestForm";
 import hotels from "@/store/hotels";
+import mealtypes from "@/store/mealtypes";
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -63,7 +64,8 @@ const state = {
   attractions: null,
   packages: null,
   requestForms,
-  hotels
+  hotels,
+  mealtypes
 
 };
 
@@ -83,6 +85,8 @@ export default new Vuex.Store({
     attractions,
     packages,
     requestForms,
-    hotels
+    hotels,
+    mealtypes
+
   }
 });

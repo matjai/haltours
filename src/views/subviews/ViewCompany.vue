@@ -1,120 +1,111 @@
 
 <template >
-
-  <v-container fluid :style="{
+  <v-container
+    fluid
+    :style="{
     backgroundAttachment: 'fixed',
     backgroundPosition: 'center',
     backgroundImage: companies.heroURL ? 'url(\'' +   companies.heroURL  + '\')' : 'url(\'' +  emptyImageUrl + '\')',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
     backgroundSize: 'cover'
-    }">
-      
-    
+    }"
+  >
     <div v-if="companies" class="ma-10">
-    <v-row class="pt-6">
-      <v-col > 
+      <v-row class="pt-6">
+        <v-col>
           <div class="text-center">
-            <v-card
-                class="mx-auto"
-                max-width="400"
-            >
-                <v-img
+            <v-card class="mx-auto" max-width="400">
+              <v-img
                 class="white--text align-end"
                 height="200px"
-                :src="companies.logoURL? companies.logoURL : emptyImageUrl" @error="imgUrlAlt"
+                :src="companies.logoURL? companies.logoURL : emptyImageUrl"
+                @error="imgUrlAlt"
                 contain
-                >
-                    <v-card-title 
-                    style="text-shadow: 0 0 2px #000;
+              >
+                <v-card-title
+                  style="text-shadow: 0 0 2px #000;
                     -moz-text-shadow: 0 0 2px #000;
-                    -webkit-text-shadow: 0 0 2px #000;" class="justify-center">
-                    {{companies.name}}
-                    </v-card-title>
-                </v-img>
+                    -webkit-text-shadow: 0 0 2px #000;"
+                  class="justify-center"
+                >{{companies.name}}</v-card-title>
+              </v-img>
 
-                <v-card-subtitle class="pb-0">{{companies.countryID}}</v-card-subtitle>
+              <v-card-subtitle class="pb-0">{{companies.countryID}}</v-card-subtitle>
 
-                <v-card-text class="text--primary">
-
+              <v-card-text class="text--primary">
                 <div>{{companies.phone_number}}</div>
-                </v-card-text>
+              </v-card-text>
 
-                <v-card-actions >
-                    <v-row
-                    align="center"
-                    justify="center"
-                    >
-                    <v-btn
-                    color="orange"
-                    text
-                    @click="aboutModal = !aboutModal"
-                >
-                    About
-                </v-btn>
-                    </v-row>
-                
-                </v-card-actions>
-            </v-card>
-            
-                
-                </div>
-                
-            <v-dialog v-model="aboutModal" max-width="500px">
-          <v-card  min-width="400" >
               <v-card-actions>
-              <v-spacer></v-spacer>
+                <v-row align="center" justify="center">
+                  <v-btn color="orange" text @click="aboutModal = !aboutModal">About</v-btn>
+                </v-row>
+              </v-card-actions>
+            </v-card>
+          </div>
 
-              <v-btn text color="primary" @click="aboutModal = false"><v-icon>mdi-close</v-icon></v-btn>
-            </v-card-actions>
-                    <v-card-text>
-                        <strong class="title">{{companies.name}}</strong>
-                    <p>
-                         <v-divider></v-divider>
-                        {{companies.countryID}}
-                    </p>
-                    <p>
-                        {{companies.description}}
-                    </p>
-                    <p>
-                        <strong>Address</strong>   : {{companies.address}}
-                    </p>
-                    <p>
-                        <strong>Registration Number</strong>  : {{companies.registration_number}}
-                    </p>
-                    <p>
-                        <strong>Phone Number</strong>  : {{companies.phone_number}}
-                    </p>
-                    <p>
-                        <strong>Fax Number</strong>  : {{companies.fax_number}}
-                    </p>
-                    <p>
-                        <strong>Website</strong>  : {{companies.website}}
-                    </p>
-                    <p>
-                        <strong>Facebook</strong>  : {{companies.facebook}}
-                    </p>
-                    <p>
-                        <strong>Instagram</strong>  : {{companies.instagram}}
-                    </p>
+          <v-dialog v-model="aboutModal" max-width="500px">
+            <v-card min-width="400">
+              <v-card-actions>
+                <v-spacer></v-spacer>
 
-                    </v-card-text>
-
-            
+                <v-btn text color="primary" @click="aboutModal = false">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </v-card-actions>
+              <v-card-text>
+                <strong class="title">{{companies.name}}</strong>
+                <p>
+                  <v-divider></v-divider>
+                  {{companies.countryID}}
+                </p>
+                <p>{{companies.description}}</p>
+                <p>
+                  <strong>Address</strong>
+                  : {{companies.address}}
+                </p>
+                <p>
+                  <strong>Registration Number</strong>
+                  : {{companies.registration_number}}
+                </p>
+                <p>
+                  <strong>Phone Number</strong>
+                  : {{companies.phone_number}}
+                </p>
+                <p>
+                  <strong>Fax Number</strong>
+                  : {{companies.fax_number}}
+                </p>
+                <p>
+                  <strong>Website</strong>
+                  : {{companies.website}}
+                </p>
+                <p>
+                  <strong>Facebook</strong>
+                  : {{companies.facebook}}
+                </p>
+                <p>
+                  <strong>Instagram</strong>
+                  : {{companies.instagram}}
+                </p>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-card class="pa-10">
+            <destination />
           </v-card>
-        </v-dialog>
-      </v-col>
-    </v-row>
-    <v-row>
-        <destination/>
-    </v-row>
-    <v-row>
-        <staff/>
-    </v-row>
-    
+        </v-col>
+      </v-row>
+      <v-row>
+        <staff />
+      </v-row>
     </div>
   </v-container>
-
 </template>
 <script>
 import firebase from "firebase";
@@ -123,12 +114,13 @@ import displayStaff from "./ViewStaffByCompany";
 import displayDestination from "./ViewDestinationByCompany";
 
 export default {
-   components: {
+  components: {
     staff: displayStaff,
-    destination: displayDestination,
+    destination: displayDestination
   },
   data: () => ({
-    emptyImageUrl : "https://firebasestorage.googleapis.com/v0/b/cikgumurnitravel-1c58c.appspot.com/o/image-not-available.jpg?alt=media&token=2ed2e48e-87c1-48c4-ba68-4889be8370b2",
+    emptyImageUrl:
+      "https://firebasestorage.googleapis.com/v0/b/cikgumurnitravel-1c58c.appspot.com/o/image-not-available.jpg?alt=media&token=2ed2e48e-87c1-48c4-ba68-4889be8370b2",
     dialog: false,
     aboutModal: false,
     search: "",
@@ -197,26 +189,25 @@ export default {
   created() {
     this.companyId = this.$router.currentRoute.params.company;
     // this.$store.dispatch('fetchCompany', this.companyId);
-    this.$store.dispatch("fetchStaffByCompanyID",this.companyId);
+    this.$store.dispatch("fetchStaffByCompanyID", this.companyId);
     // this.companies = this.$store.state.companies;
     this.initialize();
   },
   mounted() {
     this.companyId = this.$router.currentRoute.params.company;
-    this.$store.dispatch('fetchCompanyByID', this.companyId).then(async result => {
-          
-          result= result.data()
-          this.companies = result;
-          console.log(this.companies)
-          
-          
-        })
-        .catch(err => console.log(err));
+    this.$store
+      .dispatch("fetchCompanyByID", this.companyId)
+      .then(async result => {
+        result = result.data();
+        this.companies = result;
+        console.log(this.companies);
+      })
+      .catch(err => console.log(err));
   },
 
   methods: {
     initialize() {
-        this.staffs = this.$store.state.staffs;
+      this.staffs = this.$store.state.staffs;
       this.countries = [
         {
           id: 1,
@@ -330,8 +321,8 @@ export default {
       );
     },
     imgUrlAlt(event) {
-        event.target.src = this.emptyImageUrl;
-      }
+      event.target.src = this.emptyImageUrl;
+    }
   }
 };
 </script>

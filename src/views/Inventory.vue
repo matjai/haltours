@@ -20,8 +20,8 @@
       <v-tab-item class="pa-5">
         <hotels />
       </v-tab-item>
-      <v-tab-item>
-        <v-card></v-card>
+      <v-tab-item class="pa-5">
+        <mealtypes />
       </v-tab-item>
       <v-tab-item></v-tab-item>
     </v-tabs>
@@ -30,10 +30,12 @@
 <script>
 import flight from "./subviews/Flights";
 import hotels from "./subviews/Hotels";
+import mealtypes from "./subviews/MealTypes";
 export default {
   components: {
     flight: flight,
-    hotels: hotels
+    hotels: hotels,
+    mealtypes: mealtypes
   },
   data() {
     return {
