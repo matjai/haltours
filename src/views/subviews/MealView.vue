@@ -2,8 +2,8 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12" sm="12" md="12">
-        <h2 v-if="editMode">Manage Tour Leader</h2>
-        <h2 v-else>Create Tour Leader</h2>
+        <h2 v-if="editMode">Manage Meal</h2>
+        <h2 v-else>Create Meal</h2>
       </v-col>
       <v-col cols="12" sm="6" md="6">
         <v-select
