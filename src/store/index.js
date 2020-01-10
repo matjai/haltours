@@ -13,6 +13,7 @@ import hotels from "@/store/hotels";
 import grounds from "@/store/grounds";
 import tourLeaders from "@/store/tourLeaders";
 import bagAndInsurances from "@/store/bagAndInsurances";
+import meals from "@/store/meals";
 import mealtypes from "@/store/mealtypes";
 
 import Vue from "vue";
@@ -69,6 +70,7 @@ const state = {
   grounds:null,
   tourLeaders:null,
   bagAndInsurances: null,
+  meals: null,
   requestForms,
   hotels,
   mealtypes
@@ -95,6 +97,7 @@ export default new Vuex.Store({
     grounds,
     tourLeaders,
     bagAndInsurances,
+    meals,
     mealtypes
 
   }

@@ -4,16 +4,16 @@
       
     <v-data-table
       :headers="headers"
-      :items="tourLeaders"
+      :items="meals"
       sort-by="calories"
       class="elevation-1"
-      :loading="tourLeaders == null"
+      :loading="meals == null"
       :search="search"
     >
 
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>Tour Leaders Management</v-toolbar-title>
+          <v-toolbar-title>Meals Management</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-text-field
             v-model="search"
@@ -39,7 +39,7 @@
               </v-card-title>
 
               <v-card-text>
-                <tourLeaderView :tourLeaderObject="editedItem" :editMode="editMode" @closeModal="updateMessage"/>
+                <mealView :mealObject="editedItem" :editMode="editMode" @closeModal="updateMessage"/>
               </v-card-text>
             </v-card>
           </v-dialog>
@@ -56,10 +56,10 @@
 
 <script>
 import firebase from "firebase/firebase";
-import tourLeaderView from "./TourLeaderView";
+import mealView from "./MealView";
 export default {
     components:{
-        tourLeaderView: tourLeaderView
+        mealView: mealView
     },
   data: () => ({
     dialog: false,
@@ -76,7 +76,7 @@ export default {
     snackbar: false,
     top: true,
     right: true,
-    tourLeaders: [],
+    meals: [],
     editedIndex: -1,
     packages: [],
     selectedIndex: [],
@@ -105,11 +105,11 @@ export default {
     this.initialize();
     this.companyId = this.$router.currentRoute.params.companyId;
     this.$store
-      .dispatch("fetchTourLeaderByCompanyID",this.companyId)
+      .dispatch("fetchMealByCompanyID",this.companyId)
       .then(result => {
         console.log(result);
 
-        this.tourLeaders = result;
+        this.meals = result;
       })
       .catch(err => {
         console.log(err);
@@ -126,17 +126,17 @@ export default {
 
 
     editItem(item) {
-      this.editedIndex = this.tourLeaders.indexOf(item);
+      this.editedIndex = this.meals.indexOf(item);
       this.editedItem = item;
       this.editMode = true;
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.tourLeaders.indexOf(item);
+      const index = this.meals.indexOf(item);
       const x = confirm("Are you sure you want to delete this item?");
       if (x) {
-        this.$store.dispatch("deleteTourLeader", item);
+        this.$store.dispatch("deleteMeal", item);
         console.log(item)
         this.snackbar = true;
       }

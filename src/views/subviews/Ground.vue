@@ -164,17 +164,6 @@ export default {
       }, 300);
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.grounds[this.editedIndex], this.editedItem);
-        this.$store.dispatch("updateGround", this.editedItem);
-      } else {
-        this.editedItem.companyID = this.companyId;
-        this.$store.dispatch("storeGround", this.editedItem);
-      }
-
-      this.close();
-    },
     updateMessage(variable) {
       this.dialog= variable;
     }

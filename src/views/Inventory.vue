@@ -11,13 +11,13 @@
         <v-icon>mdi-hotel</v-icon>Hotels
       </v-tab> -->
       <v-tab>
-        <v-icon>mdi-food</v-icon>Tour Leader
-      </v-tab>
-      <v-tab>
-        <v-icon>mdi-food</v-icon>Bag And Insurances
-      </v-tab>
-      <v-tab>
         <v-icon>mdi-food</v-icon>Meal
+      </v-tab>
+      <v-tab>
+        <v-icon>mdi-human</v-icon>Tour Leader
+      </v-tab>
+      <v-tab>
+        <v-icon>mdi-briefcase</v-icon>Bag And Insurances
       </v-tab>
       <!-- <v-tab>
         <v-icon>mdi-bag-checked</v-icon>Miscellaneous
@@ -30,6 +30,9 @@
         <ground />
       </v-tab-item>
       <v-tab-item class="pa-5">
+        <meal />
+      </v-tab-item>
+      <v-tab-item class="pa-5">
         <tourLeader />
       </v-tab-item>
       <v-tab-item class="pa-5">
@@ -38,9 +41,9 @@
       <!-- <v-tab-item class="pa-5">
         <hotels />
       </v-tab-item> -->
-      <v-tab-item class="pa-5">
+      <!-- <v-tab-item class="pa-5">
         <mealtypes />
-      </v-tab-item>
+      </v-tab-item> -->
       <v-tab-item></v-tab-item>
     </v-tabs>
   </v-container>
@@ -48,16 +51,19 @@
 <script>
 import flight from "./subviews/Flights";
 // import hotels from "./subviews/Hotels";
-import mealtypes from "./subviews/MealTypes";
+// import mealtypes from "./subviews/MealTypes";
 import ground from "./subviews/Ground";
 import tourLeader from "./subviews/TourLeader";
 import bagAndInsurance from "./subviews/BagAndInsurance";
+import meal from "./subviews/Meal";
+
 export default {
   components: {
     flight: flight,
     // hotels: hotels,
-    mealtypes: mealtypes,
+    // mealtypes: mealtypes,
     ground: ground,
+    meal: meal,
     tourLeader: tourLeader,
     bagAndInsurance: bagAndInsurance
   },
