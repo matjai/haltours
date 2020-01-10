@@ -12,9 +12,10 @@
                     
                     <v-text-field
                     label="Package Name"
-
+                    required
                     placeholder="Package Name"
                     outlined
+                    v-model="packageObject.name"
                     ></v-text-field>
                 </v-col>
             </v-row>
@@ -26,7 +27,9 @@
                 :items="destList"
                 label="Country"
                 item-text="destination"
+                item-value="destination"
                 outlined
+                multiple
                 @change="changeDestinationList"
                 return-object
                 ></v-select>
@@ -36,18 +39,20 @@
                     :items="choosenDest"
                     item-text="name"
                     label="Destination"
+                    item-value="id"
                     multiple
                     outlined
-                    return-object
+                    resetOnOptionsChange
+                    v-model="packageObject.destination"
                 ></v-select>
             </v-col>
             </v-row>
 
             <v-btn
             color="primary"
-            @click="e1 = 2"
+            @click="save"
             >
-            Continue
+            Save
             </v-btn>   
             </v-card-text>
         </v-card>
@@ -61,7 +66,11 @@
       items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
       destList: [],
       choosenDest:[],
-      e1: 0,
+      packageObject:{
+          name: null,
+          country: [],
+          destination:[]
+      },
       date: new Date().toISOString().substr(0, 10),
       menu: false,
       datetime: new Date(),
@@ -81,15 +90,27 @@
             }))
             .value()
 
-            console.log("list",this.destList)
         })
         .catch(err => console.log(err));
         
     },
     methods: {
         changeDestinationList(item){
-            this.choosenDest = item.data;
+            var array=[];
+            var country=[]
+            item.forEach(element => {
+                country = country.concat(element.destination)
+                array = array.concat(element.data)
+            });
+            this.choosenDest = array;
+            this.packageObject.destination = (array.filter(element => this.packageObject.destination.includes(element.id))).map(a => a.id);
+            this.packageObject.country = country;
+            
         },
+        save(){
+            this.$store.dispatch("storePackage", this.packageObject);
+            // console.log(this.packageObject)
+        }
     
     }
   }

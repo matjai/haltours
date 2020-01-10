@@ -65,7 +65,6 @@ export default {
     dialog2: false,
     editMode: false,
     headers: [
-      { text: "ID", value: "id" },
       { text: "Package ID", value: "packageID" },
       { text: "Description", value: "description" },
       { text: "All-in Ticket Fare", value: "allInTicketFare" },

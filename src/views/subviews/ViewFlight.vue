@@ -310,7 +310,12 @@ export default {
   },
   mounted() {
     this.initialize();
-    
+    this.$store.dispatch('fetchPackage')
+      .then(result => {
+        this.packages = result;
+        
+      })
+      .catch(err => console.log(err));
     // this.flightId = this.$router.currentRoute.params.flightId;
     // console.log(this.flightId);
     this.companyId = this.$router.currentRoute.params.companyId;
