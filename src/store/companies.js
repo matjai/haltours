@@ -46,7 +46,7 @@ export default {
     deleteCompany: firestoreAction( async (context, payload) => {
 
         await context.rootState.db
-        .collection("companies").doc(payload).delete()
+        .collection("companies").doc(payload.id).delete()
 
     }),
 

@@ -4,16 +4,16 @@
       
     <v-data-table
       :headers="headers"
-      :items="flights"
+      :items="bagAndInsurances"
       sort-by="calories"
       class="elevation-1"
-      :loading="flights == null"
+      :loading="bagAndInsurances == null"
       :search="search"
     >
 
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>Flights Management</v-toolbar-title>
+          <v-toolbar-title>Bag And Insurances Management</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-text-field
             v-model="search"
@@ -39,7 +39,7 @@
               </v-card-title>
 
               <v-card-text>
-                <flightView :flightObject="editedItem" :editMode="editMode" @closeModal="updateMessage"/>
+                <bagAndInsuranceView :bagAndInsuranceObject="editedItem" :editMode="editMode" @closeModal="updateMessage"/>
               </v-card-text>
             </v-card>
           </v-dialog>
@@ -56,10 +56,10 @@
 
 <script>
 import firebase from "firebase/firebase";
-import flightView from "./FlightView";
+import bagAndInsuranceView from "./BagAndInsuranceView";
 export default {
     components:{
-        flightView: flightView
+        bagAndInsuranceView: bagAndInsuranceView
     },
   data: () => ({
     dialog: false,
@@ -68,10 +68,7 @@ export default {
     headers: [
       { text: "Package ID", value: "packageID" },
       { text: "Description", value: "description" },
-      { text: "All-in Ticket Fare", value: "allInTicketFare" },
-      { text: "All-in Flight Tax", value: "allInFlightTax" },
-      { text: "Available Seat", value: "availableSeat" },
-      { text: "Expiry Date", value: "expiryDate" },
+      { text: "Price", value: "price" },
       { text: "Actions", value: "action", sortable: false }
     ],
     search: "",
@@ -79,30 +76,22 @@ export default {
     snackbar: false,
     top: true,
     right: true,
-    flights: [],
+    bagAndInsurances: [],
     editedIndex: -1,
     packages: [],
     selectedIndex: [],
     editedItem: {
       packageID: null,
       description: null,
-      allInTicketFare: null,
-      allInFlightTax: null,
-      availableSeat: null,
       companyID: null,
-      expiryDate: null,
-      child:[]
+      price: 0
     },
     text: "This is notification!.",
     defaultItem: {
       packageID: null,
       description: null,
-      allInTicketFare: null,
-      allInFlightTax: null,
-      availableSeat: null,
       companyID: null,
-      expiryDate: null,
-      child:[]
+      price: 0
     }
   }),
 
@@ -116,11 +105,11 @@ export default {
     this.initialize();
     this.companyId = this.$router.currentRoute.params.companyId;
     this.$store
-      .dispatch("fetchFlightByCompanyID",this.companyId)
+      .dispatch("fetchBagAndInsuranceByCompanyID",this.companyId)
       .then(result => {
         console.log(result);
 
-        this.flights = result;
+        this.bagAndInsurances = result;
       })
       .catch(err => {
         console.log(err);
@@ -137,17 +126,17 @@ export default {
 
 
     editItem(item) {
-      this.editedIndex = this.flights.indexOf(item);
+      this.editedIndex = this.bagAndInsurances.indexOf(item);
       this.editedItem = item;
       this.editMode = true;
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.flights.indexOf(item);
+      const index = this.bagAndInsurances.indexOf(item);
       const x = confirm("Are you sure you want to delete this item?");
       if (x) {
-        this.$store.dispatch("deleteFlight", item);
+        this.$store.dispatch("deleteBagAndInsurance", item);
         console.log(item)
         this.snackbar = true;
       }
@@ -166,11 +155,11 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.flights[this.editedIndex], this.editedItem);
-        this.$store.dispatch("updateFlight", this.editedItem);
+        Object.assign(this.bagAndInsurances[this.editedIndex], this.editedItem);
+        this.$store.dispatch("updateBagAndInsurance", this.editedItem);
       } else {
         this.editedItem.companyID = this.companyId;
-        this.$store.dispatch("storeFlight", this.editedItem);
+        this.$store.dispatch("storeBagAndInsurance", this.editedItem);
       }
 
       this.close();

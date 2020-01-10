@@ -8,7 +8,7 @@
           <v-card-text>
 
             <v-row align="center">
-                <v-col class="d-flex" cols="12" sm="12">
+                <v-col class="d-flex" cols="12" sm="6">
                     
                     <v-text-field
                     label="Package Name"
@@ -16,6 +16,38 @@
                     placeholder="Package Name"
                     outlined
                     v-model="packageObject.name"
+                    ></v-text-field>
+                </v-col>
+                <v-col class="d-flex" cols="12" sm="6">
+                    
+                    <v-text-field
+                    label="Total Days"
+                    required
+                    placeholder="Total Days"
+                    outlined
+                    v-model="packageObject.days"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
+            <v-row align="center">
+                <v-col class="d-flex" cols="12" sm="6">
+                    
+                    <v-text-field
+                    label="Tipping"
+                    required
+                    placeholder="Tipping"
+                    outlined
+                    v-model="packageObject.tipping"
+                    ></v-text-field>
+                </v-col>
+                <v-col class="d-flex" cols="12" sm="6">
+                    
+                    <v-text-field
+                    label="Exchange Rate"
+                    required
+                    placeholder="Exchange Rate"
+                    outlined
+                    v-model="packageObject.exchangeRate"
                     ></v-text-field>
                 </v-col>
             </v-row>
@@ -69,7 +101,10 @@
       packageObject:{
           name: null,
           country: [],
-          destination:[]
+          destination:[],
+          days: null,
+          tipping: null,
+          exchangeRate: null
       },
       date: new Date().toISOString().substr(0, 10),
       menu: false,

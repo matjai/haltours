@@ -106,8 +106,8 @@
 <script>
 import firebase from "firebase";
 import { v1 as uuid } from "uuid";
-import displayStaff from "./ViewStaffByCompany";
-import displayDestination from "./ViewDestinationByCompany";
+import displayStaff from "./StaffViewByCompany";
+import displayDestination from "./DestinationViewByCompany";
 
 export default {
   components: {

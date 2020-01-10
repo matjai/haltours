@@ -15,7 +15,6 @@ import RequestForm from "./views/RequestForm";
 import RequestFormCreate from "./views/subviews/RequestFormCreate";
 import ViewCompany from "./views/subviews/ViewCompany";
 import ViewPackage from "./views/subviews/ViewPackage";
-import ViewFlight from "./views/subviews/ViewFlight";
 import ViewHotel from "./views/subviews/ViewHotel";
 import CreatePackage from "./views/subviews/CreatePackage";
 
@@ -54,7 +53,6 @@ export default new Router({
     { path: "/packages/:package", name: "viewPackage", component: ViewPackage },
     { path: "/packages/:companyId/createpackage", name: "createPackage", component: CreatePackage },
     { path: "/inventories/:companyId/", name: "inventories", component: Inventory },
-    { path: "/inventories/:companyId/flight/:flightId", name: "flight", component: ViewFlight },
     { path: "/inventories/:companyId/hotel/:hotelId", name: "hotel", component: ViewHotel },
     {
       path: "/requestForms", name: "requestForms", component: RequestForm

@@ -55,7 +55,7 @@ export default {
     deletePackage: firestoreAction( async (context, payload) => {
 
         await context.rootState.db
-        .collection("packages").doc(payload).delete()
+        .collection("packages").doc(payload.id).delete()
 
     }),
 
