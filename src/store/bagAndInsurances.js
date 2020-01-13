@@ -22,13 +22,23 @@ export default {
 
     }),
 
+    fetchBagAndInsuranceByPackageID:firestoreAction( async (context, payload) => {
+
+        const snapshot =   await context.rootState.db
+        .collection("bagAndInsurances")
+        .where("packageID", "==", payload).get();
+
+        return snapshot.docs.map(doc => doc.data());
+
+    }),
+
     fetchBagAndInsuranceByCompanyID:firestoreAction( async (context, payload) => {
 
-        return context.bindFirestoreRef("bagAndInsuranceInfo", await context.rootState.db
-        .collection("bagAndInsurances")
-        .where("companyID", "==", payload));
+      return context.bindFirestoreRef("bagAndInsuranceInfo", await context.rootState.db
+      .collection("bagAndInsurances")
+      .where("companyID", "==", payload));
 
-  }),
+    }),
 
     storeBagAndInsurance: firestoreAction( async (context, payload) => {
 

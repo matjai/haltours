@@ -30,6 +30,16 @@ export default {
 
     }),
 
+    fetchGroundByPackageID:firestoreAction( async (context, payload) => {
+      
+        const snapshot =   await context.rootState.db
+        .collection("grounds")
+        .where("packageID", "==", payload).get();
+
+        return snapshot.docs.map(doc => doc.data());
+
+    }),
+
     fetchGroundByCompanyID:firestoreAction( async (context, payload) => {
 
         return context.bindFirestoreRef("groundInfo", await context.rootState.db

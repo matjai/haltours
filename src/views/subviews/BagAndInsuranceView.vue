@@ -9,7 +9,7 @@
         <v-select
           :items="packages"
           item-text="name"
-          item-value="name"
+          item-value="id"
           label="Package ID"
           v-model="bagAndInsurance.packageID"
           outlined
@@ -56,7 +56,7 @@ export default {
   mixins: [ValidationMixin, NotificationMixin],
   data: () => ({
     dessets: [],
-    companyId: null,
+    companyID: null,
     snackbar: false,
     top: true,
     right: true,
@@ -92,7 +92,7 @@ export default {
         
       })
       .catch(err => console.log(err));
-    this.companyId = this.$router.currentRoute.params.companyId;
+    this.companyID = this.$router.currentRoute.params.companyID;
   },
   methods: {
     initialize() {
@@ -102,11 +102,13 @@ export default {
     },
 
     save() {
+      this.bagAndInsurance.packageName = this.packages.find(element => element.id == this.bagAndInsurance.packageID).name;
+
       if(this.editMode){
         this.$store.dispatch("updateBagAndInsurance", this.bagAndInsurance);
       }
       else{
-        this.bagAndInsurance.companyID= this.companyId;
+        this.bagAndInsurance.companyID= this.companyID;
         this.$store.dispatch("storeBagAndInsurance", this.bagAndInsurance);
       }
       this.$emit("closeModal", false);

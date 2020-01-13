@@ -21,6 +21,14 @@ export default {
         .doc(payload).get();
 
     }),
+
+    fetchMealByPackageID:firestoreAction( async (context, payload) => {
+        const snapshot =   await context.rootState.db
+        .collection("meals")
+        .where("packageID", "==", payload).get();
+
+        return snapshot.docs.map(doc => doc.data());
+    }),
     
     fetchMealByCompanyID:firestoreAction( async (context, payload) => {
 
@@ -28,7 +36,7 @@ export default {
         .collection("meals")
         .where("companyID", "==", payload));
 
-  }),
+    }),
 
     storeMeal: firestoreAction( async (context, payload) => {
 

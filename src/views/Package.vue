@@ -10,7 +10,11 @@
       :loading="packages == null"
       :search="search"
     >
-
+      <template v-slot:item.name="{ item }">
+        <router-link
+          :to="{name:'packageDetail',params:{companyID:companyID,packageID:item.id}}"
+        >{{ item.name }}</router-link>
+      </template>
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>Package Management</v-toolbar-title>
@@ -71,7 +75,7 @@ export default {
       { text: "Actions", value: "action", sortable: false }
     ],
     search: "",
-    companyId:null,
+    companyID:null,
     snackbar: false,
     top: true,
     right: true,
@@ -85,7 +89,8 @@ export default {
         destination:[],
         days: null,
         tipping: null,
-        exchangeRate: null
+        exchangeRate: null,
+        highlight: null
     },
     text: "This is notification!.",
     defaultItem: {
@@ -94,7 +99,8 @@ export default {
         destination:[],
         days: null,
         tipping: null,
-        exchangeRate: null
+        exchangeRate: null,
+        highlight: null
     }
   }),
 
@@ -105,9 +111,9 @@ export default {
   },
 
   mounted() {
-    this.companyId = this.$router.currentRoute.params.companyId;
+    this.companyID = this.$router.currentRoute.params.companyID;
     this.$store
-      .dispatch("fetchPackageByCompanyID",this.companyId)
+      .dispatch("fetchPackageByCompanyID",this.companyID)
       .then(result => {
         console.log(result);
 

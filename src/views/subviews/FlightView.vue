@@ -9,13 +9,20 @@
         <v-select
           :items="packages"
           item-text="name"
-          item-value="name"
+          item-value="id"
           label="Package ID"
           v-model="flight.packageID"
           outlined
         ></v-select>
       </v-col>
-
+      <v-col cols="12" sm="6" md="6">
+        <v-text-field
+          label="Tour Code"
+          v-model="flight.tourCode"
+          placeholder="Tour Code"
+          outlined
+        ></v-text-field>
+      </v-col>
       <v-col cols="12" sm="6" md="6">
         <v-text-field
           label="Description"
@@ -47,7 +54,7 @@
 
       <v-col cols="12" sm="6" md="6">
         <v-text-field
-          label="Avaialable Seats"
+          label="Available Seats"
           v-model="flight.availableSeats"
           placeholder="Available Seats"
           type="number"
@@ -81,6 +88,16 @@
             <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
           </v-date-picker>
         </v-menu>
+      </v-col>
+      <v-col cols="12" sm="6" md="6">
+        <v-select
+          :items="status"
+          item-text="name"
+          item-value="name"
+          label="Status"
+          v-model="flight.status"
+          outlined
+        ></v-select>
       </v-col>
 
       <v-col cols="12" md="12" sm="12" class="pa-4">
@@ -251,7 +268,6 @@ export default {
       { text: "Actions", value: "action", sortable: false }
     ],
     dessets: [],
-    date: new Date().toISOString().substr(0, 10),
     menu: false,
     modal: false,
     menu2: false,
@@ -260,10 +276,11 @@ export default {
     airline: [],
     flightType: [],
     search: "",
-    companyId: null,
+    companyID: null,
     snackbar: false,
     top: true,
     right: true,
+    status:[],
     flight: {},
     flightChild: [],
     flights: [],
@@ -318,7 +335,7 @@ export default {
       .catch(err => console.log(err));
     // this.flightId = this.$router.currentRoute.params.flightId;
     // console.log(this.flightId);
-    this.companyId = this.$router.currentRoute.params.companyId;
+    this.companyID = this.$router.currentRoute.params.companyID;
   },
   methods: {
     initialize() {
@@ -329,6 +346,7 @@ export default {
       console.log(this.editMode)
       this.flightType = [{ name: "Departure" }, { name: "Arrival" }];
       this.airline = [{ name: "MAS" }, { name: "AIR ASIA" }];
+      this.status = [{ name: "Active", code: "AV" }, { name: "Confirm Departure", code: "CF" }];
     },
 
     editItem(item) {
@@ -368,12 +386,19 @@ export default {
     },
 
     save() {
-      this.flight.child = this.flightChild;
+      
+      this.flight.packageName = this.packages.find(element => element.id == this.flight.packageID).name;
+      this.flight.child = this.flightChild.sort(function(a, b) {
+          var dateA = new Date(a.date), dateB = new Date(b.date);
+          return dateA - dateB;
+      });
+
       if(this.editMode){
         this.$store.dispatch("updateFlight", this.flight);
       }
       else{
-        this.flight.companyID= this.companyId;
+        this.flight.companyID= this.companyID;
+        this.flight.totalSeat = this.flight.availableSeat;
         this.$store.dispatch("storeFlight", this.flight);
       }
       this.$emit("closeModal", false);

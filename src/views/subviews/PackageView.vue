@@ -72,18 +72,25 @@
             item-value="id"
             multiple
             outlined
-            resetOnOptionsChange
             v-model="pack.destination"
         ></v-select>
     </v-col>
     </v-row>
-
-      <v-col cols="12" md="12" sm="12" class="pa-4">
-        <v-btn color="pink" style="margin-left: 1rem;" @click="save" dark right>Save</v-btn>
-      </v-col>
+      
 
     </v-row>
-
+    <v-row>
+    <v-textarea
+        outlined
+        label="Trip Highlights"
+        v-model="pack.highlight"
+        auto-grow
+      ></v-textarea>
+    </v-row>
+    <v-row>
+        <v-spacer></v-spacer>
+        <v-btn color="pink" style="margin-left: 1rem;" @click="save" dark>Save</v-btn>
+    </v-row>
     <v-snackbar v-model="snackbar" top="top" absolute right="right" :type="type">
       {{ message }}
       <v-btn color="pink" text @click="snackbar = false">Close</v-btn>
@@ -101,7 +108,7 @@ export default {
   mixins: [ValidationMixin, NotificationMixin],
   data: () => ({
     dessets: [],
-    companyId: null,
+    companyID: null,
     snackbar: false,
     top: true,
     right: true,
@@ -135,7 +142,7 @@ export default {
   },
   mounted() {
     this.initialize();
-    this.$store.dispatch('getListDestinationByCompany', this.$router.currentRoute.params.companyId)
+    this.$store.dispatch('getListDestinationByCompany', this.$router.currentRoute.params.companyID)
     .then(async result => {
         result= result.data()
         this.destList = await _.chain(Object.keys(result).map(key => (_.assign(result[key], {
@@ -150,7 +157,7 @@ export default {
 
     })
     .catch(err => console.log(err));
-    this.companyId = this.$router.currentRoute.params.companyId;
+    this.companyID = this.$router.currentRoute.params.companyID;
   },
   methods: {
     initialize() {
@@ -177,7 +184,7 @@ export default {
         this.$store.dispatch("updatePackage", this.pack);
       }
       else{
-        this.pack.companyID= this.companyId;
+        this.pack.companyID= this.companyID;
         this.$store.dispatch("storePackage", this.pack);
       }
       this.$emit("closeModal", false);

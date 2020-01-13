@@ -9,7 +9,7 @@
         <v-select
           :items="packages"
           item-text="name"
-          item-value="name"
+          item-value="id"
           label="Package ID"
           v-model="ground.packageID"
           outlined
@@ -124,7 +124,7 @@ export default {
     isSubmit: false,
     airline: [],
     search: "",
-    companyId: null,
+    companyID: null,
     snackbar: false,
     top: true,
     right: true,
@@ -180,7 +180,7 @@ export default {
         
       })
       .catch(err => console.log(err));
-    this.companyId = this.$router.currentRoute.params.companyId;
+    this.companyID = this.$router.currentRoute.params.companyID;
   },
   methods: {
     initialize() {
@@ -227,12 +227,14 @@ export default {
     },
 
     save() {
+      this.ground.packageName = this.packages.find(element => element.id == this.ground.packageID).name;
       this.ground.child = this.groundChild;
+
       if(this.editMode){
         this.$store.dispatch("updateGround", this.ground);
       }
       else{
-        this.ground.companyID= this.companyId;
+        this.ground.companyID= this.companyID;
         this.$store.dispatch("storeGround", this.ground);
       }
       this.$emit("closeModal", false);

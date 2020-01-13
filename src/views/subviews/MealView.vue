@@ -9,7 +9,7 @@
         <v-select
           :items="packages"
           item-text="name"
-          item-value="name"
+          item-value="id"
           label="Package ID"
           v-model="meal.packageID"
           outlined
@@ -56,7 +56,7 @@ export default {
   mixins: [ValidationMixin, NotificationMixin],
   data: () => ({
     dessets: [],
-    companyId: null,
+    companyID: null,
     snackbar: false,
     top: true,
     right: true,
@@ -92,7 +92,7 @@ export default {
         
       })
       .catch(err => console.log(err));
-    this.companyId = this.$router.currentRoute.params.companyId;
+    this.companyID = this.$router.currentRoute.params.companyID;
   },
   methods: {
     initialize() {
@@ -102,12 +102,15 @@ export default {
     },
 
     save() {
+      this.meal.packageName = this.packages.find(element => element.id == this.meal.packageID).name;
+
       if(this.editMode){
         this.$store.dispatch("updateMeal", this.meal);
       }
       else{
-        this.meal.companyID= this.companyId;
+        this.meal.companyID= this.companyID;
         this.$store.dispatch("storeMeal", this.meal);
+
       }
       this.$emit("closeModal", false);
     }

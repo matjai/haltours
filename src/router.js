@@ -10,6 +10,7 @@ import StaffView from "./views/subviews/StaffView";
 import Company from "./views/Company";
 import Attraction from "./views/Attraction";
 import Package from "./views/Package";
+import PackageDetailView from "./views/subviews/PackageDetailView";
 import Inventory from "./views/Inventory";
 import RequestForm from "./views/RequestForm";
 import RequestFormCreate from "./views/subviews/RequestFormCreate";
@@ -47,8 +48,9 @@ export default new Router({
     { path: "/companies", name: "companies", component: Company },
     { path: "/companies/:company", name: "viewCompany", component: ViewCompany },
     { path: "/attractions", name: "attractions", component: Attraction },
-    { path: "/packages/:companyId", name: "packages", component: Package },
-    { path: "/inventories/:companyId/", name: "inventories", component: Inventory },
+    { path: "/packages/:companyID", name: "packages", component: Package },
+    { path: "/packages/:companyID/:packageID", name: "packageDetail", component: PackageDetailView },
+    { path: "/inventories/:companyID/", name: "inventories", component: Inventory },
     { path: "/inventories/:companyId/hotel/:hotelId", name: "hotel", component: ViewHotel },
     {
       path: "/requestForms", name: "requestForms", component: RequestForm

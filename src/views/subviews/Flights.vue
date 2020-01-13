@@ -45,7 +45,12 @@
           </v-dialog>
         </v-toolbar>
       </template>
-
+      <template v-slot:item.departureDate="{ item }">
+        {{item.child[0].date}}
+      </template>
+      <template v-slot:item.returnDate="{ item }">
+        {{item.child[item.child.length-1].date}}
+      </template>
       <template v-slot:item.action="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
         <v-icon small @click="deleteItem(item)">delete</v-icon>
@@ -66,16 +71,19 @@ export default {
     dialog2: false,
     editMode: false,
     headers: [
-      { text: "Package ID", value: "packageID" },
+      { text: "Package ID", value: "packageName" },
+      { text: "Tour Code", value: "tourCode" },
       { text: "Description", value: "description" },
       { text: "All-in Ticket Fare", value: "allInTicketFare" },
       { text: "All-in Flight Tax", value: "allInFlightTax" },
       { text: "Available Seat", value: "availableSeat" },
+      { text: "Departure Date", value: "departureDate" },
+      { text: "Return Date", value: "returnDate" },
       { text: "Expiry Date", value: "expiryDate" },
       { text: "Actions", value: "action", sortable: false }
     ],
     search: "",
-    companyId:null,
+    companyID:null,
     snackbar: false,
     top: true,
     right: true,
@@ -85,10 +93,13 @@ export default {
     selectedIndex: [],
     editedItem: {
       packageID: null,
+      packageName: null,
       description: null,
       allInTicketFare: null,
       allInFlightTax: null,
       availableSeat: null,
+      date: null,
+      totalSeat: null,
       companyID: null,
       expiryDate: null,
       child:[]
@@ -96,10 +107,13 @@ export default {
     text: "This is notification!.",
     defaultItem: {
       packageID: null,
+      packageName: null,
       description: null,
       allInTicketFare: null,
       allInFlightTax: null,
       availableSeat: null,
+      date: null,
+      totalSeat: null,
       companyID: null,
       expiryDate: null,
       child:[]
@@ -114,9 +128,9 @@ export default {
 
   mounted() {
     this.initialize();
-    this.companyId = this.$router.currentRoute.params.companyId;
+    this.companyID = this.$router.currentRoute.params.companyID;
     this.$store
-      .dispatch("fetchFlightByCompanyID",this.companyId)
+      .dispatch("fetchFlightByCompanyID",this.companyID)
       .then(result => {
         console.log(result);
 
@@ -164,17 +178,6 @@ export default {
       }, 300);
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.flights[this.editedIndex], this.editedItem);
-        this.$store.dispatch("updateFlight", this.editedItem);
-      } else {
-        this.editedItem.companyID = this.companyId;
-        this.$store.dispatch("storeFlight", this.editedItem);
-      }
-
-      this.close();
-    },
     updateMessage(variable) {
       this.dialog= variable;
     }

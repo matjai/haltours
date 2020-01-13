@@ -66,12 +66,12 @@ export default {
     dialog2: false,
     editMode: false,
     headers: [
-      { text: "Package ID", value: "packageID" },
+      { text: "Package ID", value: "packageName" },
       { text: "Description", value: "description" },
       { text: "Actions", value: "action", sortable: false }
     ],
     search: "",
-    companyId:null,
+    companyID:null,
     snackbar: false,
     top: true,
     right: true,
@@ -81,6 +81,7 @@ export default {
     selectedIndex: [],
     editedItem: {
       packageID: null,
+      packageName: null,
       description: null,
       companyID: null,
       child:[
@@ -94,6 +95,7 @@ export default {
     text: "This is notification!.",
     defaultItem: {
       packageID: null,
+      packageName: null,
       description: null,
       companyID: null,
       child:[
@@ -114,9 +116,9 @@ export default {
 
   mounted() {
     this.initialize();
-    this.companyId = this.$router.currentRoute.params.companyId;
+    this.companyID = this.$router.currentRoute.params.companyID;
     this.$store
-      .dispatch("fetchGroundByCompanyID",this.companyId)
+      .dispatch("fetchGroundByCompanyID",this.companyID)
       .then(result => {
         console.log(result);
 

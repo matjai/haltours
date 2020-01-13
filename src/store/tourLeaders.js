@@ -30,6 +30,16 @@ export default {
 
     }),
 
+    fetchTourLeaderByPackageID:firestoreAction( async (context, payload) => {
+
+        const snapshot =   await context.rootState.db
+        .collection("tourLeaders")
+        .where("packageID", "==", payload).get();
+
+        return snapshot.docs.map(doc => doc.data());
+
+    }),
+
     fetchTourLeaderByCompanyID:firestoreAction( async (context, payload) => {
 
         return context.bindFirestoreRef("tourLeaderInfo", await context.rootState.db
