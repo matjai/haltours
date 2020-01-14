@@ -27,7 +27,8 @@ export default {
         
         const snapshot =  await context.rootState.db
         .collection("attractions")
-        .where("destinationID", "==", payload).get();
+        .where("destinationID", "in", payload).get()
+        
 
         return snapshot.docs.map(doc => doc.data());
 

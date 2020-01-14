@@ -60,8 +60,8 @@
         item-value="destination"
         outlined
         multiple
-        @change="changeDestinationList"
-        return-object
+         v-model="pack.country"
+        @change="initDestList"
         ></v-select>
     </v-col>
     <v-col class="d-flex" cols="12" sm="6">
@@ -131,10 +131,12 @@ export default {
 
     packageObject: function () {
       this.pack= this.packageObject;
+      this.initDestList(this.pack.country);
     },
     editMode: function(){
       console.log(this.editMode)
     }
+
   },
   props: {
     packageObject: Object,
@@ -155,6 +157,7 @@ export default {
         }))
         .value()
 
+      this.initDestList(this.pack.country);
     })
     .catch(err => console.log(err));
     this.companyID = this.$router.currentRoute.params.companyID;
@@ -162,22 +165,29 @@ export default {
   methods: {
     initialize() {
       
-        this.pack = this.packageObject;
+      this.pack = this.packageObject;
+      
       
     },
 
-    changeDestinationList(item){
-            var array=[];
-            var country=[]
-            item.forEach(element => {
-                country = country.concat(element.destination)
-                array = array.concat(element.data)
-            });
-            this.choosenDest = array;
-            this.pack.destination = (array.filter(element => this.pack.destination.includes(element.id))).map(a => a.id);
-            this.pack.country = country;
+    initDestList(item){
+      var array=[];
+      item.forEach(element =>{
+        array = array.concat(this.destList.filter(element2 => element.includes(element2.destination)).map(a=>a.data).flat());
+      });
+
+      this.choosenDest= array;
+    },
+
+    // changeDestinationList(item){
+    //         var array=[];
+    //         var country=[]
+    //         item.forEach(element => {
+    //             array = array.concat(this.destList.filter(element2 => element.includes(element2.destination)).map(a=>a.data).flat());
+    //         });
+    //         this.choosenDest = array;
             
-        },
+    //     },
 
     save() {
       if(this.editMode){

@@ -388,6 +388,11 @@ export default {
     save() {
       
       this.flight.packageName = this.packages.find(element => element.id == this.flight.packageID).name;
+
+      this.flight.child = this.flightChild.sort(function(a, b) {
+          return a.time - b.time;
+      });
+      
       this.flight.child = this.flightChild.sort(function(a, b) {
           var dateA = new Date(a.date), dateB = new Date(b.date);
           return dateA - dateB;
