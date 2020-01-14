@@ -1,13 +1,11 @@
 <template>
-
   <v-container fluid class="pa-2 mt-10">
-      
     <v-data-table
       :headers="headers"
       :items="packages"
       sort-by="calories"
       class="elevation-1"
-      :loading="packages == null"
+      :loading="destinations == null"
       :search="search"
     >
       <template v-slot:item.name="{ item }">
@@ -15,6 +13,13 @@
           :to="{name:'packageDetail',params:{companyID:companyID,packageID:item.id}}"
         >{{ item.name }}</router-link>
       </template>
+
+      <template v-slot:item.destination="{ item }">
+        <span v-for="(d,k) in item.destination" :key="k">
+          <v-chip>{{ destinations[d].name }}</v-chip>
+        </span>
+      </template>
+
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>Package Management</v-toolbar-title>
@@ -43,7 +48,11 @@
               </v-card-title>
 
               <v-card-text>
-                <packageView :packageObject="editedItem" :editMode="editMode" @closeModal="updateMessage"/>
+                <packageView
+                  :packageObject="editedItem"
+                  :editMode="editMode"
+                  @closeModal="updateMessage"
+                />
               </v-card-text>
             </v-card>
           </v-dialog>
@@ -61,10 +70,12 @@
 <script>
 import firebase from "firebase/firebase";
 import packageView from "./subviews/PackageView";
+import _ from "lodash";
+
 export default {
-    components:{
-        packageView: packageView
-    },
+  components: {
+    packageView: packageView
+  },
   data: () => ({
     dialog: false,
     editMode: false,
@@ -75,32 +86,33 @@ export default {
       { text: "Actions", value: "action", sortable: false }
     ],
     search: "",
-    companyID:null,
+    companyID: null,
     snackbar: false,
     top: true,
     right: true,
     packages: [],
     editedIndex: -1,
     selectedIndex: [],
+    destinations: null,
     editedItem: {
-        name: null,
-        companyID: null,
-        country: [],
-        destination:[],
-        days: null,
-        tipping: null,
-        exchangeRate: null,
-        highlight: null
+      name: null,
+      companyID: null,
+      country: [],
+      destination: [],
+      days: null,
+      tipping: null,
+      exchangeRate: null,
+      highlight: null
     },
     text: "This is notification!.",
     defaultItem: {
-        name: null,
-        country: [],
-        destination:[],
-        days: null,
-        tipping: null,
-        exchangeRate: null,
-        highlight: null
+      name: null,
+      country: [],
+      destination: [],
+      days: null,
+      tipping: null,
+      exchangeRate: null,
+      highlight: null
     }
   }),
 
@@ -110,14 +122,22 @@ export default {
     }
   },
 
-  mounted() {
+  created() {
     this.companyID = this.$router.currentRoute.params.companyID;
     this.$store
-      .dispatch("fetchPackageByCompanyID",this.companyID)
-      .then(result => {
-        console.log(result);
-
+      .dispatch("fetchPackageByCompanyID", this.companyID)
+      .then(async result => {
         this.packages = result;
+        const _destinationList = {};
+        const getDestinations = await this.$store.dispatch(
+          "getAllDestinations"
+        );
+
+        this.destinations = {};
+        getDestinations.forEach(item => {
+          const keys = Object.keys(item);
+          keys.map(k => (this.destinations[k] = item[k]));
+        });
       })
       .catch(err => {
         console.log(err);
@@ -125,7 +145,7 @@ export default {
   },
 
   methods: {
-
+    initialize() {},
     editItem(item) {
       this.editedIndex = this.packages.indexOf(item);
       this.editedItem = item;
@@ -138,7 +158,7 @@ export default {
       const x = confirm("Are you sure you want to delete this item?");
       if (x) {
         this.$store.dispatch("deletePackage", item);
-        console.log(item)
+        console.log(item);
         this.snackbar = true;
       }
     },
@@ -155,7 +175,7 @@ export default {
     },
 
     updateMessage(variable) {
-      this.dialog= variable;
+      this.dialog = variable;
     }
   }
 };
