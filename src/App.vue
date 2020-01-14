@@ -19,7 +19,7 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>{{ isLoggedIn? currentUser.name : '' }}</v-list-item-title>
+            <v-list-item-title>{{ currentUser!= null? currentUser.name : '' }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 

@@ -14,7 +14,7 @@
         >{{ item.name }}</router-link>
       </template>
 
-      <template v-slot:item.destination="{ item }">
+      <template v-slot:item.destination="{ item }" v-if="destinations != null">
         <span v-for="(d,k) in item.destination" :key="k">
           <v-chip>{{ destinations[d].name }}</v-chip>
         </span>
