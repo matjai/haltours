@@ -19,7 +19,7 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>John Leider</v-list-item-title>
+            <v-list-item-title>{{ isLoggedIn? currentUser.name : '' }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -30,7 +30,7 @@
             v-for="item in items"
             :key="item.title"
             link
-            @click="$router.push(item.route)"
+            @click="$router.push(`${item.route}/${currentUser.companyId}`)"
           >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
@@ -53,11 +53,8 @@ export default {
     drawer: null,
     items: [
       { title: "Home", icon: "dashboard", route: null },
-      { title: "Companies", icon: "dashboard", route: "/companies" },
-      { title: "Staffs", icon: "dashboard", route: "/staffs" },
-      { title: "Attractions", icon: "dashboard", route: "/attractions" },
-      { title: "Request Forms", icon: "dashboard", route: "/requestForms" },
-      { title: "About", icon: "question_answer", route: null }
+      { title: "Packages", icon: "dashboard", route: "/packages" },
+      { title: "Inventories", icon: "dashboard", route: "/inventories" }
     ]
   }),
   // watch: {
@@ -70,6 +67,9 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
+    },
+    currentUser() {
+      return this.$store.state.user.currentUser;
     }
   },
   methods: {
