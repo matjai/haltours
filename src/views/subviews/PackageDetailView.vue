@@ -248,11 +248,11 @@ export default {
 
         this.flights = result;
 
-        // this.flights = this.flights.sort(function(a, b) {
-        //   var dateA = new Date(a.date),
-        //     dateB = new Date(b.date);
-        //   return dateA - dateB;
-        // });
+        this.flights = this.flights.sort(function(a, b) {
+          var dateA = new Date(a.date),
+            dateB = new Date(b.date);
+          return dateA - dateB;
+        });
       })
       .catch(err => console.log(err));
 
