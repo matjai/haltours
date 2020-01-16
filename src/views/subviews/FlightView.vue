@@ -339,11 +339,8 @@ export default {
   },
   methods: {
     initialize() {
-      if(this.editMode){
-        this.flight = this.flightObject;
-        this.flightChild = this.flight.child;
-      }
-      console.log(this.editMode)
+      this.flight = this.flightObject;
+      this.flightChild = this.flight.child;
       this.flightType = [{ name: "Departure" }, { name: "Arrival" }];
       this.airline = [{ name: "MAS" }, { name: "AIR ASIA" }];
       this.status = [{ name: "Active", code: "AV" }, { name: "Confirm Departure", code: "CF" }];
@@ -387,8 +384,10 @@ export default {
 
     save() {
       
-      this.flight.packageName = this.packages.find(element => element.id == this.flight.packageID).name;
-
+      if(this.flight.packageID != null){
+        this.flight.packageName = this.packages.find(element => element.id == this.flight.packageID).name;
+      }
+      
       this.flight.child = this.flightChild.sort(function(a, b) {
           return a.time - b.time;
       });
@@ -403,7 +402,7 @@ export default {
       }
       else{
         this.flight.companyID= this.companyID;
-        this.flight.totalSeat = this.flight.availableSeat;
+        this.flight.totalSeat = this.flight.availableSeats;
         this.$store.dispatch("storeFlight", this.flight);
       }
       this.$emit("closeModal", false);

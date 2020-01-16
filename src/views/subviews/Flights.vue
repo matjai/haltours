@@ -46,10 +46,14 @@
         </v-toolbar>
       </template>
       <template v-slot:item.departureDate="{ item }">
+        <div v-if="item.child[0] != null">
         {{item.child[0].date}}
+        </div>
       </template>
       <template v-slot:item.returnDate="{ item }">
+        <div v-if="item.child[item.child.length-1] != null && item.child[item.child.length-1].type =='Arrival'">
         {{item.child[item.child.length-1].date}}
+        </div>
       </template>
       <template v-slot:item.action="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
@@ -97,8 +101,7 @@ export default {
       description: null,
       allInTicketFare: null,
       allInFlightTax: null,
-      availableSeat: null,
-      date: null,
+      availableSeats: null,
       totalSeat: null,
       companyID: null,
       expiryDate: null,
@@ -111,8 +114,7 @@ export default {
       description: null,
       allInTicketFare: null,
       allInFlightTax: null,
-      availableSeat: null,
-      date: null,
+      availableSeats: null,
       totalSeat: null,
       companyID: null,
       expiryDate: null,
