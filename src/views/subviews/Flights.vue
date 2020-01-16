@@ -1,7 +1,5 @@
 <template>
-
   <v-container fluid class="pa-2 mt-10">
-      
     <v-data-table
       :headers="headers"
       :items="flights"
@@ -10,7 +8,6 @@
       :loading="flights == null"
       :search="search"
     >
-
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>Flights Management</v-toolbar-title>
@@ -39,21 +36,23 @@
               </v-card-title>
 
               <v-card-text>
-                <flightView :flightObject="editedItem" :editMode="editMode" @closeModal="updateMessage"/>
+                <flightView
+                  :flightObject="editedItem"
+                  :editMode="editMode"
+                  @closeModal="updateMessage"
+                />
               </v-card-text>
             </v-card>
           </v-dialog>
         </v-toolbar>
       </template>
       <template v-slot:item.departureDate="{ item }">
-        <div v-if="item.child[0] != null">
-        {{item.child[0].date}}
-        </div>
+        <div v-if="item.child[0] != null">{{item.child[0].date}}</div>
       </template>
       <template v-slot:item.returnDate="{ item }">
-        <div v-if="item.child[item.child.length-1] != null && item.child[item.child.length-1].type =='Arrival'">
-        {{item.child[item.child.length-1].date}}
-        </div>
+        <div
+          v-if="item.child[item.child.length-1] != null && item.child[item.child.length-1].type =='Arrival'"
+        >{{item.child[item.child.length-1].date}}</div>
       </template>
       <template v-slot:item.action="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
@@ -67,9 +66,9 @@
 import firebase from "firebase/firebase";
 import flightView from "./FlightView";
 export default {
-    components:{
-        flightView: flightView
-    },
+  components: {
+    flightView: flightView
+  },
   data: () => ({
     dialog: false,
     dialog2: false,
@@ -80,14 +79,14 @@ export default {
       { text: "Description", value: "description" },
       { text: "All-in Ticket Fare", value: "allInTicketFare" },
       { text: "All-in Flight Tax", value: "allInFlightTax" },
-      { text: "Available Seat", value: "availableSeat" },
+      { text: "Available Seat", value: "availableSeats" },
       { text: "Departure Date", value: "departureDate" },
       { text: "Return Date", value: "returnDate" },
       { text: "Expiry Date", value: "expiryDate" },
       { text: "Actions", value: "action", sortable: false }
     ],
     search: "",
-    companyID:null,
+    companyID: null,
     snackbar: false,
     top: true,
     right: true,
@@ -105,7 +104,7 @@ export default {
       totalSeat: null,
       companyID: null,
       expiryDate: null,
-      child:[]
+      child: []
     },
     text: "This is notification!.",
     defaultItem: {
@@ -118,7 +117,7 @@ export default {
       totalSeat: null,
       companyID: null,
       expiryDate: null,
-      child:[]
+      child: []
     }
   }),
 
@@ -132,7 +131,7 @@ export default {
     this.initialize();
     this.companyID = this.$router.currentRoute.params.companyID;
     this.$store
-      .dispatch("fetchFlightByCompanyID",this.companyID)
+      .dispatch("fetchFlightByCompanyID", this.companyID)
       .then(result => {
         console.log(result);
 
@@ -144,13 +143,11 @@ export default {
   },
 
   methods: {
-    initialize() {
-    },
+    initialize() {},
 
     indexSelected(item) {
       this.selectedIndex.push(item.id);
     },
-
 
     editItem(item) {
       this.editedIndex = this.flights.indexOf(item);
@@ -164,7 +161,7 @@ export default {
       const x = confirm("Are you sure you want to delete this item?");
       if (x) {
         this.$store.dispatch("deleteFlight", item);
-        console.log(item)
+        console.log(item);
         this.snackbar = true;
       }
     },
@@ -181,7 +178,7 @@ export default {
     },
 
     updateMessage(variable) {
-      this.dialog= variable;
+      this.dialog = variable;
     }
   }
 };
