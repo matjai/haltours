@@ -75,6 +75,16 @@
             v-model="pack.destination"
         ></v-select>
     </v-col>
+    <v-col class="d-flex" cols="12" sm="6">
+          
+          <v-text-field
+          label="Total Pax"
+          required
+          placeholder="Total Pax"
+          outlined
+          v-model="pack.totalPax"
+          ></v-text-field>
+      </v-col>
     </v-row>
       
 

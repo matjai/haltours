@@ -83,6 +83,7 @@ export default {
       { text: "Package Name", value: "name" },
       { text: "Destination", value: "destination" },
       { text: "Total Days", value: "days" },
+      { text: "Total Pax", value: "totalPax" },
       { text: "Actions", value: "action", sortable: false }
     ],
     search: "",
@@ -102,7 +103,8 @@ export default {
       days: null,
       tipping: null,
       exchangeRate: null,
-      highlight: null
+      highlight: null,
+      totalPax:  null
     },
     text: "This is notification!.",
     defaultItem: {
@@ -112,7 +114,8 @@ export default {
       days: null,
       tipping: null,
       exchangeRate: null,
-      highlight: null
+      highlight: null,
+      totalPax:  null
     }
   }),
 
