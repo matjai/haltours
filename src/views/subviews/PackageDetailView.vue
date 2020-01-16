@@ -26,6 +26,7 @@
             item-value="id"
             label="Departure Date"
             @change="changeFlightSelection"
+            v-model="firstFlight"
             return-object
             outlined
           ></v-select>
@@ -203,6 +204,7 @@ export default {
     flight: {},
     selectedTour: {},
     attractions: [],
+    firstFlight:{},
     ground: {
       packageID: null,
       packageName: null,
@@ -253,6 +255,8 @@ export default {
             dateB = new Date(b.date);
           return dateA - dateB;
         });
+
+        this.firstFlight = this.flights[0];
       })
       .catch(err => console.log(err));
 
