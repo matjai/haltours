@@ -32,27 +32,27 @@
           <v-simple-table>
             <template v-slot:default>
               <thead>
-                <tr style="background: #E91E63; text-transform: uppercase;">
+                <tr style="text-transform: uppercase;">
                   <th class="text-center">
-                    <span style="color: #fff;">Type</span>
+                    <span >Type</span>
                   </th>
                   <th class="text-center">
-                    <span style="color: #fff;">Airline</span>
+                    <span >Airline</span>
                   </th>
                   <th class="text-center">
-                    <span style="color: #fff;">Flight Number</span>
+                    <span >Flight Number</span>
                   </th>
                   <th class="text-center">
-                    <span style="color: #fff;">From</span>
+                    <span >From</span>
                   </th>
                   <th class="text-center">
-                    <span style="color: #fff;">To</span>
+                    <span >To</span>
                   </th>
                   <th class="text-center">
-                    <span style="color: #fff;">Date</span>
+                    <span >Date</span>
                   </th>
                   <th class="text-center">
-                    <span style="color: #fff;">Time</span>
+                    <span >Time</span>
                   </th>
                 </tr>
               </thead>
@@ -95,30 +95,30 @@
           <v-simple-table>
             <template v-slot:default>
               <thead>
-                <tr style="background: #E91E63; text-transform: uppercase;">
+                <tr style="text-transform: uppercase;">
                   <th class="text-left">
-                    <span style="color: #fff">Departure Date</span>
+                    <span >Departure Date</span>
                   </th>
                   <th class="text-left">
-                    <span style="color: #fff">Return Date</span>
+                    <span >Return Date</span>
                   </th>
                   <th class="text-left">
-                    <span style="color: #fff">Tour Code</span>
+                    <span >Tour Code</span>
                   </th>
                   <th class="text-left">
-                    <span style="color: #fff">All-in Ticket Fare</span>
+                    <span >All-in Ticket Fare</span>
                   </th>
                   <th class="text-left">
-                    <span style="color: #fff">All-in Flight Tax</span>
+                    <span >All-in Flight Tax</span>
                   </th>
                   <th class="text-left">
-                    <span style="color: #fff">Status</span>
+                    <span >Status</span>
                   </th>
                   <th class="text-left">
-                    <span style="color: #fff">Ground Options</span>
+                    <span >Ground Options</span>
                   </th>
                   <th class="text-left">
-                    <span style="color: #fff">Starting From</span>
+                    <span >Starting From</span>
                   </th>
                 </tr>
               </thead>
@@ -178,7 +178,7 @@
                   <td>
                     <span style="font-weight: 400;">RM {{ lowestPrice(item) }}</span>
                     <br />
-                    <span style="font-weight: bold;">RM {{ lowestPriceAllIn(item) }}</span>
+                    <v-chip color="yellow"> All-In</v-chip><span style="font-weight: bold;">RM {{ lowestPriceAllIn(item) }}</span>
                   </td>
                 </tr>
               </tbody>
